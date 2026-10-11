@@ -1,0 +1,650 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// EMPLOYE ET UTILISATEUR
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+// Employe = toute personne qui travaille a l'ecole (avec ou sans compte)
+model Employe {
+  id              String   @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  nom             String
+  prenom          String
+  telephone       String?
+  poste           String   // "Directeur", "Enseignant", "Secretaire", "Comptable", "Surveillant", "Gardien", "Autre"
+  posteLibre      String?  // Si poste = "Autre", libelle precise
+
+  dateEmbauche    DateTime @default(now())
+  dateSortie      DateTime?
+  actif           Boolean  @default(true)
+
+  salaireReference Float?
+  typeRemuneration String? // "MENSUEL", "HORAIRE", null
+
+  user              User?
+  affectations      Affectation[]
+  paiements         Paiement[]
+  classesTitulaire  Classe[]        @relation("TitulaireClasse")
+  classesPrincipal  Classe[]        @relation("ProfesseurPrincipal")
+  lignesBulletin    BulletinLigne[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([etablissementId, actif])
+  @@index([nom, prenom])
+}
+
+// User = compte de connexion uniquement, toujours lie a un Employe
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  roles        Role[]
+  actif        Boolean  @default(true)
+
+  employeId String   @unique
+  employe   Employe  @relation(fields: [employeId], references: [id], onDelete: Restrict)
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  notesSaisies     Note[]       @relation("NotesSaisies")
+  notesModifiees   Note[]       @relation("NotesModifiees")
+  bulletinsGeneres Bulletin[]   @relation("BulletinsGeneres")
+  paiementsSaisis  Paiement[]   @relation("PaiementsSaisis")
+  paiementsAnnules Paiement[]   @relation("PaiementsAnnules")
+  fraisSaisis      PaiementFrais[]
+  rappelsSaisis    Rappel[]
+  auditLogs        AuditLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([etablissementId])
+}
+
+enum Role {
+  DIRECTEUR
+  SECRETAIRE
+  COMPTABLE
+  ENSEIGNANT
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ETABLISSEMENT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Etablissement {
+  id        String   @id @default(cuid())
+  nom       String
+  type      TypeEtablissement
+  adresse   String?
+  telephone String?
+  email     String?
+  logo      String?
+  actif     Boolean  @default(true)
+
+  users           User[]
+  employes        Employe[]
+  anneesScolaires AnneeScolaire[]
+  matieres        Matiere[]
+  classes         Classe[]
+  eleves          Eleve[]
+  paiements       Paiement[]
+  fraisScolarite  FraisScolarite[]
+  parametres      ParametresEtablissement?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TypeEtablissement {
+  PUBLIC
+  PRIVE
+  COMMUNAUTAIRE
+  MEDERSA
+}
+
+model ParametresEtablissement {
+  id              String        @id @default(cuid())
+  etablissementId String        @unique
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  modeSaisieNotes       ModeSaisieNotes @default(DECENTRALISEE)
+  validationObligatoire Boolean         @default(true)
+  ponderationDevoirs    Float           @default(0.333)
+  ponderationCompo      Float           @default(0.667)
+
+  // Transition annuelle
+  reinscriptionRequise Boolean @default(false)
+  fraisReinscription   Float   @default(0)
+  copierAffectations   Boolean @default(true)
+  archiverNotes        Boolean @default(true)
+
+  updatedAt DateTime @updatedAt
+}
+
+enum ModeSaisieNotes {
+  DECENTRALISEE
+  CENTRALISEE
+  MIXTE
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ANNEE SCOLAIRE / TRIMESTRES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model AnneeScolaire {
+  id              String        @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  libelle   String
+  dateDebut DateTime
+  dateFin   DateTime
+  active    Boolean  @default(false)
+
+  // Archivage
+  archivee        Boolean   @default(false)
+  archiveeLe      DateTime?
+  notesSupprimees Boolean   @default(false)
+
+  trimestres  Trimestre[]
+  classes     Classe[]
+  frais       FraisScolarite[]
+  inscriptions InscriptionAnnuelle[]
+
+  @@unique([etablissementId, libelle])
+}
+
+model Trimestre {
+  id              String        @id @default(cuid())
+  anneeScolaireId String
+  anneeScolaire   AnneeScolaire @relation(fields: [anneeScolaireId], references: [id])
+
+  nom       String
+  ordre     Int
+  dateDebut DateTime
+  dateFin   DateTime?
+  cloture   Boolean   @default(false)
+
+  notes     Note[]
+  bulletins Bulletin[]
+
+  @@unique([anneeScolaireId, ordre])
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// MATIERES / CLASSES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Matiere {
+  id              String        @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  nom         String
+  code        String?
+  cycle       Cycle
+  coefficient Int    @default(1)
+
+  affectations   Affectation[]
+  notes          Note[]
+  bulletinLignes BulletinLigne[]
+
+  @@unique([etablissementId, nom, cycle])
+}
+
+enum Cycle {
+  PRESCOLAIRE
+  PREMIER_CYCLE
+  SECOND_CYCLE
+}
+
+model Classe {
+  id              String        @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  anneeScolaireId String
+  anneeScolaire   AnneeScolaire @relation(fields: [anneeScolaireId], references: [id])
+
+  nom     String?
+  niveau  Int
+  cycle   Cycle
+  section String?
+  salle   String?
+
+  fraisInscription      Float @default(0)
+  fraisScolariteMensuel Float @default(0)
+  capaciteMax           Int   @default(50)
+
+  titulaireId String?
+  titulaire   Employe? @relation("TitulaireClasse", fields: [titulaireId], references: [id])
+
+  professeurPrincipalId String?
+  professeurPrincipal   Employe? @relation("ProfesseurPrincipal", fields: [professeurPrincipalId], references: [id])
+
+  eleves       Eleve[]
+  inscriptions InscriptionAnnuelle[]
+  affectations Affectation[]
+  notes        Note[]
+  bulletins    Bulletin[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([etablissementId, anneeScolaireId, niveau, section])
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// ELEVES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Eleve {
+  id              String        @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  matricule       String
+  nom             String
+  prenom          String
+  dateNaissance   DateTime
+  sexe            Sexe
+  tuteurNom       String?
+  tuteurTelephone String?
+  emailParent     String?
+
+  classeId String?
+  classe   Classe? @relation(fields: [classeId], references: [id])
+
+  statut StatutEleve @default(INSCRIT)
+
+  notes          Note[]
+  inscriptions   InscriptionAnnuelle[]
+  bulletins      Bulletin[]
+  fraisScolarite FraisScolarite[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([etablissementId, matricule])
+  @@index([classeId, statut])
+}
+
+enum Sexe {
+  M
+  F
+}
+
+enum StatutEleve {
+  INSCRIT
+  TRANSFERE
+  RADIE
+  DIPLOME
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// AFFECTATIONS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Affectation {
+  id           String  @id @default(cuid())
+  enseignantId String
+  enseignant   Employe @relation(fields: [enseignantId], references: [id])
+
+  classeId  String
+  classe    Classe   @relation(fields: [classeId], references: [id])
+  matiereId String?
+  matiere   Matiere? @relation(fields: [matiereId], references: [id])
+
+  type TypeAffectation
+
+  // Creneau horaire (optionnel)
+  jour       String? // "LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"
+  heureDebut String? // "08:00"
+  heureFin   String? // "09:00"
+
+  @@index([enseignantId, classeId])
+  @@index([classeId, jour])
+}
+
+enum TypeAffectation {
+  TITULAIRE
+  PROFESSEUR_MATIERE
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// NOTES
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Note {
+  id String @id @default(cuid())
+
+  eleveId String
+  eleve   Eleve  @relation(fields: [eleveId], references: [id])
+
+  matiereId String
+  matiere   Matiere @relation(fields: [matiereId], references: [id])
+
+  classeId String
+  classe   Classe @relation(fields: [classeId], references: [id])
+
+  trimestreId String
+  trimestre   Trimestre @relation(fields: [trimestreId], references: [id])
+
+  type   TypeNote
+  numero Int
+  valeur Float?
+  sur    Float @default(20)
+
+  statut StatutNote @default(BROUILLON)
+
+  saisieParId   String
+  saisiePar     User    @relation("NotesSaisies", fields: [saisieParId], references: [id])
+  modifieeParId String?
+  modifieePar   User?   @relation("NotesModifiees", fields: [modifieeParId], references: [id])
+  modifieeLe    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eleveId, matiereId, trimestreId, type, numero])
+  @@index([classeId, trimestreId, statut])
+}
+
+enum TypeNote {
+  DEVOIR
+  COMPOSITION
+}
+
+enum StatutNote {
+  BROUILLON
+  SOUMISE
+  VALIDEE
+  VERROUILLEE
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// BULLETINS
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Bulletin {
+  id String @id @default(cuid())
+
+  eleveId String
+  eleve   Eleve  @relation(fields: [eleveId], references: [id], onDelete: Restrict)
+
+  trimestreId String
+  trimestre   Trimestre @relation(fields: [trimestreId], references: [id])
+
+  classeId String
+  classe   Classe @relation(fields: [classeId], references: [id])
+
+  moyenneGenerale   Float
+  moyenneClasse     Float?
+  moyennePlusForte  Float?
+  moyennePlusFaible Float?
+
+  totalPoints    Float
+  totalCoeffs    Int
+  rang           Int?
+  effectifClasse Int
+  appreciation   String?
+  decision       DecisionBulletin?
+
+  genereParId String
+  generePar   User     @relation("BulletinsGeneres", fields: [genereParId], references: [id])
+  genereLe    DateTime @default(now())
+  version     Int      @default(1)
+
+  lignes BulletinLigne[]
+
+  @@unique([eleveId, trimestreId])
+  @@index([classeId, trimestreId, moyenneGenerale(sort: Desc)])
+}
+
+model BulletinLigne {
+  id String @id @default(cuid())
+
+  bulletinId String
+  bulletin   Bulletin @relation(fields: [bulletinId], references: [id], onDelete: Cascade)
+
+  matiereId String
+  matiere   Matiere @relation(fields: [matiereId], references: [id])
+
+  nomMatiere           String
+  moyenneDevoirs       Float?
+  moyenneCompo         Float?
+  moyenneMatiere       Float
+  moyenneClasseMatiere Float?
+  coefficient          Int
+  points               Float
+  rangMatiere          Int?
+  appreciation         String?
+
+  professeurId  String?
+  professeur    Employe? @relation(fields: [professeurId], references: [id])
+  nomProfesseur String?
+
+  @@unique([bulletinId, matiereId])
+}
+
+enum DecisionBulletin {
+  ADMIS
+  REDOUBLE
+  ADMIS_AVEC_RESERVE
+  EN_ATTENTE
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// PAIEMENTS ENSEIGNANTS (registre manuel)
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model Paiement {
+  id String @id @default(cuid())
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  employeId String
+  employe   Employe @relation(fields: [employeId], references: [id])
+
+  periode String
+  type    TypePaiement
+  montant Float
+
+  nombreHeures Float?
+  tauxHoraire  Float?
+
+  brut        Float?
+  net         Float?
+  cotisations Float?
+
+  datePaiement DateTime
+  modePaiement ModePaiement
+  reference    String?
+  note         String?
+  statut       StatutPaiement @default(PAYE)
+
+  saisieParId String
+  saisiePar   User    @relation("PaiementsSaisis", fields: [saisieParId], references: [id])
+
+  annuleParId     String?
+  annulePar       User?   @relation("PaiementsAnnules", fields: [annuleParId], references: [id])
+  motifAnnulation String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([etablissementId, datePaiement])
+  @@index([employeId, periode])
+}
+
+enum TypePaiement {
+  MENSUEL
+  HORAIRE
+  PRIME
+  AVANCE
+  REMBOURSEMENT
+}
+
+enum ModePaiement {
+  ESPECES
+  VIREMENT
+  MOBILE_MONEY
+  CHEQUE
+}
+
+enum StatutPaiement {
+  PAYE
+  EN_ATTENTE
+  ANNULE
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// FRAIS DE SCOLARITE
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model FraisScolarite {
+  id String @id @default(cuid())
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  eleveId String
+  eleve   Eleve  @relation(fields: [eleveId], references: [id])
+
+  anneeScolaireId String
+  anneeScolaire   AnneeScolaire @relation(fields: [anneeScolaireId], references: [id])
+
+  fraisInscription      Float @default(0)
+  fraisScolariteMensuel Float
+  reduction             Float @default(0)
+
+  dateDebut DateTime
+
+  tranches TrancheFrais[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eleveId, anneeScolaireId])
+}
+
+model TrancheFrais {
+  id String @id @default(cuid())
+
+  fraisId String
+  frais   FraisScolarite @relation(fields: [fraisId], references: [id], onDelete: Cascade)
+
+  libelle      String
+  periode      String
+  ordre        Int
+  montant      Float
+  dateEcheance DateTime
+
+  paiements PaiementFrais[]
+  rappels   Rappel[]
+
+  @@unique([fraisId, ordre])
+  @@index([periode])
+}
+
+model PaiementFrais {
+  id String @id @default(cuid())
+
+  trancheId String
+  tranche   TrancheFrais @relation(fields: [trancheId], references: [id])
+
+  montant         Float
+  datePaiement    DateTime
+  mode            ModePaiement
+  reference       String?
+  recuNumero      String       @unique
+  annule          Boolean      @default(false)
+  motifAnnulation String?
+
+  saisieParId String
+  saisiePar   User    @relation(fields: [saisieParId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Rappel {
+  id String @id @default(cuid())
+
+  trancheId String
+  tranche   TrancheFrais @relation(fields: [trancheId], references: [id])
+
+  dateRappel DateTime @default(now())
+  envoye     Boolean  @default(false)
+  contenu    String?
+
+  saisieParId String
+  saisiePar   User    @relation(fields: [saisieParId], references: [id])
+}
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+// AUDIT
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+model AuditLog {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  action    String
+  entite    String
+  entiteId  String
+  details   Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entite, entiteId])
+  @@index([createdAt])
+}
+
+// ═════════════════════════════════════════════
+// INSCRIPTION ANNUELLE (historique)
+// ═════════════════════════════════════════════
+
+model InscriptionAnnuelle {
+  id              String        @id @default(cuid())
+  eleveId         String
+  eleve           Eleve         @relation(fields: [eleveId], references: [id], onDelete: Cascade)
+  classeId        String
+  classe          Classe        @relation(fields: [classeId], references: [id])
+  anneeScolaireId String
+  anneeScolaire   AnneeScolaire @relation(fields: [anneeScolaireId], references: [id])
+
+  decision        DecisionEleve
+  moyenneAnnuelle Float?
+  dateInscription DateTime      @default(now())
+  note            String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([eleveId, anneeScolaireId])
+  @@index([classeId])
+  @@index([anneeScolaireId])
+}
+
+enum DecisionEleve {
+  INSCRIT
+  ADMIS
+  REDOUBLE
+  DIPLOME
+  TRANSFERE
+}
