@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+check-*.ts
+force-*.ts
+fix-*.ts
+drop-*.ts
+reset-password.ts
+test-conn.ts
