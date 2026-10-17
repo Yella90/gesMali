@@ -1,30 +1,22 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
-import { calculerSituation } from "@/lib/frais/calculs";
+import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
+import { elevesAvecFrais } from "@/lib/frais/requetes";
 import { ListeFrais } from "./ListeFrais";
 
 export default async function FraisPage() {
   const user = await requirePermission("frais.read");
 
-  const anneeActive = await prisma.anneeScolaire.findFirst({
-    where: { etablissementId: user.etablissementId, active: true },
-  });
-
-  const [eleves, classes] = await Promise.all([
-    prisma.eleve.findMany({
-      where: { etablissementId: user.etablissementId, statut: "INSCRIT" },
-      include: {
-        classe: { select: { nom: true, niveau: true, section: true } },
-        fraisScolarite: {
-          where: anneeActive ? { anneeScolaireId: anneeActive.id } : {},
-          include: { tranches: { include: { paiements: true } } },
-        },
-      },
-      orderBy: [{ nom: "asc" }],
+  const [anneeActive, eleves, classes] = await Promise.all([
+    prisma.anneeScolaire.findFirst({
+      where: { etablissementId: user.etablissementId, active: true },
+      select: { libelle: true },
     }),
+    elevesAvecFrais(user.etablissementId),
     prisma.classe.findMany({
       where: { etablissementId: user.etablissementId },
+      select: { id: true, nom: true, niveau: true, section: true },
       orderBy: [{ niveau: "asc" }, { section: "asc" }],
     }),
   ]);
@@ -40,7 +32,7 @@ export default async function FraisPage() {
   };
 
   const enrichis = eleves.map((e) => {
-    const f = e.fraisScolarite[0];
+    const f = e.frais;
     if (!f) {
       stats.nonConfigure++;
       return {
@@ -52,18 +44,11 @@ export default async function FraisPage() {
         situation: null,
       };
     }
-    const situation = calculerSituation(
+    const situation = calculerSituationDepuisTotaux(
       f.fraisInscription,
       f.fraisScolariteMensuel,
       f.dateDebut,
-      f.tranches.map((t) => ({
-        id: t.id,
-        ordre: t.ordre,
-        libelle: t.libelle,
-        montant: t.montant,
-        dateEcheance: t.dateEcheance,
-        paiements: t.paiements.map((p) => ({ montant: p.montant, annule: p.annule })),
-      }))
+      f.totaux
     );
 
     stats.attenduMaintenant += situation.attenduJusquMaintenant;

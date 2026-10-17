@@ -1,62 +1,60 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
-import { fmtPeriode, estPeriodeEcoulee } from "@/lib/frais/periode";
+import { fmtPeriode } from "@/lib/frais/periode";
+import { periodesEcoulees, statsImpayes, tranchesImpayees, type FiltresImpayes } from "@/lib/frais/requetes";
+import type { ClasseLib } from "@/lib/frais/requetes";
+
+const PAR_PAGE = 50;
 
 export default async function ImpayesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ periode?: string; type?: string }>;
+  searchParams: Promise<{ periode?: string; type?: string; page?: string }>;
 }) {
-  const { periode, type } = await searchParams;
+  const { periode, type, page } = await searchParams;
   const user = await requirePermission("frais.read");
 
-  const where: any = { frais: { etablissementId: user.etablissementId } };
-  if (periode) where.periode = periode;
+  const filtres: FiltresImpayes = {
+    periode: periode || undefined,
+    type: type === "inscription" || type === "mensuel" ? type : undefined,
+  };
+  const pageCourante = Math.max(1, parseInt(page ?? "1") || 1);
 
-  const tranches = await prisma.trancheFrais.findMany({
-    where,
-    include: {
-      paiements: true,
-      frais: { include: { eleve: { include: { classe: true } } } },
-    },
-    orderBy: [{ dateEcheance: "asc" }],
-  });
+  // Totaux calcules en base sur toutes les echeances ; seule la page affichee est rapatriee
+  const [stats, tranches, periodes] = await Promise.all([
+    statsImpayes(user.etablissementId, filtres),
+    tranchesImpayees(user.etablissementId, filtres, PAR_PAGE, (pageCourante - 1) * PAR_PAGE),
+    periodesEcoulees(user.etablissementId),
+  ]);
 
-  const impayes = tranches
-    .map((t) => {
-      const paye = t.paiements.filter((p) => !p.annule).reduce((s, p) => s + p.montant, 0);
-      const reste = t.montant - paye;
-      const enRetard = new Date(t.dateEcheance) < new Date();
-      const estInscription = t.ordre === 0;
-      return { t, reste, paye, enRetard, estInscription };
-    })
-    .filter((x) => {
-      if (x.reste <= 0.01) return false;
-      if (type === "inscription" && !x.estInscription) return false;
-      if (type === "mensuel" && x.estInscription) return false;
-      return true;
-    });
+  const maintenant = new Date();
+  const impayes = tranches.map((t) => ({
+    t,
+    reste: t.montant - t.paye,
+    paye: t.paye,
+    enRetard: new Date(t.dateEcheance) < maintenant,
+    estInscription: t.ordre === 0,
+  }));
 
-  // Filtre : uniquement les periodes ecoulees
-  const toutesPeriodes = await prisma.trancheFrais.findMany({
-    where: { frais: { etablissementId: user.etablissementId } },
-    distinct: ["periode"],
-    select: { periode: true },
-    orderBy: { periode: "desc" },
-  });
+  const periodesDispo = periodes.map((p) => ({ periode: p, libelle: fmtPeriode(p) }));
 
-  const periodesDispo = toutesPeriodes
-    .filter((p) => estPeriodeEcoulee(p.periode))
-    .map((p) => ({ periode: p.periode, libelle: fmtPeriode(p.periode) }));
+  const totalReste = stats.total;
+  const totalInscriptions = stats.totalInscriptions;
+  const totalMensuel = stats.totalMensuel;
+  const nbInscriptions = stats.nbInscriptions;
+  const nbMensuel = stats.nbMensuel;
+  const nbPages = Math.max(1, Math.ceil(stats.nb / PAR_PAGE));
 
-  const totalReste = impayes.reduce((s, x) => s + x.reste, 0);
-  const totalInscriptions = impayes.filter((x) => x.estInscription).reduce((s, x) => s + x.reste, 0);
-  const totalMensuel = impayes.filter((x) => !x.estInscription).reduce((s, x) => s + x.reste, 0);
-  const nbInscriptions = impayes.filter((x) => x.estInscription).length;
-  const nbMensuel = impayes.filter((x) => !x.estInscription).length;
+  function lienPage(p: number) {
+    const q = new URLSearchParams();
+    if (periode) q.set("periode", periode);
+    if (type) q.set("type", type);
+    if (p > 1) q.set("page", String(p));
+    const s = q.toString();
+    return "/frais/impaies" + (s ? "?" + s : "");
+  }
 
-  function libClasse(c: any) {
+  function libClasse(c: ClasseLib | null) {
     if (!c) return "-";
     return c.nom || (c.niveau + (c.section ? " " + c.section : ""));
   }
@@ -70,7 +68,7 @@ export default async function ImpayesPage({
       <div>
         <h1 className="text-2xl font-semibold mt-1">Impayés</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-0.5">
-          {impayes.length} échéance(s) non payée(s) · Uniquement les mois écoulés
+          {stats.nb} échéance(s) non payée(s) · Uniquement les mois écoulés
         </p>
       </div>
 
@@ -78,7 +76,7 @@ export default async function ImpayesPage({
         <Stat label="Total impayé" value={totalReste.toLocaleString("fr-FR") + " F"} accent="danger" />
         <Stat label="Inscriptions" value={totalInscriptions.toLocaleString("fr-FR") + " F"} accent="gold" sub={nbInscriptions + " éléve(s)"} />
         <Stat label="Mensualités" value={totalMensuel.toLocaleString("fr-FR") + " F"} accent="brand" sub={nbMensuel + " échéance(s)"} />
-        <Stat label="échéances" value={String(impayes.length)} accent="brand" />
+        <Stat label="échéances" value={String(stats.nb)} accent="brand" />
       </div>
 
       <form className="bg-white rounded-xl border border-[var(--color-border)] p-3 grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -128,14 +126,14 @@ export default async function ImpayesPage({
                       )}
                     </td>
                     <td className="p-3 text-xs">{t.libelle}</td>
-                    <td className="p-3 font-mono text-xs text-[var(--color-ink-muted)]">{t.frais.eleve.matricule}</td>
-                    <td className="p-3 font-medium">{t.frais.eleve.nom} {t.frais.eleve.prenom}</td>
-                    <td className="p-3 text-[var(--color-ink-muted)] text-xs">{libClasse(t.frais.eleve.classe)}</td>
+                    <td className="p-3 font-mono text-xs text-[var(--color-ink-muted)]">{t.eleve.matricule}</td>
+                    <td className="p-3 font-medium">{t.eleve.nom} {t.eleve.prenom}</td>
+                    <td className="p-3 text-[var(--color-ink-muted)] text-xs">{libClasse(t.eleve.classe)}</td>
                     <td className="p-3 text-right tnum">{t.montant.toLocaleString("fr-FR")}</td>
                     <td className="p-3 text-right tnum text-[var(--color-accent)]">{paye.toLocaleString("fr-FR")}</td>
                     <td className="p-3 text-right tnum font-medium text-red-700">{reste.toLocaleString("fr-FR")}</td>
                     <td className="p-3 text-right">
-                      <Link href={"/frais/eleve/" + t.frais.eleveId} className="text-[var(--color-brand)] text-sm hover:underline">
+                      <Link href={"/frais/eleve/" + t.eleve.id} className="text-[var(--color-brand)] text-sm hover:underline">
                         Encaisser
                       </Link>
                     </td>
@@ -149,13 +147,13 @@ export default async function ImpayesPage({
             {impayes.map(({ t, reste, paye, enRetard, estInscription }) => (
               <Link
                 key={t.id}
-                href={"/frais/eleve/" + t.frais.eleveId}
+                href={"/frais/eleve/" + t.eleve.id}
                 className={"block p-4 hover:bg-neutral-50 " + (enRetard ? "bg-red-50/30" : estInscription ? "bg-amber-50/30" : "")}
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="min-w-0">
-                    <p className="font-medium truncate">{t.frais.eleve.nom} {t.frais.eleve.prenom}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">{t.libelle} · {libClasse(t.frais.eleve.classe)}</p>
+                    <p className="font-medium truncate">{t.eleve.nom} {t.eleve.prenom}</p>
+                    <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">{t.libelle} · {libClasse(t.eleve.classe)}</p>
                   </div>
                   {estInscription ? (
                     <span className="inline-flex px-2 py-0.5 rounded-md text-xs bg-amber-100 text-amber-900 whitespace-nowrap">Inscription</span>
@@ -170,6 +168,24 @@ export default async function ImpayesPage({
               </Link>
             ))}
           </div>
+        </div>
+      )}
+
+      {nbPages > 1 && (
+        <div className="flex items-center justify-between text-sm">
+          {pageCourante > 1 ? (
+            <Link href={lienPage(pageCourante - 1)} className="inline-flex items-center h-9 px-3 rounded-lg border border-[var(--color-border-strong)] bg-white hover:bg-neutral-50">
+              ← Précédent
+            </Link>
+          ) : <span />}
+          <span className="text-[var(--color-ink-muted)] tnum">
+            Page {pageCourante} / {nbPages}
+          </span>
+          {pageCourante < nbPages ? (
+            <Link href={lienPage(pageCourante + 1)} className="inline-flex items-center h-9 px-3 rounded-lg border border-[var(--color-border-strong)] bg-white hover:bg-neutral-50">
+              Suivant →
+            </Link>
+          ) : <span />}
         </div>
       )}
     </div>

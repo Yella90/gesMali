@@ -32,6 +32,14 @@ export function nombreMoisEntre(debut: Date, fin: Date): number {
   return (fin.getFullYear() - debut.getFullYear()) * 12 + (fin.getMonth() - debut.getMonth()) + 1;
 }
 
+// Totaux de paiements d'un eleve (deja agreges, ex. en SQL)
+export type TotauxFrais = {
+  inscription: { id: string; montant: number; paye: number } | null; // tranche ordre 0
+  moisTotal: number; // nombre de tranches mensuelles (ordre > 0)
+  payeMensuel: number; // paye sur les tranches mensuelles
+  totalPaye: number; // paye sur toutes les tranches
+};
+
 // Calcule la situation d'un eleve
 export function calculerSituation(
   fraisInscription: number,
@@ -40,22 +48,47 @@ export function calculerSituation(
   tranches: TrancheAvecPaiements[],
   maintenant: Date = new Date()
 ): FraisSituation {
-  const debut = typeof dateDebut === "string" ? new Date(dateDebut) : dateDebut;
+  const payeTranche = (t: TrancheAvecPaiements) =>
+    t.paiements.filter((p) => !p.annule).reduce((s, p) => s + p.montant, 0);
 
   // Separer les tranches
   const trancheInscription = tranches.find((t) => t.ordre === 0) ?? null;
   const tranchesMensuelles = tranches.filter((t) => t.ordre > 0);
-  const moisTotal = tranchesMensuelles.length;
+
+  return calculerSituationDepuisTotaux(
+    fraisInscription,
+    fraisMensuel,
+    dateDebut,
+    {
+      inscription: trancheInscription
+        ? { id: trancheInscription.id, montant: trancheInscription.montant, paye: payeTranche(trancheInscription) }
+        : null,
+      moisTotal: tranchesMensuelles.length,
+      payeMensuel: tranchesMensuelles.reduce((s, t) => s + payeTranche(t), 0),
+      totalPaye: tranches.reduce((s, t) => s + payeTranche(t), 0),
+    },
+    maintenant
+  );
+}
+
+// Meme calcul, a partir de totaux deja agreges
+export function calculerSituationDepuisTotaux(
+  fraisInscription: number,
+  fraisMensuel: number,
+  dateDebut: Date | string,
+  totaux: TotauxFrais,
+  maintenant: Date = new Date()
+): FraisSituation {
+  const debut = typeof dateDebut === "string" ? new Date(dateDebut) : dateDebut;
+  const { inscription, moisTotal, totalPaye } = totaux;
 
   // === INSCRIPTION ===
   let inscriptionStatut: FraisSituation["inscriptionStatut"] = "AUCUNE";
   let inscriptionPayee = 0;
   let inscriptionReste = 0;
-  if (trancheInscription) {
-    inscriptionPayee = trancheInscription.paiements
-      .filter((p) => !p.annule)
-      .reduce((s, p) => s + p.montant, 0);
-    inscriptionReste = Math.max(0, trancheInscription.montant - inscriptionPayee);
+  if (inscription) {
+    inscriptionPayee = inscription.paye;
+    inscriptionReste = Math.max(0, inscription.montant - inscriptionPayee);
     if (inscriptionReste <= 0.01) inscriptionStatut = "PAYEE";
     else if (inscriptionPayee > 0) inscriptionStatut = "PARTIELLE";
     else inscriptionStatut = "IMPAYEE";
@@ -72,11 +105,6 @@ export function calculerSituation(
   if (moisEcoules > moisTotal) moisEcoules = moisTotal; // <-- PLAFOND
 
   // === TOTAUX ===
-  const totalPaye = tranches.reduce(
-    (s, t) => s + t.paiements.filter((p) => !p.annule).reduce((ss, p) => ss + p.montant, 0),
-    0
-  );
-
   const aInscription = fraisInscription > 0;
   const attenduJusquMaintenant =
     (aInscription ? fraisInscription : 0) + moisEcoules * fraisMensuel;
@@ -86,11 +114,7 @@ export function calculerSituation(
   const retard = Math.max(0, attenduJusquMaintenant - totalPaye);
 
   // Combien de mois payes
-  const paiementsMensuels = tranchesMensuelles.reduce(
-    (s, t) => s + t.paiements.filter((p) => !p.annule).reduce((ss, p) => ss + p.montant, 0),
-    0
-  );
-  const moisPayes = fraisMensuel > 0 ? Math.floor(paiementsMensuels / fraisMensuel) : 0;
+  const moisPayes = fraisMensuel > 0 ? Math.floor(totaux.payeMensuel / fraisMensuel) : 0;
 
   const resteTotal = Math.max(0, attenduTotal - totalPaye);
 
@@ -119,7 +143,7 @@ export function calculerSituation(
     inscriptionPayee,
     inscriptionReste,
     inscriptionStatut,
-    inscriptionTrancheId: trancheInscription?.id ?? null,
+    inscriptionTrancheId: inscription?.id ?? null,
   };
 }
 

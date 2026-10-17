@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
 import type { Role, Permission } from "./permissions";
@@ -20,7 +21,8 @@ export type UtilisateurCourant = {
   typeRemuneration: string | null;
 };
 
-export async function getUtilisateurCourant(): Promise<UtilisateurCourant | null> {
+// cache() : une seule lecture par requete, meme si layout et page l'appellent tous les deux
+export const getUtilisateurCourant = cache(async (): Promise<UtilisateurCourant | null> => {
   let session = null;
   try {
     session = await auth();
@@ -50,7 +52,7 @@ export async function getUtilisateurCourant(): Promise<UtilisateurCourant | null
     salaireReference: user.employe.salaireReference,
     typeRemuneration: user.employe.typeRemuneration,
   };
-}
+});
 
 export async function requireUtilisateur(): Promise<UtilisateurCourant> {
   const user = await getUtilisateurCourant();
