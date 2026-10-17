@@ -37,6 +37,7 @@ export type EleveMinAggregateOutputType = {
   emailParent: string | null
   classeId: string | null
   statut: $Enums.StatutEleve | null
+  codeParent: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +55,7 @@ export type EleveMaxAggregateOutputType = {
   emailParent: string | null
   classeId: string | null
   statut: $Enums.StatutEleve | null
+  codeParent: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,6 +73,7 @@ export type EleveCountAggregateOutputType = {
   emailParent: number
   classeId: number
   statut: number
+  codeParent: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -90,6 +93,7 @@ export type EleveMinAggregateInputType = {
   emailParent?: true
   classeId?: true
   statut?: true
+  codeParent?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -107,6 +111,7 @@ export type EleveMaxAggregateInputType = {
   emailParent?: true
   classeId?: true
   statut?: true
+  codeParent?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +129,7 @@ export type EleveCountAggregateInputType = {
   emailParent?: true
   classeId?: true
   statut?: true
+  codeParent?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -214,6 +220,7 @@ export type EleveGroupByOutputType = {
   emailParent: string | null
   classeId: string | null
   statut: $Enums.StatutEleve
+  codeParent: string | null
   createdAt: Date
   updatedAt: Date
   _count: EleveCountAggregateOutputType | null
@@ -252,6 +259,7 @@ export type EleveWhereInput = {
   emailParent?: Prisma.StringNullableFilter<"Eleve"> | string | null
   classeId?: Prisma.StringNullableFilter<"Eleve"> | string | null
   statut?: Prisma.EnumStatutEleveFilter<"Eleve"> | $Enums.StatutEleve
+  codeParent?: Prisma.StringNullableFilter<"Eleve"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Eleve"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Eleve"> | Date | string
   etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
@@ -275,6 +283,7 @@ export type EleveOrderByWithRelationInput = {
   emailParent?: Prisma.SortOrderInput | Prisma.SortOrder
   classeId?: Prisma.SortOrderInput | Prisma.SortOrder
   statut?: Prisma.SortOrder
+  codeParent?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   etablissement?: Prisma.EtablissementOrderByWithRelationInput
@@ -287,6 +296,7 @@ export type EleveOrderByWithRelationInput = {
 
 export type EleveWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  codeParent?: string
   etablissementId_matricule?: Prisma.EleveEtablissementIdMatriculeCompoundUniqueInput
   AND?: Prisma.EleveWhereInput | Prisma.EleveWhereInput[]
   OR?: Prisma.EleveWhereInput[]
@@ -310,7 +320,7 @@ export type EleveWhereUniqueInput = Prisma.AtLeast<{
   inscriptions?: Prisma.InscriptionAnnuelleListRelationFilter
   bulletins?: Prisma.BulletinListRelationFilter
   fraisScolarite?: Prisma.FraisScolariteListRelationFilter
-}, "id" | "etablissementId_matricule">
+}, "id" | "codeParent" | "etablissementId_matricule">
 
 export type EleveOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -325,6 +335,7 @@ export type EleveOrderByWithAggregationInput = {
   emailParent?: Prisma.SortOrderInput | Prisma.SortOrder
   classeId?: Prisma.SortOrderInput | Prisma.SortOrder
   statut?: Prisma.SortOrder
+  codeParent?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EleveCountOrderByAggregateInput
@@ -348,6 +359,7 @@ export type EleveScalarWhereWithAggregatesInput = {
   emailParent?: Prisma.StringNullableWithAggregatesFilter<"Eleve"> | string | null
   classeId?: Prisma.StringNullableWithAggregatesFilter<"Eleve"> | string | null
   statut?: Prisma.EnumStatutEleveWithAggregatesFilter<"Eleve"> | $Enums.StatutEleve
+  codeParent?: Prisma.StringNullableWithAggregatesFilter<"Eleve"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Eleve"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Eleve"> | Date | string
 }
@@ -363,6 +375,7 @@ export type EleveCreateInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -386,6 +399,7 @@ export type EleveUncheckedCreateInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -405,6 +419,7 @@ export type EleveUpdateInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -428,6 +443,7 @@ export type EleveUncheckedUpdateInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -449,6 +465,7 @@ export type EleveCreateManyInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -464,6 +481,7 @@ export type EleveUpdateManyMutationInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -481,6 +499,7 @@ export type EleveUncheckedUpdateManyInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -513,6 +532,7 @@ export type EleveCountOrderByAggregateInput = {
   emailParent?: Prisma.SortOrder
   classeId?: Prisma.SortOrder
   statut?: Prisma.SortOrder
+  codeParent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -530,6 +550,7 @@ export type EleveMaxOrderByAggregateInput = {
   emailParent?: Prisma.SortOrder
   classeId?: Prisma.SortOrder
   statut?: Prisma.SortOrder
+  codeParent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -547,6 +568,7 @@ export type EleveMinOrderByAggregateInput = {
   emailParent?: Prisma.SortOrder
   classeId?: Prisma.SortOrder
   statut?: Prisma.SortOrder
+  codeParent?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -715,6 +737,7 @@ export type EleveCreateWithoutEtablissementInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   classe?: Prisma.ClasseCreateNestedOneWithoutElevesInput
@@ -736,6 +759,7 @@ export type EleveUncheckedCreateWithoutEtablissementInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -786,6 +810,7 @@ export type EleveScalarWhereInput = {
   emailParent?: Prisma.StringNullableFilter<"Eleve"> | string | null
   classeId?: Prisma.StringNullableFilter<"Eleve"> | string | null
   statut?: Prisma.EnumStatutEleveFilter<"Eleve"> | $Enums.StatutEleve
+  codeParent?: Prisma.StringNullableFilter<"Eleve"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Eleve"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Eleve"> | Date | string
 }
@@ -801,6 +826,7 @@ export type EleveCreateWithoutClasseInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -822,6 +848,7 @@ export type EleveUncheckedCreateWithoutClasseInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -867,6 +894,7 @@ export type EleveCreateWithoutNotesInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -889,6 +917,7 @@ export type EleveUncheckedCreateWithoutNotesInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutEleveInput
@@ -923,6 +952,7 @@ export type EleveUpdateWithoutNotesInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -945,6 +975,7 @@ export type EleveUncheckedUpdateWithoutNotesInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutEleveNestedInput
@@ -963,6 +994,7 @@ export type EleveCreateWithoutBulletinsInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -985,6 +1017,7 @@ export type EleveUncheckedCreateWithoutBulletinsInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -1019,6 +1052,7 @@ export type EleveUpdateWithoutBulletinsInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -1041,6 +1075,7 @@ export type EleveUncheckedUpdateWithoutBulletinsInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -1059,6 +1094,7 @@ export type EleveCreateWithoutFraisScolariteInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -1081,6 +1117,7 @@ export type EleveUncheckedCreateWithoutFraisScolariteInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -1115,6 +1152,7 @@ export type EleveUpdateWithoutFraisScolariteInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -1137,6 +1175,7 @@ export type EleveUncheckedUpdateWithoutFraisScolariteInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -1155,6 +1194,7 @@ export type EleveCreateWithoutInscriptionsInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutElevesInput
@@ -1177,6 +1217,7 @@ export type EleveUncheckedCreateWithoutInscriptionsInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutEleveInput
@@ -1211,6 +1252,7 @@ export type EleveUpdateWithoutInscriptionsInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -1233,6 +1275,7 @@ export type EleveUncheckedUpdateWithoutInscriptionsInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -1252,6 +1295,7 @@ export type EleveCreateManyEtablissementInput = {
   emailParent?: string | null
   classeId?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1267,6 +1311,7 @@ export type EleveUpdateWithoutEtablissementInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   classe?: Prisma.ClasseUpdateOneWithoutElevesNestedInput
@@ -1288,6 +1333,7 @@ export type EleveUncheckedUpdateWithoutEtablissementInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -1308,6 +1354,7 @@ export type EleveUncheckedUpdateManyWithoutEtablissementInput = {
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   classeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1324,6 +1371,7 @@ export type EleveCreateManyClasseInput = {
   tuteurTelephone?: string | null
   emailParent?: string | null
   statut?: $Enums.StatutEleve
+  codeParent?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1339,6 +1387,7 @@ export type EleveUpdateWithoutClasseInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutElevesNestedInput
@@ -1360,6 +1409,7 @@ export type EleveUncheckedUpdateWithoutClasseInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notes?: Prisma.NoteUncheckedUpdateManyWithoutEleveNestedInput
@@ -1380,6 +1430,7 @@ export type EleveUncheckedUpdateManyWithoutClasseInput = {
   tuteurTelephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   statut?: Prisma.EnumStatutEleveFieldUpdateOperationsInput | $Enums.StatutEleve
+  codeParent?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1455,6 +1506,7 @@ export type EleveSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   emailParent?: boolean
   classeId?: boolean
   statut?: boolean
+  codeParent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
@@ -1479,6 +1531,7 @@ export type EleveSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   emailParent?: boolean
   classeId?: boolean
   statut?: boolean
+  codeParent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
@@ -1498,6 +1551,7 @@ export type EleveSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   emailParent?: boolean
   classeId?: boolean
   statut?: boolean
+  codeParent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
@@ -1517,11 +1571,12 @@ export type EleveSelectScalar = {
   emailParent?: boolean
   classeId?: boolean
   statut?: boolean
+  codeParent?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EleveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "matricule" | "nom" | "prenom" | "dateNaissance" | "sexe" | "tuteurNom" | "tuteurTelephone" | "emailParent" | "classeId" | "statut" | "createdAt" | "updatedAt", ExtArgs["result"]["eleve"]>
+export type EleveOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "matricule" | "nom" | "prenom" | "dateNaissance" | "sexe" | "tuteurNom" | "tuteurTelephone" | "emailParent" | "classeId" | "statut" | "codeParent" | "createdAt" | "updatedAt", ExtArgs["result"]["eleve"]>
 export type EleveInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   classe?: boolean | Prisma.Eleve$classeArgs<ExtArgs>
@@ -1563,6 +1618,7 @@ export type $ElevePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     emailParent: string | null
     classeId: string | null
     statut: $Enums.StatutEleve
+    codeParent: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["eleve"]>
@@ -2006,6 +2062,7 @@ export interface EleveFieldRefs {
   readonly emailParent: Prisma.FieldRef<"Eleve", 'String'>
   readonly classeId: Prisma.FieldRef<"Eleve", 'String'>
   readonly statut: Prisma.FieldRef<"Eleve", 'StatutEleve'>
+  readonly codeParent: Prisma.FieldRef<"Eleve", 'String'>
   readonly createdAt: Prisma.FieldRef<"Eleve", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Eleve", 'DateTime'>
 }

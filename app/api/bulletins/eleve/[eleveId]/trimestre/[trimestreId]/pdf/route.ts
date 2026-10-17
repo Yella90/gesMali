@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
-import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
+import { rendreBulletinEleve } from "@/lib/pdf/bulletinEleve";
 
 export async function GET(
   _: NextRequest,
@@ -20,45 +19,16 @@ export async function GET(
   });
   if (!user) return NextResponse.json({ error: "Utilisateur inconnu" }, { status: 401 });
 
-  const bulletin = await prisma.bulletin.findUnique({
-    where: { eleveId_trimestreId: { eleveId, trimestreId } },
-    include: {
-      eleve: true,
-      lignes: { orderBy: { nomMatiere: "asc" } },
-      classe: {
-        include: {
-          etablissement: true,
-          anneeScolaire: true,
-          professeurPrincipal: { select: { nom: true, prenom: true } },
-          titulaire: { select: { nom: true, prenom: true } },
-        },
-      },
-      trimestre: true,
-    },
-  });
-
-  if (!bulletin) return NextResponse.json({ error: "Bulletin introuvable" }, { status: 404 });
-  if (bulletin.classe.etablissementId !== user.etablissementId) {
+  const pdf = await rendreBulletinEleve(eleveId, trimestreId);
+  if (!pdf) return NextResponse.json({ error: "Bulletin introuvable" }, { status: 404 });
+  if (pdf.etablissementId !== user.etablissementId) {
     return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
   }
 
-  const profPrincipal = bulletin.classe.professeurPrincipal ?? bulletin.classe.titulaire;
-  const classeAvecProf = { ...bulletin.classe, professeurPrincipal: profPrincipal };
-
-  const buffer = await renderToBuffer(
-    BulletinPDF({
-      etablissement: bulletin.classe.etablissement,
-      classe: classeAvecProf,
-      trimestre: bulletin.trimestre,
-      anneeScolaire: bulletin.classe.anneeScolaire,
-      bulletins: [bulletin],
-    })
-  );
-
-  return new NextResponse(buffer as any, {
+  return new NextResponse(new Uint8Array(pdf.buffer), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": "inline; filename=\"bulletin-" + bulletin.eleve.matricule + ".pdf\"",
+      "Content-Disposition": "inline; filename=\"" + pdf.nomFichier + "\"",
     },
   });
 }

@@ -270,6 +270,9 @@ model Eleve {
 
   statut StatutEleve @default(INSCRIT)
 
+  // Code secret du lien d'acces parent (QR code de la fiche d'inscription)
+  codeParent String? @unique
+
   notes          Note[]
   inscriptions   InscriptionAnnuelle[]
   bulletins      Bulletin[]
@@ -579,6 +582,8 @@ model PaiementFrais {
   saisiePar   User    @relation(fields: [saisieParId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([trancheId])
 }
 
 model Rappel {
@@ -593,6 +598,8 @@ model Rappel {
 
   saisieParId String
   saisiePar   User    @relation(fields: [saisieParId], references: [id])
+
+  @@index([trancheId])
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•

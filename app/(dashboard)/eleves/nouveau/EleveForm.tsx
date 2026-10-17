@@ -22,6 +22,7 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
   const [erreur, setErreur] = useState<string | null>(null);
   const [classeId, setClasseId] = useState("");
   const [fraisInscriptionPaye, setFraisInscriptionPaye] = useState(false);
+  const [exonereInscription, setExonereInscription] = useState(false);
 
   const classeSelectionnee = classes.find((c) => c.id === classeId);
   const plein = classeSelectionnee ? classeSelectionnee.effectif >= classeSelectionnee.capacite : false;
@@ -37,7 +38,7 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
       if (res.paiementInscriptionId) {
         window.open("/api/frais/recu/" + res.paiementInscriptionId + "/pdf", "_blank");
       }
-      router.push("/eleves/" + res.id);
+      router.push("/eleves/" + res.id + "?inscrit=1");
     } catch (err: any) {
       setErreur(err.message);
       setLoading(false);
@@ -102,7 +103,7 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
           <select
             id="classeId" name="classeId"
             value={classeId}
-            onChange={(e) => { setClasseId(e.target.value); setFraisInscriptionPaye(false); }}
+            onChange={(e) => { setClasseId(e.target.value); setFraisInscriptionPaye(false); setExonereInscription(false); }}
             required
             className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
           >
@@ -147,6 +148,25 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
             </div>
 
             {aFraisInscription && (
+              <label htmlFor="exonereInscription" className="flex items-start gap-3 rounded-lg border border-[var(--color-border)] p-4 cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="exonereInscription"
+                  name="exonereInscription"
+                  checked={exonereInscription}
+                  onChange={(e) => { setExonereInscription(e.target.checked); if (e.target.checked) setFraisInscriptionPaye(false); }}
+                  className="w-4 h-4 mt-0.5 rounded border-[var(--color-border-strong)]"
+                />
+                <span className="text-sm flex-1">
+                  <span className="font-medium">Inscrire sans frais d&apos;inscription</span>
+                  <span className="block text-xs text-[var(--color-ink-muted)] mt-0.5">
+                    L&apos;élève est exonéré des {classeSelectionnee.fraisInscription.toLocaleString("fr-FR")} F d&apos;inscription. Seule la scolarité mensuelle sera due.
+                  </span>
+                </span>
+              </label>
+            )}
+
+            {aFraisInscription && !exonereInscription && (
               <div className="rounded-lg border border-[var(--color-brand-soft)] bg-[var(--color-brand-soft)]/40 p-4 space-y-3">
                 <div className="flex items-start gap-3">
                   <input

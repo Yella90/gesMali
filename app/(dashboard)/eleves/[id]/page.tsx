@@ -2,9 +2,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { peut } from "@/lib/auth/permissions";
+import { assurerCodeParent, qrCodeSvg, urlPortailParent } from "@/lib/portail/acces";
+import { AccesParent } from "./AccesParent";
 
-export default async function EleveDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EleveDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ inscrit?: string }>;
+}) {
   const { id } = await params;
+  const { inscrit } = await searchParams;
   const user = await requirePermission("eleve.read");
 
   const eleve = await prisma.eleve.findUnique({
@@ -21,6 +31,9 @@ export default async function EleveDetailPage({ params }: { params: Promise<{ id
     },
   });
   if (!eleve || eleve.etablissementId !== user.etablissementId) notFound();
+
+  const urlParent = await urlPortailParent(await assurerCodeParent(eleve.id));
+  const qrSvg = await qrCodeSvg(urlParent);
 
   const frais = eleve.fraisScolarite[0];
   const total = frais
@@ -72,6 +85,24 @@ export default async function EleveDetailPage({ params }: { params: Promise<{ id
         </div>
       </div>
 
+      {inscrit && (
+        <div className="rounded-xl border border-[var(--color-accent)]/30 bg-[var(--color-accent-soft)] p-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="font-medium text-[var(--color-accent)]">Élève inscrit avec succès</p>
+            <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
+              Imprimez la fiche d&apos;inscription : elle contient le QR code d&apos;accès à l&apos;espace parent.
+            </p>
+          </div>
+          <a
+            href={"/api/eleves/" + eleve.id + "/fiche-inscription/pdf"}
+            target="_blank"
+            className="inline-flex items-center h-10 px-4 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium"
+          >
+            Imprimer la fiche d&apos;inscription
+          </a>
+        </div>
+      )}
+
       {/* Infos personnelles */}
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
         <h2 className="text-sm font-medium text-[var(--color-ink-muted)] uppercase tracking-wide mb-3">
@@ -106,6 +137,13 @@ export default async function EleveDetailPage({ params }: { params: Promise<{ id
         </div>
       </div>
 
+      <AccesParent
+        eleveId={eleve.id}
+        url={urlParent}
+        qrSvg={qrSvg}
+        peutModifier={peut(user.roles, "eleve.update")}
+      />
+
       {/* Classe + frais */}
       {eleve.classe && (
         <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
@@ -120,7 +158,14 @@ export default async function EleveDetailPage({ params }: { params: Promise<{ id
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <Info label="Classe" value={classeLib ?? "-"} />
             <Info label="Année scolaire" value={eleve.classe.anneeScolaire.libelle} />
-            <Info label="Frais d'inscription" value={eleve.classe.fraisInscription.toLocaleString("fr-FR") + " F"} />
+            <Info
+              label="Frais d'inscription"
+              value={
+                frais && frais.fraisInscription === 0 && eleve.classe.fraisInscription > 0
+                  ? "Exonéré"
+                  : eleve.classe.fraisInscription.toLocaleString("fr-FR") + " F"
+              }
+            />
             <Info label="Scolarité mensuelle" value={eleve.classe.fraisScolariteMensuel.toLocaleString("fr-FR") + " F"} />
           </div>
         </div>

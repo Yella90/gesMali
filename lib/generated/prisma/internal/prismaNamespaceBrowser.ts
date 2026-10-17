@@ -231,6 +231,7 @@ export const EleveScalarFieldEnum = {
   emailParent: 'emailParent',
   classeId: 'classeId',
   statut: 'statut',
+  codeParent: 'codeParent',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

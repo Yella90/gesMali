@@ -5,6 +5,7 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { eleveSchema } from "@/lib/validators/eleve";
 import { revalidatePath } from "next/cache";
+import { genererCodeParent } from "@/lib/portail/acces";
 
 async function genererMatricule(etablissementId: string): Promise<string> {
   const annee = new Date().getFullYear();
@@ -42,17 +43,25 @@ export async function creerEleve(formData: FormData) {
   const user = await requirePermission("eleve.create");
   const data = eleveSchema.parse(formToRaw(formData));
 
-  const fraisInscriptionPaye = formData.get("fraisInscriptionPaye") === "on";
+  // Exoneration : l'eleve est inscrit sans frais d'inscription (pas de tranche "Inscription")
+  const exonereInscription = formData.get("exonereInscription") === "on";
+  const fraisInscriptionPaye = !exonereInscription && formData.get("fraisInscriptionPaye") === "on";
   const modePaiementInscription = (formData.get("modePaiementInscription") as string) || "ESPECES";
   const referenceInscription = (formData.get("referenceInscription") as string) || null;
 
   if (data.classeId) {
     const classe = await prisma.classe.findUnique({
       where: { id: data.classeId },
-      include: { _count: { select: { eleves: { where: { statut: "INSCRIT" } } } } },
+      include: {
+        anneeScolaire: { select: { active: true } },
+        _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
+      },
     });
     if (!classe || classe.etablissementId !== user.etablissementId) {
       throw new Error("Classe invalide");
+    }
+    if (!classe.anneeScolaire.active) {
+      throw new Error("Cette classe appartient a une annee scolaire archivee");
     }
     if (classe._count.eleves >= classe.capaciteMax) {
       throw new Error("Classe pleine (" + classe.capaciteMax + " eleves max)");
@@ -62,7 +71,7 @@ export async function creerEleve(formData: FormData) {
   const matricule = await genererMatricule(user.etablissementId);
 
   const eleve = await prisma.eleve.create({
-    data: { ...data, matricule, etablissementId: user.etablissementId },
+    data: { ...data, matricule, etablissementId: user.etablissementId, codeParent: genererCodeParent() },
   });
 
   let paiementInscription: any = null;
@@ -74,11 +83,13 @@ export async function creerEleve(formData: FormData) {
       include: { anneeScolaire: true },
     });
 
-    if (classe && (classe.fraisInscription > 0 || classe.fraisScolariteMensuel > 0)) {
+    const fraisInscription = exonereInscription ? 0 : (classe?.fraisInscription ?? 0);
+
+    if (classe && (fraisInscription > 0 || classe.fraisScolariteMensuel > 0)) {
       const { trancheInscriptionId, fraisId } = await genererFraisPourEleve(
         eleve.id,
         classe.anneeScolaireId,
-        classe.fraisInscription,
+        fraisInscription,
         classe.fraisScolariteMensuel,
         classe.anneeScolaire.dateDebut,
         classe.anneeScolaire.dateFin,
@@ -118,7 +129,7 @@ export async function creerEleve(formData: FormData) {
     action: "CREATE_ELEVE",
     entite: "Eleve",
     entiteId: eleve.id,
-    details: { matricule, emailParent: data.emailParent, inscriptionPayee: fraisInscriptionPaye },
+    details: { matricule, emailParent: data.emailParent, inscriptionPayee: fraisInscriptionPaye, exonereInscription },
   });
 
   revalidatePath("/eleves");
@@ -217,4 +228,15 @@ export async function radierEleve(id: string) {
   await prisma.eleve.update({ where: { id }, data: { statut: "RADIE" } });
   await enregistrerAudit({ userId: user.id, action: "RADIER_ELEVE", entite: "Eleve", entiteId: id });
   revalidatePath("/eleves");
+}
+// Nouveau code d'acces parent : l'ancien lien / QR code cesse de fonctionner
+export async function regenererCodeParent(id: string) {
+  const user = await requirePermission("eleve.update");
+  const eleve = await prisma.eleve.findUnique({ where: { id } });
+  if (!eleve || eleve.etablissementId !== user.etablissementId) {
+    throw new Error("Acces refuse");
+  }
+  await prisma.eleve.update({ where: { id }, data: { codeParent: genererCodeParent() } });
+  await enregistrerAudit({ userId: user.id, action: "REGENERER_CODE_PARENT", entite: "Eleve", entiteId: id });
+  revalidatePath("/eleves/" + id);
 }

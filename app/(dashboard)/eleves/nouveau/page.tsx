@@ -7,7 +7,8 @@ export default async function NouvelElevePage() {
   const user = await requirePermission("eleve.create");
 
   const classes = await prisma.classe.findMany({
-    where: { etablissementId: user.etablissementId },
+    // Uniquement l'annee scolaire en cours : on n'inscrit pas dans une annee archivee
+    where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } },
     include: { _count: { select: { eleves: { where: { statut: "INSCRIT" } } } } },
     orderBy: [{ niveau: "asc" }, { section: "asc" }],
   });
