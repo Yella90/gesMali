@@ -69,29 +69,36 @@ export function SaisieNotes({
   const trimestreFerme = trimestreSelectionne?.cloture ?? false;
   const pret = !!(classeId && matiereId && trimestreId);
 
-  useEffect(() => {
-    if (matiereId && classeSelectionnee) {
-      const m = matieres.find((x) => x.id === matiereId);
-      if (m && m.cycle !== classeSelectionnee.cycle) setMatiereId("");
-    }
-  }, [classeId]);
+  // Changer de classe : la matiere choisie doit rester du meme cycle
+  function choisirClasse(id: string) {
+    setClasseId(id);
+    setRecherche("");
+    const nouvelle = classes.find((c) => c.id === id);
+    const m = matieres.find((x) => x.id === matiereId);
+    if (nouvelle && m && m.cycle !== nouvelle.cycle) setMatiereId("");
+  }
 
   useEffect(() => {
-    if (!pret) { setLignes([]); setValeurs({}); return; }
+    if (!pret) return;
+    // Une reponse arrivee apres un changement de selection est ignoree
+    let annule = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- indicateur de chargement de la requete lancee ici
     setChargement(true);
     setErreur(null);
     setMessage(null);
 
     chargerElevesEtNotes({ classeId, matiereId, trimestreId, type, numero })
       .then((data) => {
+        if (annule) return;
         setLignes(data);
         const v: Record<string, string> = {};
         for (const e of data) v[e.id] = e.note?.valeur != null ? String(e.note.valeur) : "";
         setValeurs(v);
       })
-      .catch((err: any) => setErreur(err.message))
-      .finally(() => setChargement(false));
-  }, [classeId, matiereId, trimestreId, type, numero]);
+      .catch((err: unknown) => { if (!annule) setErreur(err instanceof Error ? err.message : "Erreur"); })
+      .finally(() => { if (!annule) setChargement(false); });
+    return () => { annule = true; };
+  }, [pret, classeId, matiereId, trimestreId, type, numero]);
 
   // Filtrage local des eleves (instantane)
   const lignesFiltrees = useMemo(() => {
@@ -148,7 +155,7 @@ export function SaisieNotes({
             <label className="text-xs font-medium text-[var(--color-ink-muted)]">Classe</label>
             <select
               value={classeId}
-              onChange={(e) => { setClasseId(e.target.value); setRecherche(""); }}
+              onChange={(e) => choisirClasse(e.target.value)}
               className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
             >
               <option value="">-- Choisir --</option>

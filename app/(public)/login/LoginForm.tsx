@@ -21,7 +21,7 @@ export function LoginForm() {
     const res = await signIn("credentials", { email, password, redirect: false });
     setChargement(false);
     if (!res || res.error) {
-      setErreur("Identifiants incorrects ou compte inactif.");
+      setErreur("Identifiants incorrects, compte inactif ou trop de tentatives (réessayez dans 15 minutes).");
       return;
     }
     router.push("/dashboard");

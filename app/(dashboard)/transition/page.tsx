@@ -19,7 +19,7 @@ export default async function TransitionPage() {
 
   // Verifier si la transition est possible
   let transitionPossible = false;
-  let raisons: string[] = [];
+  const raisons: string[] = [];
 
   if (!anneeActive) {
     raisons.push("Aucune année scolaire active");

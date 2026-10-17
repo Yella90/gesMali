@@ -73,7 +73,7 @@ export default async function EmploiDuTempsClassePage({ params }: { params: Prom
   }
 
   // Construire la liste des heures a afficher
-  let heures: number[] = [];
+  const heures: number[] = [];
   if (heuresUtilisees.size > 0) {
     const min = Math.min(...heuresUtilisees, HEURES_DEBUT);
     const max = Math.max(...heuresUtilisees, HEURES_FIN - 1);

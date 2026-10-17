@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
+import { connexionBloquee, effacerEchecs, noterEchec } from "@/lib/auth/limite";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -14,15 +15,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email = credentials?.email as string | undefined;
         const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
+        if (connexionBloquee(email)) return null;
 
         const user = await prisma.user.findUnique({
           where: { email },
           include: { employe: true },
         });
-        if (!user || !user.actif || !user.employe.actif) return null;
+        if (!user || !user.actif || !user.employe.actif) {
+          noterEchec(email);
+          return null;
+        }
 
         const ok = await bcrypt.compare(password, user.passwordHash);
-        if (!ok) return null;
+        if (!ok) {
+          noterEchec(email);
+          return null;
+        }
+        effacerEchecs(email);
 
         return {
           id: user.id,

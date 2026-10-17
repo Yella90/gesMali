@@ -21,17 +21,26 @@ const isLocal =
   connectionString.includes("127.0.0.1");
 
 // Pool configure pour Neon (connexions qui se ferment)
-const pool =
-  globalForPrisma.pool ??
-  new Pool({
+function creerPool() {
+  const p = new Pool({
     connectionString,
-    ssl: isLocal ? false : { rejectUnauthorized: false },
+    // Certificat verifie (Neon a un certificat valide). DATABASE_SSL_NO_VERIFY=1 pour un
+    // serveur au certificat auto-signe uniquement.
+    ssl: isLocal ? false : { rejectUnauthorized: process.env.DATABASE_SSL_NO_VERIFY !== "1" },
     max: 5, // Limiter les connexions simultanees
     idleTimeoutMillis: 30000, // Fermer les connexions inactives apres 30s
     connectionTimeoutMillis: 10000, // Timeout de connexion 10s
     keepAlive: true,
     keepAliveInitialDelayMillis: 10000,
   });
+  // Gestion d'erreur sur le pool (une seule fois par pool, meme apres rechargement a chaud)
+  p.on("error", (err) => {
+    console.error("[pg pool error]", err.message);
+  });
+  return p;
+}
+
+const pool = globalForPrisma.pool ?? creerPool();
 
 const adapter = new PrismaPg(pool);
 
@@ -49,8 +58,3 @@ if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
   globalForPrisma.pool = pool;
 }
-
-// Gestion d'erreur sur le pool
-pool.on("error", (err) => {
-  console.error("[pg pool error]", err.message);
-});

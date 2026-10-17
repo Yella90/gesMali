@@ -103,7 +103,7 @@ export default async function DashboardPage() {
   // STATS ADMIN
   // ─────────────────────────────────────────────
   let statsAdmin: any = null;
-  let alertes: any[] = [];
+  const alertes: any[] = [];
   let dernieresActions: any[] = [];
 
   if (estAdmin) {
