@@ -141,7 +141,7 @@ export default async function FraisPage() {
       )}
 
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-4">
-        <h2 className="font-semibold mb-3">élèves ({eleves.length})</h2>
+        <h2 className="font-semibold mb-3">Élèves ({eleves.length})</h2>
         <p className="text-xs text-[var(--color-ink-muted)] mb-3">
           {stats.nonConfigure} sans frais configurés
         </p>

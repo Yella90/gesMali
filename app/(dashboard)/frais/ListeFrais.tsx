@@ -180,7 +180,7 @@ export function ListeFrais({
           <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
             <tr>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matricule</th>
-              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
+              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Élève</th>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
               <th className="text-center p-3 font-medium text-[var(--color-ink-muted)]">Inscription</th>
               <th className="text-center p-3 font-medium text-[var(--color-ink-muted)]">Mois</th>

@@ -76,7 +76,7 @@ export default async function ImpayesPage({
         <Stat label="Total impayé" value={totalReste.toLocaleString("fr-FR") + " F"} accent="danger" />
         <Stat label="Inscriptions" value={totalInscriptions.toLocaleString("fr-FR") + " F"} accent="gold" sub={nbInscriptions + " élève(s)"} />
         <Stat label="Mensualités" value={totalMensuel.toLocaleString("fr-FR") + " F"} accent="brand" sub={nbMensuel + " échéance(s)"} />
-        <Stat label="échéances" value={String(stats.nb)} accent="brand" />
+        <Stat label="Échéances" value={String(stats.nb)} accent="brand" />
       </div>
 
       <form className="bg-white rounded-xl border border-[var(--color-border)] p-3 grid grid-cols-2 md:grid-cols-3 gap-2">
@@ -96,7 +96,7 @@ export default async function ImpayesPage({
 
       {impayes.length === 0 ? (
         <div className="bg-white rounded-xl border border-dashed border-[var(--color-border-strong)] py-16 text-center">
-          <p className="text-sm text-[var(--color-ink-muted)]">Aucun impayé. 🎉</p>
+          <p className="text-sm text-[var(--color-ink-muted)]">Aucun impayé : toutes les échéances de cette sélection sont réglées.</p>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden">
@@ -107,7 +107,7 @@ export default async function ImpayesPage({
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Type</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Période</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matricule</th>
-                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
+                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Élève</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
                   <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Montant</th>
                   <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Payé</th>

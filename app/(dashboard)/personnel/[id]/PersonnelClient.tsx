@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { libCycle, libRole } from "@/lib/libelles";
 
 const POSTES = ["Enseignant", "Directeur", "Secretaire", "Comptable", "Surveillant", "Gardien", "Autre"];
 
@@ -297,7 +298,7 @@ export function GererCompte({
         <>
           <div className="space-y-2 mb-4 text-sm">
             <p><strong>Email :</strong> {user.email}</p>
-            <p><strong>Rôles :</strong> {user.roles.join(", ")}</p>
+            <p><strong>Rôles :</strong> {user.roles.map(libRole).join(", ")}</p>
             <p><strong>Statut :</strong> {user.actif ? "Actif" : "Inactif"}</p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -451,7 +452,7 @@ export function GererAffectations({
           </select>
           {classeSel && matieresFiltrees.length === 0 && (
             <p className="text-xs text-red-600">
-              Aucune matière pour le cycle {classeSel.cycle}.
+              Aucune matière pour le cycle {libCycle(classeSel.cycle).toLowerCase()}.
             </p>
           )}
         </div>

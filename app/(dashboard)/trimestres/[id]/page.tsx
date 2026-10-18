@@ -63,12 +63,12 @@ export default async function TrimestreDetailPage({ params }: { params: Promise<
           )}
           {termine && !trimestre.cloture && (
             <span className="inline-flex px-3 py-1 rounded-md text-xs bg-amber-50 text-amber-800">
-              Terminé non cloturé
+              Terminé non clôturé
             </span>
           )}
           {trimestre.cloture && (
             <span className="inline-flex px-3 py-1 rounded-md text-xs bg-[var(--color-brand-soft)] text-[var(--color-brand)]">
-              Cloturé
+              Clôturé
             </span>
           )}
         </div>
@@ -118,7 +118,7 @@ export default async function TrimestreDetailPage({ params }: { params: Promise<
           <div className="flex justify-between py-2 border-b border-[var(--color-border)]">
             <span className="text-[var(--color-ink-muted)]">Statut</span>
             <span className="font-medium">
-              {trimestre.cloture ? "Cloturé" : "Ouvert"}
+              {trimestre.cloture ? "Clôturé" : "Ouvert"}
             </span>
           </div>
           <div className="flex justify-between py-2">

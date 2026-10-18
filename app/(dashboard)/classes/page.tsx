@@ -250,7 +250,7 @@ function StatGlobal({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-[var(--color-border)] p-4">
+    <div className="min-w-0 bg-white rounded-xl border border-[var(--color-border)] p-3 sm:p-4">
       <span
         className={
           "inline-block px-2 py-0.5 rounded-md text-[10px] font-medium uppercase tracking-wide " +
@@ -259,13 +259,13 @@ function StatGlobal({
       >
         {label}
       </span>
-      <div className="flex items-baseline gap-2 mt-2">
+      <div className="mt-2 flex flex-col sm:flex-row sm:items-baseline sm:gap-2">
         <p className={"text-2xl font-semibold tnum " + valueColor[color]}>
           {value}
         </p>
         {pourcentage !== undefined && (
-          <span className="text-xs text-[var(--color-ink-muted)] tnum">
-            ({pourcentage} %)
+          <span className="whitespace-nowrap text-xs text-[var(--color-ink-muted)] tnum">
+            {pourcentage} %
           </span>
         )}
       </div>

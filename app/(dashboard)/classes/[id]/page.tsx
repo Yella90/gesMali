@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { EditerClasse } from "./EditerClasse";
+import { libCycle } from "@/lib/libelles";
 
 const JOURS_ORDRE = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"];
 
@@ -99,7 +100,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
           </Link>
           <h1 className="text-2xl font-semibold mt-1">Classe {lib}</h1>
           <p className="text-sm text-[var(--color-ink-muted)] mt-0.5">
-            {classe.anneeScolaire.libelle} · {classe.cycle}
+            {classe.anneeScolaire.libelle} · {libCycle(classe.cycle)}
           </p>
         </div>
         {peutEditer && (
@@ -319,7 +320,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
       <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden">
         <div className="p-5 border-b border-[var(--color-border)] flex items-center justify-between">
           <h2 className="text-sm font-medium text-[var(--color-ink-muted)] uppercase tracking-wide">
-            élèves inscrits ({classe.eleves.length})
+            Élèves inscrits ({classe.eleves.length})
           </h2>
           <Link
             href={"/eleves/nouveau?classeId=" + classe.id}

@@ -82,7 +82,7 @@ function labelAction(action: string): string {
     CREATE_AFFECTATION: "Affectation créée",
     DELETE_AFFECTATION: "Affectation supprimée",
     UPDATE_ETABLISSEMENT: "Modification établissement",
-    UPDATE_PARAMETRES_NOTES: "Modification paramétres notes",
+    UPDATE_PARAMETRES_NOTES: "Modification paramètres notes",
   };
   return labels[action] || action.replace(/_/g, " ");
 }

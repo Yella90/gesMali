@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { libCycle } from "@/lib/libelles";
 
 export default async function BulletinsPage() {
   const user = await requirePermission("bulletin.read");
@@ -57,7 +58,7 @@ export default async function BulletinsPage() {
                 <div className="p-4 border-b border-[var(--color-border)] flex items-center justify-between">
                   <div>
                     <p className="font-semibold">{lib}</p>
-                    <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">{c.cycle}</p>
+                    <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">{libCycle(c.cycle)}</p>
                   </div>
                 </div>
                 <div className="divide-y divide-[var(--color-border)]">

@@ -39,7 +39,7 @@ export function ActionsTrimestre({
     return (
       <div className="bg-[var(--color-brand-soft)] rounded-xl border border-[var(--color-brand)]/30 p-5">
         <p className="text-sm text-[var(--color-brand)]">
-          <strong>Trimestre cloturé.</strong> Les notes sont verrouillées. Seul le directeur peut déverrouiller.
+          <strong>Trimestre clôturé.</strong> Les notes sont verrouillées. Seul le directeur peut déverrouiller.
         </p>
       </div>
     );
@@ -50,7 +50,7 @@ export function ActionsTrimestre({
       <div>
         <h2 className="font-semibold">Cloturer le trimestre</h2>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Verrouille définitivement toutes les notes du trimestre. Les bulletins devront étre régénérés si nécessaire.
+          Verrouille définitivement toutes les notes du trimestre. Les bulletins devront être régénérés si nécessaire.
         </p>
       </div>
 

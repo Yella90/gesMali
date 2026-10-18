@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { libModeSaisie, libTypeEtablissement } from "@/lib/libelles";
+import { Building2, FileText, Users } from "lucide-react";
 
 export default async function ParametresPage() {
   const user = await requirePermission("parametres.read");
@@ -22,7 +24,7 @@ export default async function ParametresPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-semibold">Paramétres</h1>
+        <h1 className="text-2xl font-semibold">Paramètres</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
           Configuration de l'établissement et du système
         </p>
@@ -37,13 +39,13 @@ export default async function ParametresPage() {
           <div>
             <h2 className="font-semibold text-lg">{etablissement?.nom}</h2>
             <p className="text-xs text-[var(--color-ink-muted)]">
-              {etablissement?.type} · {etablissement?.adresse || "Adresse non renseignée"}
+              {libTypeEtablissement(etablissement?.type)} · {etablissement?.adresse || "Adresse non renseignée"}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-[var(--color-border)]">
-          <MiniStat label="élèves" value={String(nbEleves)} />
+          <MiniStat label="Élèves" value={String(nbEleves)} />
           <MiniStat label="Classes" value={String(nbClasses)} />
           <MiniStat label="Personnel" value={String(nbUsers)} />
           <MiniStat label="Année active" value={anneeActive?.libelle || "Aucune"} accent={anneeActive ? "accent" : "danger"} />
@@ -54,21 +56,21 @@ export default async function ParametresPage() {
       <div className="grid md:grid-cols-3 gap-4">
         <CarteLien
           href="/parametres/etablissement"
-          title="établissement"
+          title="Établissement"
           description="Nom, type, coordonnées, année scolaire active"
-          icon="🏫"
+          icone={Building2}
         />
         <CarteLien
           href="/parametres/notes"
           title="Notes et bulletins"
           description="Mode de saisie, validation, pondérations"
-          icon="📝"
+          icone={FileText}
         />
         <CarteLien
           href="/parametres/utilisateurs"
           title="Utilisateurs"
           description="Gestion des comptes et des rôles"
-          icon="👥"
+          icone={Users}
         />
       </div>
 
@@ -77,11 +79,11 @@ export default async function ParametresPage() {
         <h2 className="font-semibold mb-3">Informations système</h2>
         <div className="space-y-2 text-sm">
           <Ligne label="Version" value="1.0.0" />
-          <Ligne label="Base de données" value="PostgreSQL (Neon)" />
-          <Ligne label="Mode de saisie des notes" value={parametres?.modeSaisieNotes || "DECENTRALISEE"} />
+          <Ligne label="Base de données" value="PostgreSQL" />
+          <Ligne label="Mode de saisie des notes" value={libModeSaisie(parametres?.modeSaisieNotes || "DECENTRALISEE")} />
           <Ligne label="Validation obligatoire" value={parametres?.validationObligatoire ? "Oui" : "Non"} />
           <Ligne
-            label="Régle de pondération"
+            label="Règle de pondération"
             value={
               parametres
                 ? "Devoirs " + (parametres.ponderationDevoirs * 100).toFixed(0) + " % / Composition " + (parametres.ponderationCompo * 100).toFixed(0) + " %"
@@ -108,14 +110,16 @@ function MiniStat({ label, value, accent }: { label: string; value: string; acce
 }
 
 function CarteLien({
-  href, title, description, icon,
-}: { href: string; title: string; description: string; icon: string }) {
+  href, title, description, icone: Icone,
+}: { href: string; title: string; description: string; icone: React.ComponentType<{ className?: string; strokeWidth?: number }> }) {
   return (
     <Link
       href={href}
       className="block bg-white rounded-xl border border-[var(--color-border)] p-5 hover:border-[var(--color-border-strong)] transition"
     >
-      <div className="text-2xl mb-3">{icon}</div>
+      <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--color-brand-soft)] text-[var(--color-brand)]">
+        <Icone className="h-5 w-5" strokeWidth={1.8} />
+      </span>
       <p className="font-medium">{title}</p>
       <p className="text-xs text-[var(--color-ink-muted)] mt-1">{description}</p>
       <p className="text-xs text-[var(--color-brand)] mt-3">Configurer →</p>

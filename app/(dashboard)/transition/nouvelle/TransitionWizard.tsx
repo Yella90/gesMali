@@ -273,7 +273,7 @@ export function TransitionWizard({
           {/* Rappel des parametres */}
           <div className="rounded-lg bg-[var(--color-surface)] p-4 space-y-2">
             <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-ink-muted)]">
-              Paramétres appliqués
+              Paramètres appliqués
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
               <div>

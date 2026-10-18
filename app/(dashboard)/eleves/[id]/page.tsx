@@ -6,6 +6,7 @@ import { peut } from "@/lib/auth/permissions";
 import { assurerCodeParent, qrCodeSvg, urlPortailParent } from "@/lib/portail/acces";
 import { AccesParent } from "./AccesParent";
 import { EditerEleve } from "./EditerEleve";
+import { libStatutEleve, libTypeNote } from "@/lib/libelles";
 
 export default async function EleveDetailPage({
   params,
@@ -143,7 +144,7 @@ export default async function EleveDetailPage({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <Info label="Date de naissance" value={new Date(eleve.dateNaissance).toLocaleDateString("fr-FR")} />
           <Info label="Sexe" value={eleve.sexe === "M" ? "Masculin" : "Féminin"} />
-          <Info label="Statut" value={eleve.statut} />
+          <Info label="Statut" value={libStatutEleve(eleve.statut)} />
           <Info label="Classe" value={classeLib ?? "-"} />
         </div>
       </div>
@@ -231,7 +232,7 @@ export default async function EleveDetailPage({
               <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                 <tr>
                   <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Libellé</th>
-                  <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Echéance</th>
+                  <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Échéance</th>
                   <th className="text-right p-2.5 font-medium text-[var(--color-ink-muted)]">Montant</th>
                   <th className="text-right p-2.5 font-medium text-[var(--color-ink-muted)]">Payé</th>
                   <th className="p-2.5 font-medium text-[var(--color-ink-muted)]">Statut</th>
@@ -312,7 +313,7 @@ export default async function EleveDetailPage({
                 <tr key={n.id} className="border-t border-[var(--color-border)]">
                   <td className="p-2.5">{n.matiere.nom}</td>
                   <td className="p-2.5 text-[var(--color-ink-muted)]">{n.trimestre.nom}</td>
-                  <td className="p-2.5 text-[var(--color-ink-muted)]">{n.type} {n.numero}</td>
+                  <td className="p-2.5 text-[var(--color-ink-muted)]">{libTypeNote(n.type)} {n.numero}</td>
                   <td className="p-2.5 text-right tnum font-medium">{n.valeur ?? "-"} / {n.sur}</td>
                 </tr>
               ))}

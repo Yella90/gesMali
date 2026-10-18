@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CalendarClock, CalendarDays, PencilLine, Receipt, School, Users, Wallet, type LucideIcon } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
@@ -55,7 +56,7 @@ function labelAction(action: string): string {
     GENERER_RAPPELS: "Génération rappels",
     CLOTURER_TRIMESTRE: "Clôture trimestre",
     UPDATE_ETABLISSEMENT: "Modification établissement",
-    UPDATE_PARAMETRES_NOTES: "Modification paramétres",
+    UPDATE_PARAMETRES_NOTES: "Modification paramètres",
   };
   return labels[action] || action.replace(/_/g, " ");
 }
@@ -431,28 +432,28 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
               href="/classes"
               label="Classes"
               value={String(nbClasses)}
-              icon="▤"
+              icon={School}
               accent="brand"
             />
             <StatCard
               href="/personnel"
               label="Personnel actif"
               value={String(nbEmployes)}
-              icon="☰"
+              icon={Users}
               accent="brand"
             />
             <StatCard
               href="/emploi-du-temps"
               label="Emploi du temps"
               value="Voir"
-              icon="◫"
+              icon={CalendarClock}
               accent="brand"
             />
             <StatCard
               href="/frais"
               label="Recettes du mois"
               value={statsAdmin.recettesMois.toLocaleString("fr-FR") + " F"}
-              icon="₣"
+              icon={Wallet}
               accent="accent"
               trend={statsAdmin.recettesMoisPrec > 0 ? statsAdmin.recettesMois - statsAdmin.recettesMoisPrec : null}
             />
@@ -602,8 +603,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </div>
 
           <div className="grid grid-cols-2 gap-3 md:gap-4">
-            <StatCard href="/frais" label="Recettes du mois" value={statsComptable.recettesMois.toLocaleString("fr-FR") + " F"} icon="₣" accent="accent" />
-            <StatCard href="/frais" label="Paiements reçus" value={String(statsComptable.nbPaiements)} icon="↦" accent="brand" />
+            <StatCard href="/frais" label="Recettes du mois" value={statsComptable.recettesMois.toLocaleString("fr-FR") + " F"} icon={Wallet} accent="accent" />
+            <StatCard href="/frais" label="Paiements reçus" value={String(statsComptable.nbPaiements)} icon={Receipt} accent="brand" />
           </div>
 
           {finances && (
@@ -621,14 +622,14 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       {isEnseignant && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-            <StatCard href="/emploi-du-temps" label="Cours aujourd'hui" value={String(mesCreneauxAujourdHui.length)} icon="◷" accent="brand" />
-            <StatCard href="/emploi-du-temps" label="Cours cette semaine" value={String(mesCreneauxSemaine.length)} icon="◫" accent="brand" />
-            <StatCard href="/eleves" label="Classes suivies" value={String(mesClasses.length)} icon="▤" accent="brand" />
+            <StatCard href="/emploi-du-temps" label="Cours aujourd'hui" value={String(mesCreneauxAujourdHui.length)} icon={CalendarClock} accent="brand" />
+            <StatCard href="/emploi-du-temps" label="Cours cette semaine" value={String(mesCreneauxSemaine.length)} icon={CalendarDays} accent="brand" />
+            <StatCard href="/eleves" label="Classes suivies" value={String(mesClasses.length)} icon={School} accent="brand" />
             <StatCard
               href="/notes"
               label="Notes saisies"
               value={mesStatsNotes ? String(mesStatsNotes.nbNotesSaisies) : "—"}
-              icon="✎"
+              icon={PencilLine}
               accent="accent"
               subtitle={mesStatsNotes ? mesStatsNotes.trimestre.nom : "Aucun trimestre actif"}
             />
@@ -707,7 +708,7 @@ function StatCard({
   href,
   label,
   value,
-  icon,
+  icon: Icone,
   accent,
   trend,
   subtitle,
@@ -715,7 +716,7 @@ function StatCard({
   href: string;
   label: string;
   value: string;
-  icon: string;
+  icon: LucideIcon;
   accent: "brand" | "accent" | "gold" | "danger";
   trend?: number | null;
   subtitle?: string;
@@ -732,7 +733,7 @@ function StatCard({
         <span className={"inline-block px-2 py-0.5 rounded-md text-[10px] font-medium uppercase tracking-wide " + bg}>
           {label}
         </span>
-        <span className="text-[var(--color-ink-faint)] text-base">{icon}</span>
+        <Icone aria-hidden className="h-4 w-4 shrink-0 text-[var(--color-ink-faint)]" strokeWidth={1.8} />
       </div>
       <p className="text-xl md:text-2xl font-semibold tnum">{value}</p>
       {subtitle && <p className="text-[10px] text-[var(--color-ink-muted)] mt-1">{subtitle}</p>}

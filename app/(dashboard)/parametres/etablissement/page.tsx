@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { EtablissementForm } from "./EtablissementForm";
+import { libTypeEtablissement } from "@/lib/libelles";
 
 export default async function EtablissementPage() {
   const user = await requirePermission("parametres.read");
@@ -22,11 +23,11 @@ export default async function EtablissementPage() {
   return (
     <div className="space-y-5 max-w-3xl">
       <Link href="/parametres" className="text-xs text-[var(--color-ink-muted)] hover:underline">
-        ← Retour aux paramétres
+        ← Retour aux paramètres
       </Link>
 
       <div>
-        <h1 className="text-2xl font-semibold mt-1">établissement</h1>
+        <h1 className="text-2xl font-semibold mt-1">Établissement</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
           Informations générales et année scolaire active
         </p>
@@ -47,7 +48,7 @@ export default async function EtablissementPage() {
       {!peutEditer && (
         <div className="bg-white rounded-xl border border-[var(--color-border)] p-5 space-y-3 text-sm">
           <p><strong>Nom :</strong> {etablissement.nom}</p>
-          <p><strong>Type :</strong> {etablissement.type}</p>
+          <p><strong>Type :</strong> {libTypeEtablissement(etablissement.type)}</p>
           <p><strong>Adresse :</strong> {etablissement.adresse || "—"}</p>
           <p><strong>Téléphone :</strong> {etablissement.telephone || "—"}</p>
           <p><strong>Email :</strong> {etablissement.email || "—"}</p>
@@ -59,7 +60,7 @@ export default async function EtablissementPage() {
         <div className="p-5 border-b border-[var(--color-border)]">
           <h2 className="font-semibold">Années scolaires</h2>
           <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
-            Une seule année peut étre active à la fois
+            Une seule année peut être active à la fois
           </p>
         </div>
 

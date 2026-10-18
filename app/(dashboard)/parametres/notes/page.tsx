@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { NotesForm } from "./NotesForm";
+import { libModeSaisie } from "@/lib/libelles";
 
 export default async function ParametresNotesPage() {
   const user = await requirePermission("parametres.read");
@@ -22,13 +23,13 @@ export default async function ParametresNotesPage() {
   return (
     <div className="space-y-5 max-w-3xl">
       <Link href="/parametres" className="text-xs text-[var(--color-ink-muted)] hover:underline">
-        ← Retour aux paramétres
+        ← Retour aux paramètres
       </Link>
 
       <div>
         <h1 className="text-2xl font-semibold mt-1">Notes et bulletins</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Mode de saisie, validation et régle de pondération
+          Mode de saisie, validation et règle de pondération
         </p>
       </div>
 
@@ -43,7 +44,7 @@ export default async function ParametresNotesPage() {
         />
       ) : (
         <div className="bg-white rounded-xl border border-[var(--color-border)] p-5 space-y-3 text-sm">
-          <p><strong>Mode de saisie :</strong> {valeur.modeSaisieNotes}</p>
+          <p><strong>Mode de saisie :</strong> {libModeSaisie(valeur.modeSaisieNotes)}</p>
           <p><strong>Validation obligatoire :</strong> {valeur.validationObligatoire ? "Oui" : "Non"}</p>
           <p><strong>Pondération devoirs :</strong> {(valeur.ponderationDevoirs * 100).toFixed(0)} %</p>
           <p><strong>Pondération composition :</strong> {(valeur.ponderationCompo * 100).toFixed(0)} %</p>
@@ -51,7 +52,7 @@ export default async function ParametresNotesPage() {
       )}
 
       <div className="rounded-xl border border-[var(--color-brand-soft)] bg-[var(--color-brand-soft)] p-4 text-sm text-[var(--color-brand)]">
-        <p className="font-medium">Régle officielle Mali</p>
+        <p className="font-medium">Règle officielle Mali</p>
         <p className="text-xs mt-1">
           Article 20 du Journal Officiel (2013) : la moyenne par discipline est calculée ainsi :<br />
           <strong>(Composition x 2 + Moyenne des devoirs) / 3</strong>

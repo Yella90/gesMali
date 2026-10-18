@@ -49,7 +49,7 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
     <form onSubmit={onSubmit} className="space-y-5">
       {/* Eleve */}
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-5 md:p-6 space-y-4">
-        <h2 className="font-medium">élève</h2>
+        <h2 className="font-medium">Élève</h2>
         <div className="grid md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
             <Label htmlFor="nom">Nom</Label>

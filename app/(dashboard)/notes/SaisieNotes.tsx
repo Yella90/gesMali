@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { chargerElevesEtNotes, enregistrerNotes } from "./actions";
+import { libModeSaisie } from "@/lib/libelles";
 
 type ClasseOption = { id: string; label: string; cycle: string };
 type MatiereOption = { id: string; nom: string; cycle: string };
@@ -183,7 +184,7 @@ export function SaisieNotes({
               <option value="">-- Choisir --</option>
               {trimestres.map((t) => (
                 <option key={t.id} value={t.id}>
-                  {t.label}{t.cloture ? " · cloturé" : ""}
+                  {t.label}{t.cloture ? " · clôturé" : ""}
                 </option>
               ))}
             </select>
@@ -213,7 +214,7 @@ export function SaisieNotes({
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-[var(--color-ink-muted)]">
-          <span>Mode : <strong className="text-[var(--color-ink)]">{modeSaisie}</strong></span>
+          <span>Mode : <strong className="text-[var(--color-ink)]">{libModeSaisie(modeSaisie)}</strong></span>
           {pret && !chargement && (
             <span>
               · {lignes.length} élève(s) · {totalSaisies} note(s) saisie(s)
@@ -224,7 +225,7 @@ export function SaisieNotes({
 
       {trimestreFerme && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          Ce trimestre est cloturé. Seul le directeur peut le déverrouiller.
+          Ce trimestre est clôturé. Seul le directeur peut le déverrouiller.
         </div>
       )}
 
@@ -392,7 +393,7 @@ export function SaisieNotes({
           <div className="sticky bottom-20 md:bottom-0 z-20 bg-white/95 backdrop-blur rounded-xl border border-[var(--color-border)] p-3 md:p-4 flex items-center justify-between gap-3">
             <div className="text-sm text-[var(--color-ink-muted)]">
               <span className="hidden md:inline">
-                {totalSaisies} note(s) préte(s) à enregistrer
+                {totalSaisies} note(s) prête(s) à enregistrer
                 {recherche && " · " + lignesFiltrees.length + " affiché(s)"}
               </span>
               <span className="md:hidden">{totalSaisies} note(s)</span>

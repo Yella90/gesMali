@@ -265,7 +265,7 @@ export default async function FraisElevePage({ params }: { params: Promise<{ ele
       {/* Detail des echeances */}
       <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden">
         <div className="p-4 md:p-5 border-b border-[var(--color-border)]">
-          <h2 className="font-semibold">échéances</h2>
+          <h2 className="font-semibold">Échéances</h2>
           <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
             Inscription {frais.fraisInscription.toLocaleString("fr-FR")} F + {situation.moisTotal} mensualités de {frais.fraisScolariteMensuel.toLocaleString("fr-FR")} F
           </p>
@@ -278,7 +278,7 @@ export default async function FraisElevePage({ params }: { params: Promise<{ ele
               <tr>
                 <th className="text-left p-3 font-medium text-[var(--color-ink-muted)] w-12">#</th>
                 <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Libellé</th>
-                <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Echéance</th>
+                <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Échéance</th>
                 <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Montant</th>
                 <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Payé</th>
                 <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Reste</th>

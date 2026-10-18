@@ -32,7 +32,7 @@ export function NotesForm({
     const fd = new FormData(e.currentTarget);
     try {
       await modifierParametresNotes(fd);
-      setMessage("Paramétres enregistrés.");
+      setMessage("Paramètres enregistrés.");
       router.refresh();
     } catch (e: any) {
       setErreur(e.message);
@@ -87,7 +87,7 @@ export function NotesForm({
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-5 md:p-6 space-y-4">
         <h2 className="font-medium">Pondération des notes</h2>
         <p className="text-xs text-[var(--color-ink-muted)]">
-          Détermine le poids des devoirs et des compositions dans la moyenne. La somme doit étre égale à 100.
+          Détermine le poids des devoirs et des compositions dans la moyenne. La somme doit être égale à 100.
         </p>
 
         <div className="grid md:grid-cols-2 gap-4">
@@ -133,7 +133,7 @@ export function NotesForm({
       )}
 
       <Button type="submit" disabled={loading || somme !== 100}>
-        {loading ? "Enregistrement..." : "Enregistrer les paramétres"}
+        {loading ? "Enregistrement..." : "Enregistrer les paramètres"}
       </Button>
     </form>
   );

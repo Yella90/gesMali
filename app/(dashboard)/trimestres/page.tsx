@@ -109,7 +109,7 @@ export default async function TrimestresPage() {
                                     : "bg-[var(--color-accent-soft)] text-[var(--color-accent)]")
                                 }
                               >
-                                {cloture ? "Cloturé" : "Ouvert"}
+                                {cloture ? "Clôturé" : "Ouvert"}
                               </span>
                               <span className="text-[var(--color-ink-muted)] text-lg flex-shrink-0">›</span>
                             </div>

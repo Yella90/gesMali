@@ -39,7 +39,7 @@ export default async function AuditPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-        <Stat label="événements" value={String(logs.length)} accent="brand" />
+        <Stat label="Événements" value={String(logs.length)} accent="brand" />
         <Stat label="Aujourd'hui" value={String(aujourdHui)} accent="accent" />
         <Stat label="Utilisateurs actifs" value={String(utilisateursUniques)} accent="gold" />
         <Stat

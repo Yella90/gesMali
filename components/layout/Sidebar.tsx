@@ -7,30 +7,36 @@ import { cn } from "@/lib/utils";
 import type { Permission, Role } from "@/lib/auth/permissions";
 import { deconnexion } from "@/app/(dashboard)/_actions/deconnexion";
 import { LiensLegaux } from "@/components/legal/PageLegale";
+import { libRole } from "@/lib/libelles";
+import {
+  ArrowRightLeft, Banknote, BookOpen, BriefcaseBusiness, CalendarClock, CalendarRange, FileText,
+  GraduationCap, LayoutDashboard, LogOut, PencilLine, School, ScrollText, Settings, Wallet,
+  type LucideIcon,
+} from "lucide-react";
 
 type Item = {
   href: string;
   label: string;
   permission: Permission;
-  icon: string;
+  icon: LucideIcon;
   mobile?: boolean;
 };
 
 const MENU: Item[] = [
-  { href: "/dashboard", label: "Tableau de bord", permission: "eleve.read", icon: "◧", mobile: true },
-  { href: "/eleves", label: "élèves", permission: "eleve.read", icon: "◉", mobile: true },
-  { href: "/classes", label: "Classes", permission: "classe.read", icon: "▤", mobile: true },
-  { href: "/emploi-du-temps", label: "Emploi du temps", permission: "classe.read", icon: "◫" },
-  { href: "/notes", label: "Notes", permission: "note.create", icon: "✎", mobile: true },
-  { href: "/bulletins", label: "Bulletins", permission: "bulletin.read", icon: "▦" },
-  { href: "/frais", label: "Frais", permission: "frais.read", icon: "₣", mobile: true },
-  { href: "/paiements", label: "Paiements", permission: "paiement.read", icon: "≡" },
-  { href: "/matieres", label: "Matières", permission: "matiere.read", icon: "◇" },
-  { href: "/trimestres", label: "Trimestres", permission: "trimestre.read", icon: "◷" },
-  { href: "/personnel", label: "Personnel", permission: "personnel.read", icon: "☰" },
-    { href: "/transition", label: "Transition annuelle", permission: "parametres.read", icon: "⇉" },
-{ href: "/parametres", label: "Paramétres", permission: "parametres.read", icon: "⚙" },
-  { href: "/audit", label: "Journal", permission: "audit.read", icon: "☰" },
+  { href: "/dashboard", label: "Tableau de bord", permission: "eleve.read", icon: LayoutDashboard, mobile: true },
+  { href: "/eleves", label: "Élèves", permission: "eleve.read", icon: GraduationCap, mobile: true },
+  { href: "/classes", label: "Classes", permission: "classe.read", icon: School, mobile: true },
+  { href: "/emploi-du-temps", label: "Emploi du temps", permission: "classe.read", icon: CalendarClock },
+  { href: "/notes", label: "Notes", permission: "note.create", icon: PencilLine, mobile: true },
+  { href: "/bulletins", label: "Bulletins", permission: "bulletin.read", icon: FileText },
+  { href: "/frais", label: "Frais", permission: "frais.read", icon: Wallet, mobile: true },
+  { href: "/paiements", label: "Paiements", permission: "paiement.read", icon: Banknote },
+  { href: "/matieres", label: "Matières", permission: "matiere.read", icon: BookOpen },
+  { href: "/trimestres", label: "Trimestres", permission: "trimestre.read", icon: CalendarRange },
+  { href: "/personnel", label: "Personnel", permission: "personnel.read", icon: BriefcaseBusiness },
+  { href: "/transition", label: "Transition annuelle", permission: "parametres.read", icon: ArrowRightLeft },
+  { href: "/parametres", label: "Paramètres", permission: "parametres.read", icon: Settings },
+  { href: "/audit", label: "Journal", permission: "audit.read", icon: ScrollText },
 ];
 
 export function Sidebar({
@@ -107,7 +113,7 @@ export function Sidebar({
                           : "text-[var(--color-ink)] hover:bg-neutral-50"
                       )}
                     >
-                      <span className="text-base w-5 text-center">{m.icon}</span>
+                      <m.icon aria-hidden className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
                       {m.label}
                     </Link>
                   </li>
@@ -119,7 +125,7 @@ export function Sidebar({
                   disabled={loadingOut}
                   className="w-full flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
                 >
-                  <span className="text-base w-5 text-center">↪</span>
+                  <LogOut aria-hidden className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
                   {loadingOut ? "Déconnexion..." : "Se déconnecter"}
                 </button>
               </li>
@@ -144,7 +150,7 @@ export function Sidebar({
             </div>
           </div>
           <p className="mt-3 text-[10px] uppercase tracking-wider text-[var(--color-ink-faint)] font-medium">
-            {roles.join(" · ")}
+            {roles.map(libRole).join(", ")}
           </p>
         </div>
 
@@ -163,7 +169,7 @@ export function Sidebar({
                         : "text-[var(--color-ink)] hover:bg-neutral-50"
                     )}
                   >
-                    <span className="text-base w-5 text-center opacity-80">{m.icon}</span>
+                    <m.icon aria-hidden className="h-[18px] w-[18px] shrink-0 opacity-80" strokeWidth={1.8} />
                     {m.label}
                   </Link>
                 </li>
@@ -178,7 +184,7 @@ export function Sidebar({
             disabled={loadingOut}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
           >
-            <span className="text-base w-5 text-center">↪</span>
+            <LogOut aria-hidden className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
             {loadingOut ? "Déconnexion..." : "Se déconnecter"}
           </button>
           <LiensLegaux className="px-3 pt-2 text-[var(--color-ink-faint)]" />
@@ -201,7 +207,7 @@ export function Sidebar({
                       : "text-[var(--color-ink-muted)]"
                   )}
                 >
-                  <span className="text-lg leading-none">{m.icon}</span>
+                  <m.icon aria-hidden className="h-5 w-5" strokeWidth={1.8} />
                   <span className="truncate px-1">{m.label}</span>
                 </Link>
               </li>
