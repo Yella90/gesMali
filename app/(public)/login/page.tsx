@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { LoginForm } from "./LoginForm";
+import { LiensLegaux } from "@/components/legal/PageLegale";
 
 export default async function LoginPage() {
   let session = null;
@@ -44,6 +45,11 @@ export default async function LoginPage() {
           </p>
 
           <LoginForm />
+
+          <p className="text-xs text-[var(--color-ink-muted)] mt-6">
+            En vous connectant, vous acceptez les conditions d&apos;utilisation et la politique de confidentialité.
+          </p>
+          <LiensLegaux className="mt-2 text-[var(--color-ink-muted)]" />
         </div>
       </div>
     </div>

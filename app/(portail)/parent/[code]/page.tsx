@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { eleveParCodeParent } from "@/lib/portail/eleve";
 import { calculerSituation, libelleStatut } from "@/lib/frais/calculs";
+import { LiensLegaux } from "@/components/legal/PageLegale";
 
 // Espace parent : page publique, accessible uniquement avec le code secret de l'eleve.
 // Lecture seule. Seules les notes validees ou verrouillees sont montrees.
@@ -251,6 +252,7 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
           Lien personnel : ne le partagez pas. Pour toute question, contactez l&apos;établissement
           {eleve.etablissement.telephone ? " au " + eleve.etablissement.telephone : ""}.
         </p>
+        <LiensLegaux className="justify-center pb-6 text-[var(--color-ink-muted)]" />
       </main>
     </div>
   );

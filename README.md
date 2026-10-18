@@ -39,6 +39,13 @@ npm run typecheck && npm run lint && npm run build
 2. Appliquer les migrations **avant** de démarrer la nouvelle version : `npm run db:deploy`.
 3. Construire et démarrer : `npm run build` puis `npm run start`.
 
+Sur **Vercel** : importer le dépôt, renseigner les variables (`AUTH_TRUST_HOST` inutile),
+et lancer les migrations depuis un poste (`npm run db:deploy`) avant chaque déploiement qui en contient.
+`vercel.json` fixe la région des fonctions à `fra1` (Francfort), à côté de la base Neon.
+
+> Pages légales : `/conditions-utilisation`, `/confidentialite`, `/cookies`. Compléter le nom et
+> l'adresse de l'éditeur dans `lib/legal.ts`, et faire relire les textes par un juriste.
+
 > Performance : héberger l'application dans la **même région que la base**
 > (Neon `eu-central-1`, Francfort). Le volume de données entre l'application et la base
 > est le facteur dominant ; depuis une connexion lointaine, les pages sont nettement plus lentes.

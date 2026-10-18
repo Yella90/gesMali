@@ -6,6 +6,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Permission, Role } from "@/lib/auth/permissions";
 import { deconnexion } from "@/app/(dashboard)/_actions/deconnexion";
+import { LiensLegaux } from "@/components/legal/PageLegale";
 
 type Item = {
   href: string;
@@ -122,6 +123,9 @@ export function Sidebar({
                   {loadingOut ? "Déconnexion..." : "Se déconnecter"}
                 </button>
               </li>
+              <li className="px-3 py-2">
+                <LiensLegaux className="text-[var(--color-ink-faint)]" />
+              </li>
             </ul>
           </nav>
         </>
@@ -177,6 +181,7 @@ export function Sidebar({
             <span className="text-base w-5 text-center">↪</span>
             {loadingOut ? "Déconnexion..." : "Se déconnecter"}
           </button>
+          <LiensLegaux className="px-3 pt-2 text-[var(--color-ink-faint)]" />
         </div>
       </aside>
 
