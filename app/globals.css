@@ -69,3 +69,50 @@ html, body {
   .no-print { display: none !important; }
   body { background: white; }
 }
+/* ─── Chargement ─── */
+
+/* Bloc de squelette avec reflet qui passe */
+.squelette {
+  position: relative;
+  overflow: hidden;
+  background: #eef1f5;
+  border-radius: 8px;
+}
+.squelette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.7), transparent);
+  animation: reflet 1.4s ease-in-out infinite;
+}
+
+/* Barre de progression indeterminee en haut de la page */
+.barre-chargement {
+  position: relative;
+  height: 3px;
+  overflow: hidden;
+  background: var(--color-brand-soft);
+}
+.barre-chargement::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 40%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--color-brand), var(--color-gold));
+  animation: progression 1.2s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+@keyframes reflet {
+  to { transform: translateX(100%); }
+}
+@keyframes progression {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .squelette::after { animation: none; }
+  .barre-chargement::before { animation: none; width: 100%; opacity: 0.6; }
+}
