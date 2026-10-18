@@ -1,0 +1,118 @@
+/* Vitrine de la page de connexion : une seule sequence au chargement
+   (lever des couleurs, puis les documents de l'ecole apparaissent),
+   suivie d'un flottement tres lent. Tout s'arrete si l'utilisateur
+   prefere reduire les animations. */
+
+.entree {
+  animation: entree 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Entree puis flottement (translate et transform sont independants) */
+.flotte {
+  animation:
+    entree 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    flotte 8s ease-in-out infinite;
+  animation-delay: var(--d, 0ms), calc(var(--d, 0ms) + 900ms);
+}
+
+.ecole {
+  animation: entree 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Le drapeau monte au mat */
+.drapeau {
+  animation: lever 1600ms cubic-bezier(0.45, 0, 0.2, 1) both;
+  animation-delay: 200ms;
+}
+
+/* Tampon "Paye" qui tombe sur le recu */
+.tampon {
+  animation: tampon 420ms cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  animation-delay: 1700ms;
+}
+
+/* Barres des moyennes par matiere */
+.barre {
+  transform-origin: left center;
+  animation: barre 900ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+
+/* Point "en cours" de l'emploi du temps */
+.pouls {
+  animation: pouls 2.4s ease-out infinite;
+  animation-delay: 1.6s;
+}
+
+@keyframes entree {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes flotte {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+@keyframes lever {
+  from {
+    transform: translateY(104px);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes tampon {
+  from {
+    opacity: 0;
+    transform: rotate(-12deg) scale(1.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(-12deg) scale(1);
+  }
+}
+
+@keyframes barre {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes pouls {
+  0% {
+    box-shadow: 0 0 0 0 rgb(15 118 110 / 0.45);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 7px rgb(15 118 110 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entree,
+  .flotte,
+  .ecole,
+  .drapeau,
+  .barre,
+  .pouls {
+    animation: none;
+  }
+  .tampon {
+    animation: none;
+    transform: rotate(-12deg);
+  }
+}
