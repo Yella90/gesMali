@@ -30,7 +30,9 @@ function client(url) {
   const u = new URL(url);
   for (const p of ["sslmode", "channel_binding", "schema", "pgbouncer"]) u.searchParams.delete(p);
   const local = u.hostname === "localhost" || u.hostname === "127.0.0.1";
-  return new pg.Client({ connectionString: u.toString(), ssl: local ? false : { rejectUnauthorized: true } });
+  // SSL_NO_VERIFY=1 : chiffre sans verifier le certificat (ex. Supabase sans son CA)
+  const verifier = process.env.SSL_NO_VERIFY !== "1";
+  return new pg.Client({ connectionString: u.toString(), ssl: local ? false : { rejectUnauthorized: verifier } });
 }
 
 const q = (schema, table) => '"' + schema + '"."' + table + '"';

@@ -23,13 +23,21 @@ const isLocal =
   connectionString.includes("localhost") ||
   connectionString.includes("127.0.0.1");
 
+// TLS : certificat verifie. Supabase signe avec sa propre autorite : fournir son
+// certificat CA (PEM) dans DATABASE_SSL_CA. DATABASE_SSL_NO_VERIFY=1 garde le
+// chiffrement sans verifier le certificat (a eviter en production).
+function optionsSsl() {
+  // Accepte le PEM sur une ligne avec des "\n" litteraux (variables Vercel)
+  const ca = process.env.DATABASE_SSL_CA?.replace(/\\n/g, "\n");
+  if (ca) return { rejectUnauthorized: true, ca };
+  return { rejectUnauthorized: process.env.DATABASE_SSL_NO_VERIFY !== "1" };
+}
+
 // Pool configure pour Neon (connexions qui se ferment)
 function creerPool() {
   const p = new Pool({
     connectionString,
-    // Certificat verifie (Neon a un certificat valide). DATABASE_SSL_NO_VERIFY=1 pour un
-    // serveur au certificat auto-signe uniquement.
-    ssl: isLocal ? false : { rejectUnauthorized: process.env.DATABASE_SSL_NO_VERIFY !== "1" },
+    ssl: isLocal ? false : optionsSsl(),
     max: 5, // Limiter les connexions simultanees
     idleTimeoutMillis: 30000, // Fermer les connexions inactives apres 30s
     connectionTimeoutMillis: 10000, // Timeout de connexion 10s
