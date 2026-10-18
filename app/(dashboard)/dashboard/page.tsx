@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { getUtilisateurCourant } from "@/lib/auth/session";
-import { calculerSituation } from "@/lib/frais/calculs";
+import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
+import { elevesAvecFrais } from "@/lib/frais/requetes";
+import { financesMensuelles, moisValide, optionsMois, salairesPrevus } from "@/lib/tableau-de-bord/finances";
+import { Finances, type SituationEleves } from "./Finances";
 
 const JOURS = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"];
 
@@ -57,7 +60,7 @@ function labelAction(action: string): string {
   return labels[action] || action.replace(/_/g, " ");
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ mois?: string }> }) {
   const user = await getUtilisateurCourant();
   if (!user) return null;
 
@@ -95,6 +98,39 @@ export default async function DashboardPage() {
       where: { etablissementId: user.etablissementId, actif: true },
     }),
   ]);
+
+  // Situation des eleves (alertes + graphique), une seule requete
+  // Promesse memorisee : la requete n'est lancee qu'une fois, a la premiere demande
+  const memo: { situations?: Promise<(ReturnType<typeof calculerSituationDepuisTotaux> | null)[]> } = {};
+  const chargerSituations = () =>
+    (memo.situations ??= elevesAvecFrais(user.etablissementId).then((eleves) =>
+      eleves.map((e) =>
+        e.frais
+          ? calculerSituationDepuisTotaux(e.frais.fraisInscription, e.frais.fraisScolariteMensuel, e.frais.dateDebut, e.frais.totaux)
+          : null
+      )
+    ));
+
+  // Graphiques financiers (direction, secretariat, comptabilite)
+  const { mois: moisParam } = await searchParams;
+  const mois = moisValide(moisParam);
+  let finances: { flux: Awaited<ReturnType<typeof financesMensuelles>>; prevus: number; situation: SituationEleves } | null = null;
+  if (estAdmin || isComptable) {
+    const [flux, prevus, sit] = await Promise.all([
+      financesMensuelles(user.etablissementId, mois),
+      salairesPrevus(user.etablissementId),
+      chargerSituations(),
+    ]);
+    finances = {
+      flux,
+      prevus,
+      situation: {
+        aJour: sit.filter((x) => x && x.statut !== "EN_RETARD").length,
+        enRetard: sit.filter((x) => x && x.statut === "EN_RETARD").length,
+        sansFrais: sit.filter((x) => !x).length,
+      },
+    };
+  }
 
   const pourcentFilles = nbElevesTotal > 0 ? Math.round((nbFilles / nbElevesTotal) * 100) : 0;
   const pourcentGarcons = nbElevesTotal > 0 ? Math.round((nbGarcons / nbElevesTotal) * 100) : 0;
@@ -150,45 +186,16 @@ export default async function DashboardPage() {
 
     statsAdmin = { recettesMois, recettesMoisPrec, nbNotes, nbNotesValidees, trimestreActif };
 
-    // Alertes
-    const elevesAvecFrais = await prisma.eleve.findMany({
-      where: {
-        etablissementId: user.etablissementId,
-        statut: "INSCRIT",
-        fraisScolarite: anneeActive ? { some: { anneeScolaireId: anneeActive.id } } : undefined,
-      },
-      include: {
-        fraisScolarite: {
-          where: anneeActive ? { anneeScolaireId: anneeActive.id } : {},
-          include: { tranches: { include: { paiements: true } } },
-        },
-      },
-    });
-
+    // Alertes (totaux agreges en base, cf. lib/frais/requetes.ts)
     let nbInscriptionsImpayees = 0;
     let nbEnRetard = 0;
     let totalImpaye = 0;
 
-    for (const e of elevesAvecFrais) {
-      const f = e.fraisScolarite[0];
-      if (!f) continue;
-      const situation = calculerSituation(
-        f.fraisInscription,
-        f.fraisScolariteMensuel,
-        f.dateDebut,
-        f.tranches.map((t) => ({
-          id: t.id,
-          ordre: t.ordre,
-          libelle: t.libelle,
-          montant: t.montant,
-          dateEcheance: t.dateEcheance,
-          paiements: t.paiements.map((p) => ({ montant: p.montant, annule: p.annule })),
-        }))
-      );
-
-      if (situation.inscriptionStatut === "IMPAYEE") nbInscriptionsImpayees++;
-      if (situation.statut === "EN_RETARD") nbEnRetard++;
-      totalImpaye += situation.retard;
+    for (const e of await chargerSituations()) {
+      if (!e) continue;
+      if (e.inscriptionStatut === "IMPAYEE") nbInscriptionsImpayees++;
+      if (e.statut === "EN_RETARD") nbEnRetard++;
+      totalImpaye += e.retard;
     }
 
     if (nbInscriptionsImpayees > 0) {
@@ -484,6 +491,10 @@ export default async function DashboardPage() {
             </div>
           )}
 
+          {finances && (
+            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} />
+          )}
+
           {/* Trimestre en cours */}
           {statsAdmin.trimestreActif && (
             <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
@@ -594,6 +605,10 @@ export default async function DashboardPage() {
             <StatCard href="/frais" label="Recettes du mois" value={statsComptable.recettesMois.toLocaleString("fr-FR") + " F"} icon="₣" accent="accent" />
             <StatCard href="/frais" label="Paiements reçus" value={String(statsComptable.nbPaiements)} icon="↦" accent="brand" />
           </div>
+
+          {finances && (
+            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} />
+          )}
 
           <div className="grid md:grid-cols-2 gap-4">
             <ActionCard href="/frais" title="Frais de scolarité" description="Encaisser les paiements et imprimer les reçus" primary />
