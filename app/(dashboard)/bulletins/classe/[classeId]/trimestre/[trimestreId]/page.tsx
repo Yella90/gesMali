@@ -66,7 +66,7 @@ export default async function ClassementPage({
             {lib} · {trimestre.nom}
           </h1>
           <p className="text-sm text-[var(--color-ink-muted)] mt-0.5">
-            {classe.anneeScolaire.libelle} · {bulletins.length} éléve(s)
+            {classe.anneeScolaire.libelle} · {bulletins.length} élève(s)
           </p>
         </div>
         <Link
@@ -83,7 +83,7 @@ export default async function ClassementPage({
         <Stat label="Moyenne de classe" value={moyenneClasse.toFixed(2) + " / 20"} accent="brand" />
         <Stat label="Plus forte" value={plusForte.toFixed(2)} accent="accent" />
         <Stat label="Plus faible" value={plusFaible.toFixed(2)} accent="danger" />
-        <Stat label="éléves admis (>= 10)" value={admis + " / " + bulletins.length} accent="gold" />
+        <Stat label="élèves admis (>= 10)" value={admis + " / " + bulletins.length} accent="gold" />
       </div>
 
       {/* Classement avec recherche */}

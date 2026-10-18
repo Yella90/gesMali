@@ -112,7 +112,7 @@ export function ListeFrais({
               type="search"
               value={recherche}
               onChange={(e) => setRecherche(e.target.value)}
-              placeholder="Rechercher un éléve (nom, prénom ou matricule)..."
+              placeholder="Rechercher un élève (nom, prénom ou matricule)..."
               className="w-full h-10 pl-9 pr-9 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
             />
             {recherche && (
@@ -168,7 +168,7 @@ export function ListeFrais({
       {/* Compteur */}
       <div className="flex items-center justify-between text-sm text-[var(--color-ink-muted)]">
         <span>
-          {elevesFiltres.length} éléve{elevesFiltres.length > 1 ? "s" : ""}
+          {elevesFiltres.length} élève{elevesFiltres.length > 1 ? "s" : ""}
           {filtresActifs && " (filtré" + (elevesFiltres.length > 1 ? "s" : "") + ")"}
           {filtresActifs && " · " + eleves.length + " au total"}
         </span>
@@ -180,7 +180,7 @@ export function ListeFrais({
           <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
             <tr>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matricule</th>
-              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">éléve</th>
+              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
               <th className="text-center p-3 font-medium text-[var(--color-ink-muted)]">Inscription</th>
               <th className="text-center p-3 font-medium text-[var(--color-ink-muted)]">Mois</th>
@@ -246,7 +246,7 @@ export function ListeFrais({
             {elevesFiltres.length === 0 && (
               <tr>
                 <td colSpan={9} className="p-8 text-center text-[var(--color-ink-muted)]">
-                  Aucun éléve ne correspond aux filtres.
+                  Aucun élève ne correspond aux filtres.
                 </td>
               </tr>
             )}
@@ -301,7 +301,7 @@ export function ListeFrais({
           </Link>
         ))}
         {elevesFiltres.length === 0 && (
-          <p className="text-center text-[var(--color-ink-muted)] py-12">Aucun éléve ne correspond aux filtres.</p>
+          <p className="text-center text-[var(--color-ink-muted)] py-12">Aucun élève ne correspond aux filtres.</p>
         )}
       </div>
     </>

@@ -197,10 +197,10 @@ export function EleveForm({ classes }: { classes: ClasseOption[] }) {
                         defaultValue="ESPECES"
                         className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
                       >
-                        <option value="ESPECES">Espéces</option>
+                        <option value="ESPECES">Espèces</option>
                         <option value="VIREMENT">Virement</option>
                         <option value="MOBILE_MONEY">Mobile Money</option>
-                        <option value="CHEQUE">Chéque</option>
+                        <option value="CHEQUE">Chèque</option>
                       </select>
                     </div>
                     <div className="space-y-1.5">

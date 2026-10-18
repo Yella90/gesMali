@@ -37,7 +37,7 @@ export function ModifierMatiere({
   }
 
   async function handleSupprimer() {
-    if (!confirm("Supprimer cette matiére ? Cette action est irréversible.")) return;
+    if (!confirm("Supprimer cette matière ? Cette action est irréversible.")) return;
     setSuppression(true);
     setErreur(null);
     try {
@@ -71,7 +71,7 @@ export function ModifierMatiere({
 
   return (
     <form onSubmit={onSubmit} className="bg-white rounded-xl border border-[var(--color-border)] p-5 md:p-6 space-y-4">
-      <h2 className="font-medium">Modifier la matiére</h2>
+      <h2 className="font-medium">Modifier la matière</h2>
 
       <div className="space-y-1.5">
         <Label htmlFor="nom">Nom</Label>

@@ -31,7 +31,7 @@ export default async function NouvelleClassePage() {
       <div>
         <h1 className="text-2xl font-semibold mt-1">Nouvelle classe</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Définissez les frais et la capacité : ils s'appliqueront automatiquement aux éléves inscrits.
+          Définissez les frais et la capacité : ils s'appliqueront automatiquement aux élèves inscrits.
         </p>
       </div>
       <ClasseForm

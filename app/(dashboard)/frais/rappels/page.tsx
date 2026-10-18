@@ -88,7 +88,7 @@ export default async function RappelsPage({
               <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                 <tr>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Date</th>
-                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">éléve</th>
+                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Période</th>
                   <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Reste</th>

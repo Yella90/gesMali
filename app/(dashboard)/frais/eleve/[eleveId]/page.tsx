@@ -51,7 +51,7 @@ export default async function FraisElevePage({ params }: { params: Promise<{ ele
             <h2 className="font-semibold text-amber-900">Impossible de générer les frais</h2>
             <p className="text-sm text-amber-800">
               {!eleve.classe
-                ? "Cet éléve n'a pas de classe assignée."
+                ? "Cet élève n'a pas de classe assignée."
                 : "La classe " + libClasse + " n'a aucun frais défini."}
             </p>
             <Link

@@ -44,7 +44,7 @@ export default async function ClassesPage() {
         <div>
           <h1 className="text-2xl font-semibold">Classes</h1>
           <p className="text-sm text-[var(--color-ink-muted)]">
-            {classes.length} classe(s) · {totalEleves} éléve(s) inscrit(s)
+            {classes.length} classe(s) · {totalEleves} élève(s) inscrit(s)
           </p>
         </div>
         <Link
@@ -58,7 +58,7 @@ export default async function ClassesPage() {
       {/* Stats globales */}
       <div className="grid grid-cols-3 gap-3 md:gap-4">
         <StatGlobal
-          label="Total éléves"
+          label="Total élèves"
           value={totalEleves}
           color="brand"
         />

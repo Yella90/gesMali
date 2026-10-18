@@ -160,7 +160,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
             <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
               {aTitulaire
                 ? "Classe tenue par un titulaire"
-                : creneauxMatiere.length + " affectation(s) de matiére"}
+                : creneauxMatiere.length + " affectation(s) de matière"}
             </p>
           </div>
           {peutEditer && (
@@ -186,7 +186,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
                     {titulaires[0].enseignant.nom} {titulaires[0].enseignant.prenom}
                   </p>
                   <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
-                    Titulaire — en charge de toutes les matiéres du programme
+                    Titulaire — en charge de toutes les matières du programme
                   </p>
                 </div>
               </div>
@@ -208,7 +208,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
             {/* Cas 2 : matieres couvertes */}
             <div className="p-5 space-y-3">
               <p className="text-xs font-medium uppercase tracking-wide text-[var(--color-ink-muted)]">
-                Matiéres assignées
+                Matières assignées
               </p>
 
               {matieresNonCouvertes.length > 0 && (
@@ -218,7 +218,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-medium text-amber-900">
-                      {matieresNonCouvertes.length} matiére(s) sans enseignant
+                      {matieresNonCouvertes.length} matière(s) sans enseignant
                     </p>
                     <p className="text-xs text-amber-800 mt-0.5">
                       {matieresNonCouvertes.map((m) => m.nom).join(", ")}
@@ -230,7 +230,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
               <table className="w-full text-sm">
                 <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                   <tr>
-                    <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matiére</th>
+                    <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matière</th>
                     <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Enseignant</th>
                     <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Créneau</th>
                   </tr>
@@ -319,19 +319,19 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
       <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden">
         <div className="p-5 border-b border-[var(--color-border)] flex items-center justify-between">
           <h2 className="text-sm font-medium text-[var(--color-ink-muted)] uppercase tracking-wide">
-            éléves inscrits ({classe.eleves.length})
+            élèves inscrits ({classe.eleves.length})
           </h2>
           <Link
             href={"/eleves/nouveau?classeId=" + classe.id}
             className="text-xs text-[var(--color-brand)] hover:underline"
           >
-            + Inscrire un éléve
+            + Inscrire un élève
           </Link>
         </div>
 
         {classe.eleves.length === 0 ? (
           <p className="p-8 text-center text-sm text-[var(--color-ink-muted)]">
-            Aucun éléve dans cette classe pour l'instant.
+            Aucun élève dans cette classe pour l'instant.
           </p>
         ) : (
           <>

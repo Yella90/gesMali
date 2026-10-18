@@ -134,14 +134,14 @@ export default async function FraisPage() {
           <div className="w-8 h-8 rounded-lg bg-red-100 text-red-700 flex items-center justify-center flex-shrink-0">!</div>
           <div className="min-w-0">
             <p className="font-medium text-red-900">
-              {stats.enRetardCount} éléve(s) en retard · {stats.enRetard.toLocaleString("fr-FR")} F CFA
+              {stats.enRetardCount} élève(s) en retard · {stats.enRetard.toLocaleString("fr-FR")} F CFA
             </p>
           </div>
         </div>
       )}
 
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-4">
-        <h2 className="font-semibold mb-3">éléves ({eleves.length})</h2>
+        <h2 className="font-semibold mb-3">élèves ({eleves.length})</h2>
         <p className="text-xs text-[var(--color-ink-muted)] mb-3">
           {stats.nonConfigure} sans frais configurés
         </p>

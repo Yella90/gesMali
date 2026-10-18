@@ -152,7 +152,7 @@ export function ClasseForm({
               onChange={(e) => setCapacite(e.target.value)}
               className="tnum"
             />
-            <p className="text-xs text-[var(--color-ink-muted)]">Défaut 50 éléves.</p>
+            <p className="text-xs text-[var(--color-ink-muted)]">Défaut 50 élèves.</p>
           </div>
         </div>
 
@@ -176,7 +176,7 @@ export function ClasseForm({
                 <p className="font-semibold tnum">{annuel.toLocaleString("fr-FR")} F</p>
               </div>
               <div>
-                <p className="text-xs text-[var(--color-ink-muted)]">Total éléve</p>
+                <p className="text-xs text-[var(--color-ink-muted)]">Total élève</p>
                 <p className="font-semibold tnum text-[var(--color-brand)]">
                   {(inscNum + annuel).toLocaleString("fr-FR")} F
                 </p>

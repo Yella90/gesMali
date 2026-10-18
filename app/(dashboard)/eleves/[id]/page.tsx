@@ -80,7 +80,7 @@ export default async function EleveDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Link href="/eleves" className="text-xs text-[var(--color-ink-muted)] hover:underline">
-            ← Retour aux éléves
+            ← Retour aux élèves
           </Link>
           <h1 className="text-2xl font-semibold mt-1">{eleve.nom} {eleve.prenom}</h1>
           <p className="text-sm text-[var(--color-ink-muted)] font-mono mt-0.5">{eleve.matricule}</p>
@@ -211,7 +211,7 @@ export default async function EleveDetailPage({
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-            <MiniStat label="Total dù" value={total.toLocaleString("fr-FR") + " F"} />
+            <MiniStat label="Total dû" value={total.toLocaleString("fr-FR") + " F"} />
             <MiniStat label="Payé" value={paye.toLocaleString("fr-FR") + " F"} tone="success" />
             <MiniStat
               label="Reste"
@@ -301,7 +301,7 @@ export default async function EleveDetailPage({
           <table className="w-full text-sm">
             <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
               <tr>
-                <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Matiére</th>
+                <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Matière</th>
                 <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Trimestre</th>
                 <th className="text-left p-2.5 font-medium text-[var(--color-ink-muted)]">Type</th>
                 <th className="text-right p-2.5 font-medium text-[var(--color-ink-muted)]">Note</th>

@@ -28,16 +28,16 @@ export default async function ElevesPage() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">éléves</h1>
+          <h1 className="text-2xl font-semibold">élèves</h1>
           <p className="text-sm text-[var(--color-ink-muted)]">
-            {eleves.length} éléve(s) inscrit(s)
+            {eleves.length} élève(s) inscrit(s)
           </p>
         </div>
         <Link
           href="/eleves/nouveau"
           className="inline-flex items-center h-10 px-4 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)]"
         >
-          + Nouvel éléve
+          + Nouvel élève
         </Link>
       </div>
 

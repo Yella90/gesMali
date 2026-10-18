@@ -79,15 +79,15 @@ export default async function GenererBulletinsPage() {
         <ul className="space-y-2 text-sm text-[var(--color-ink-muted)]">
           <li className="flex gap-2">
             <span className="text-[var(--color-brand)] font-medium">1.</span>
-            <span>Le systéme regroupe les notes par matiére pour chaque éléve.</span>
+            <span>Le système regroupe les notes par matière pour chaque élève.</span>
           </li>
           <li className="flex gap-2">
             <span className="text-[var(--color-brand)] font-medium">2.</span>
-            <span>Calcul de la moyenne par matiére : <strong className="text-[var(--color-ink)]">(Composition x 2 + Moyenne des devoirs) / 3</strong>.</span>
+            <span>Calcul de la moyenne par matière : <strong className="text-[var(--color-ink)]">(Composition x 2 + Moyenne des devoirs) / 3</strong>.</span>
           </li>
           <li className="flex gap-2">
             <span className="text-[var(--color-brand)] font-medium">3.</span>
-            <span>Moyenne générale pondérée par les coefficients, rang par matiére et rang général.</span>
+            <span>Moyenne générale pondérée par les coefficients, rang par matière et rang général.</span>
           </li>
           <li className="flex gap-2">
             <span className="text-[var(--color-brand)] font-medium">4.</span>

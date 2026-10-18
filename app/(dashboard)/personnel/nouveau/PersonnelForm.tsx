@@ -185,7 +185,7 @@ export function PersonnelForm() {
                   Générer
                 </button>
               </div>
-              <p className="text-xs text-[var(--color-ink-muted)]">6 caractéres minimum.</p>
+              <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum.</p>
             </div>
           </>
         )}

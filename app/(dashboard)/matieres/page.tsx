@@ -30,16 +30,16 @@ export default async function MatieresPage() {
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold">Matiéres</h1>
+          <h1 className="text-2xl font-semibold">Matières</h1>
           <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-            {matieres.length} matiére(s) répartie(s) sur {Object.values(parCycle).filter((v) => v.length > 0).length} cycle(s)
+            {matieres.length} matière(s) répartie(s) sur {Object.values(parCycle).filter((v) => v.length > 0).length} cycle(s)
           </p>
         </div>
         <Link
           href="/matieres/nouveau"
           className="inline-flex items-center h-10 px-4 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)]"
         >
-          + Nouvelle matiére
+          + Nouvelle matière
         </Link>
       </div>
 
@@ -53,7 +53,7 @@ export default async function MatieresPage() {
               <div>
                 <h2 className="font-semibold">{labelCycle(cycle)}</h2>
                 <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
-                  {items.length} matiére(s) · coefficient total : {totalCoeff(items)}
+                  {items.length} matière(s) · coefficient total : {totalCoeff(items)}
                 </p>
               </div>
             </div>
@@ -63,7 +63,7 @@ export default async function MatieresPage() {
               <table className="w-full text-sm">
                 <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                   <tr>
-                    <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matiére</th>
+                    <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matière</th>
                     <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Code</th>
                     <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Coefficient</th>
                     <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Notes</th>
@@ -117,7 +117,7 @@ export default async function MatieresPage() {
       {matieres.length === 0 && (
         <div className="bg-white rounded-xl border border-dashed border-[var(--color-border-strong)] py-16 text-center">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            Aucune matiére. Créez-en une pour commencer.
+            Aucune matière. Créez-en une pour commencer.
           </p>
         </div>
       )}

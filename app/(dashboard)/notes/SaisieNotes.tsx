@@ -163,7 +163,7 @@ export function SaisieNotes({
             </select>
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-[var(--color-ink-muted)]">Matiére</label>
+            <label className="text-xs font-medium text-[var(--color-ink-muted)]">Matière</label>
             <select
               value={matiereId}
               onChange={(e) => setMatiereId(e.target.value)}
@@ -216,7 +216,7 @@ export function SaisieNotes({
           <span>Mode : <strong className="text-[var(--color-ink)]">{modeSaisie}</strong></span>
           {pret && !chargement && (
             <span>
-              · {lignes.length} éléve(s) · {totalSaisies} note(s) saisie(s)
+              · {lignes.length} élève(s) · {totalSaisies} note(s) saisie(s)
             </span>
           )}
         </div>
@@ -253,7 +253,7 @@ export function SaisieNotes({
             type="search"
             value={recherche}
             onChange={(e) => setRecherche(e.target.value)}
-            placeholder="Rechercher un éléve (nom, prénom ou matricule)..."
+            placeholder="Rechercher un élève (nom, prénom ou matricule)..."
             className="w-full h-10 pl-9 pr-9 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
           />
           {recherche && (
@@ -333,7 +333,7 @@ export function SaisieNotes({
                 {lignesFiltrees.length === 0 && (
                   <tr>
                     <td colSpan={6} className="p-8 text-center text-[var(--color-ink-muted)]">
-                      Aucun éléve ne correspond à la recherche.
+                      Aucun élève ne correspond à la recherche.
                     </td>
                   </tr>
                 )}
@@ -383,7 +383,7 @@ export function SaisieNotes({
             })}
             {lignesFiltrees.length === 0 && (
               <p className="text-center text-[var(--color-ink-muted)] py-12">
-                Aucun éléve ne correspond à la recherche.
+                Aucun élève ne correspond à la recherche.
               </p>
             )}
           </div>
@@ -415,7 +415,7 @@ export function SaisieNotes({
       {!pret && (
         <div className="bg-white rounded-xl border border-dashed border-[var(--color-border-strong)] py-16 text-center">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            Sélectionnez une classe, une matiére et un trimestre.
+            Sélectionnez une classe, une matière et un trimestre.
           </p>
         </div>
       )}

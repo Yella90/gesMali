@@ -29,7 +29,7 @@ export default async function NotesPage() {
       <div>
         <h1 className="text-2xl font-semibold">Saisie des notes</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Sélectionnez une classe, une matiére et un trimestre pour saisir les notes de toute la classe.
+          Sélectionnez une classe, une matière et un trimestre pour saisir les notes de toute la classe.
         </p>
       </div>
 

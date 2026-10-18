@@ -24,7 +24,7 @@ export default async function PaiementDetailPage({ params }: { params: Promise<{
 
   function fmtPeriode(periode: string) {
     const [an, mois] = periode.split("-");
-    const noms = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aoùt","Septembre","Octobre","Novembre","Décembre"];
+    const noms = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
     return noms[parseInt(mois) - 1] + " " + an;
   }
 

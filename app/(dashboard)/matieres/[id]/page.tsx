@@ -26,7 +26,7 @@ export default async function MatiereDetailPage({ params }: { params: Promise<{ 
   return (
     <div className="space-y-5 max-w-3xl">
       <Link href="/matieres" className="text-xs text-[var(--color-ink-muted)] hover:underline">
-        ← Retour aux matiéres
+        ← Retour aux matières
       </Link>
 
       <div>

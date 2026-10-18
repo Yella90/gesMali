@@ -2,12 +2,12 @@
 
 const MOIS_FR = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Aoùt", "Septembre", "Octobre", "Novembre", "Décembre",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
 ];
 
 const MOIS_COURT = [
   "Jan", "Fév", "Mar", "Avr", "Mai", "Juin",
-  "Juil", "Aoùt", "Sep", "Oct", "Nov", "Déc",
+  "Juil", "Août", "Sep", "Oct", "Nov", "Déc",
 ];
 
 export function periodeActuelle(now: Date = new Date()): string {

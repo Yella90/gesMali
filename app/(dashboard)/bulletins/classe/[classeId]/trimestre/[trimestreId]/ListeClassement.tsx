@@ -54,7 +54,7 @@ export function ListeClassement({
           type="search"
           value={recherche}
           onChange={(e) => setRecherche(e.target.value)}
-          placeholder="Rechercher un éléve (nom, prénom ou matricule)..."
+          placeholder="Rechercher un élève (nom, prénom ou matricule)..."
           className="w-full h-10 pl-9 pr-24 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]"
         />
         {recherche && (
@@ -82,7 +82,7 @@ export function ListeClassement({
           <thead className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
             <tr>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)] w-16">Rang</th>
-              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">éléve</th>
+              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matricule</th>
               <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Moyenne</th>
               <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Points</th>
@@ -129,7 +129,7 @@ export function ListeClassement({
             {bulletinsFiltres.length === 0 && (
               <tr>
                 <td colSpan={6} className="p-8 text-center text-[var(--color-ink-muted)]">
-                  Aucun éléve ne correspond à la recherche.
+                  Aucun élève ne correspond à la recherche.
                 </td>
               </tr>
             )}
@@ -165,7 +165,7 @@ export function ListeClassement({
         })}
         {bulletinsFiltres.length === 0 && (
           <p className="text-center text-[var(--color-ink-muted)] py-12">
-            Aucun éléve ne correspond à la recherche.
+            Aucun élève ne correspond à la recherche.
           </p>
         )}
       </div>

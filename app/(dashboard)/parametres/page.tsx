@@ -24,7 +24,7 @@ export default async function ParametresPage() {
       <div>
         <h1 className="text-2xl font-semibold">Paramétres</h1>
         <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Configuration de l'établissement et du systéme
+          Configuration de l'établissement et du système
         </p>
       </div>
 
@@ -43,7 +43,7 @@ export default async function ParametresPage() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-4 border-t border-[var(--color-border)]">
-          <MiniStat label="éléves" value={String(nbEleves)} />
+          <MiniStat label="élèves" value={String(nbEleves)} />
           <MiniStat label="Classes" value={String(nbClasses)} />
           <MiniStat label="Personnel" value={String(nbUsers)} />
           <MiniStat label="Année active" value={anneeActive?.libelle || "Aucune"} accent={anneeActive ? "accent" : "danger"} />
@@ -74,7 +74,7 @@ export default async function ParametresPage() {
 
       {/* Info systeme */}
       <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
-        <h2 className="font-semibold mb-3">Informations systéme</h2>
+        <h2 className="font-semibold mb-3">Informations système</h2>
         <div className="space-y-2 text-sm">
           <Ligne label="Version" value="1.0.0" />
           <Ligne label="Base de données" value="PostgreSQL (Neon)" />

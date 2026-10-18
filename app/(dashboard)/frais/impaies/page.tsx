@@ -74,7 +74,7 @@ export default async function ImpayesPage({
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         <Stat label="Total impayé" value={totalReste.toLocaleString("fr-FR") + " F"} accent="danger" />
-        <Stat label="Inscriptions" value={totalInscriptions.toLocaleString("fr-FR") + " F"} accent="gold" sub={nbInscriptions + " éléve(s)"} />
+        <Stat label="Inscriptions" value={totalInscriptions.toLocaleString("fr-FR") + " F"} accent="gold" sub={nbInscriptions + " élève(s)"} />
         <Stat label="Mensualités" value={totalMensuel.toLocaleString("fr-FR") + " F"} accent="brand" sub={nbMensuel + " échéance(s)"} />
         <Stat label="échéances" value={String(stats.nb)} accent="brand" />
       </div>
@@ -107,7 +107,7 @@ export default async function ImpayesPage({
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Type</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Période</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Matricule</th>
-                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">éléve</th>
+                  <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">élève</th>
                   <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
                   <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Montant</th>
                   <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Payé</th>

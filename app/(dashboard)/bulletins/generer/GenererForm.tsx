@@ -66,12 +66,12 @@ export function GenererForm({
             <option value="">-- Choisir une classe --</option>
             {classes.map((c) => (
               <option key={c.id} value={c.id} disabled={c.effectif === 0}>
-                {c.label} ({c.effectif} éléve{c.effectif > 1 ? "s" : ""}){c.effectif === 0 ? " - vide" : ""}
+                {c.label} ({c.effectif} élève{c.effectif > 1 ? "s" : ""}){c.effectif === 0 ? " - vide" : ""}
               </option>
             ))}
           </select>
           {classeSelectionnee && classeSelectionnee.effectif === 0 && (
-            <p className="text-xs text-red-600">Cette classe n'a aucun éléve inscrit.</p>
+            <p className="text-xs text-red-600">Cette classe n'a aucun élève inscrit.</p>
           )}
         </div>
 
@@ -104,7 +104,7 @@ export function GenererForm({
               <p className="font-medium mt-0.5 truncate">{classeSelectionnee?.label.split(" · ")[0]}</p>
             </div>
             <div>
-              <p className="text-xs text-[var(--color-ink-muted)]">éléves</p>
+              <p className="text-xs text-[var(--color-ink-muted)]">élèves</p>
               <p className="font-medium mt-0.5 tnum">{classeSelectionnee?.effectif ?? 0}</p>
             </div>
             <div>

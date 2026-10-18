@@ -30,7 +30,7 @@ export function MatiereForm() {
   return (
     <form onSubmit={onSubmit} className="bg-white rounded-xl border border-[var(--color-border)] p-5 md:p-6 space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="nom">Nom de la matiére</Label>
+        <Label htmlFor="nom">Nom de la matière</Label>
         <Input id="nom" name="nom" required placeholder="Ex : Mathématiques" />
       </div>
 
@@ -38,7 +38,7 @@ export function MatiereForm() {
         <div className="space-y-1.5">
           <Label htmlFor="code">Code</Label>
           <Input id="code" name="code" maxLength={10} placeholder="MATH" />
-          <p className="text-xs text-[var(--color-ink-muted)]">Optionnel, 10 caractéres max.</p>
+          <p className="text-xs text-[var(--color-ink-muted)]">Optionnel, 10 caractères max.</p>
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="coefficient">Coefficient</Label>
@@ -64,7 +64,7 @@ export function MatiereForm() {
 
       <div className="flex gap-3">
         <Button type="submit" size="lg" disabled={loading}>
-          {loading ? "Enregistrement..." : "Créer la matiére"}
+          {loading ? "Enregistrement..." : "Créer la matière"}
         </Button>
         <button
           type="button"

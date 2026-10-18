@@ -18,14 +18,14 @@ type Item = {
 
 const MENU: Item[] = [
   { href: "/dashboard", label: "Tableau de bord", permission: "eleve.read", icon: "◧", mobile: true },
-  { href: "/eleves", label: "éléves", permission: "eleve.read", icon: "◉", mobile: true },
+  { href: "/eleves", label: "élèves", permission: "eleve.read", icon: "◉", mobile: true },
   { href: "/classes", label: "Classes", permission: "classe.read", icon: "▤", mobile: true },
   { href: "/emploi-du-temps", label: "Emploi du temps", permission: "classe.read", icon: "◫" },
   { href: "/notes", label: "Notes", permission: "note.create", icon: "✎", mobile: true },
   { href: "/bulletins", label: "Bulletins", permission: "bulletin.read", icon: "▦" },
   { href: "/frais", label: "Frais", permission: "frais.read", icon: "₣", mobile: true },
   { href: "/paiements", label: "Paiements", permission: "paiement.read", icon: "≡" },
-  { href: "/matieres", label: "Matiéres", permission: "matiere.read", icon: "◇" },
+  { href: "/matieres", label: "Matières", permission: "matiere.read", icon: "◇" },
   { href: "/trimestres", label: "Trimestres", permission: "trimestre.read", icon: "◷" },
   { href: "/personnel", label: "Personnel", permission: "personnel.read", icon: "☰" },
     { href: "/transition", label: "Transition annuelle", permission: "parametres.read", icon: "⇉" },

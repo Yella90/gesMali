@@ -124,7 +124,7 @@ export function ListeEleves({
 
       {/* Compteur */}
       <p className="text-sm text-[var(--color-ink-muted)]">
-        {elevesFiltres.length} éléve{elevesFiltres.length > 1 ? "s" : ""}
+        {elevesFiltres.length} élève{elevesFiltres.length > 1 ? "s" : ""}
         {filtresActifs && " (filtré" + (elevesFiltres.length > 1 ? "s" : "") + ")"}
         {filtresActifs && " · " + eleves.length + " au total"}
       </p>
@@ -158,7 +158,7 @@ export function ListeEleves({
             {elevesFiltres.length === 0 && (
               <tr>
                 <td colSpan={5} className="p-8 text-center text-[var(--color-ink-muted)]">
-                  {filtresActifs ? "Aucun éléve ne correspond aux filtres." : "Aucun éléve."}
+                  {filtresActifs ? "Aucun élève ne correspond aux filtres." : "Aucun élève."}
                 </td>
               </tr>
             )}
@@ -187,7 +187,7 @@ export function ListeEleves({
         ))}
         {elevesFiltres.length === 0 && (
           <p className="text-center text-[var(--color-ink-muted)] py-12">
-            {filtresActifs ? "Aucun éléve ne correspond aux filtres." : "Aucun éléve."}
+            {filtresActifs ? "Aucun élève ne correspond aux filtres." : "Aucun élève."}
           </p>
         )}
       </div>

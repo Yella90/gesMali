@@ -33,8 +33,8 @@ function ilYA(date: Date): string {
 
 function labelAction(action: string): string {
   const labels: Record<string, string> = {
-    CREATE_ELEVE: "Création éléve",
-    UPDATE_ELEVE: "Modification éléve",
+    CREATE_ELEVE: "Création élève",
+    UPDATE_ELEVE: "Modification élève",
     CREATE_CLASSE: "Création classe",
     UPDATE_CLASSE: "Modification classe",
     CREATE_NOTE: "Saisie note",
@@ -210,7 +210,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     if (nbEnRetard > 0) {
       alertes.push({
         type: "danger",
-        titre: nbEnRetard + " éléve(s) en retard",
+        titre: nbEnRetard + " élève(s) en retard",
         description: totalImpaye.toLocaleString("fr-FR") + " F CFA à recouvrer",
         href: "/frais/impaies",
       });
@@ -239,7 +239,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       if (classesIncompletes > 0) {
         alertes.push({
           type: "warning",
-          titre: classesIncompletes + " classe(s) avec matiéres non couvertes",
+          titre: classesIncompletes + " classe(s) avec matières non couvertes",
           description: "Vérifiez les affectations des enseignants",
           href: "/emploi-du-temps",
         });
@@ -316,7 +316,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   }
 
   const heure = new Date().getHours();
-  const salutation = heure < 12 ? "Bonjour" : heure < 18 ? "Bon aprés-midi" : "Bonsoir";
+  const salutation = heure < 12 ? "Bonjour" : heure < 18 ? "Bon après-midi" : "Bonsoir";
 
   return (
     <div className="space-y-5 max-w-7xl">
@@ -341,7 +341,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
             <div className="flex items-start justify-between gap-3 mb-4">
               <div>
-                <h2 className="font-semibold">Effectif des éléves</h2>
+                <h2 className="font-semibold">Effectif des élèves</h2>
                 <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
                   Répartition actuelle de l'établissement
                 </p>
@@ -350,7 +350,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 href="/eleves"
                 className="text-xs text-[var(--color-brand)] hover:underline whitespace-nowrap"
               >
-                Voir tous les éléves →
+                Voir tous les élèves →
               </Link>
             </div>
 
@@ -552,7 +552,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           {dernieresActions.length > 0 && (
             <div className="bg-white rounded-xl border border-[var(--color-border)] overflow-hidden">
               <div className="p-5 border-b border-[var(--color-border)] flex items-center justify-between">
-                <h2 className="font-semibold">Derniéres actions</h2>
+                <h2 className="font-semibold">Dernières actions</h2>
                 <Link href="/audit" className="text-xs text-[var(--color-brand)] hover:underline">
                   Voir tout le journal →
                 </Link>

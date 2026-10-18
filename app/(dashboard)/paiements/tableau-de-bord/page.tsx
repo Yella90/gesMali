@@ -43,7 +43,7 @@ export default async function TableauDeBordPaiementsPage() {
 
   function fmtPeriode(p: string) {
     const [an, mois] = p.split("-");
-    const noms = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Aoùt","Sep","Oct","Nov","Déc"];
+    const noms = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
     return noms[parseInt(mois) - 1] + " " + an;
   }
 

@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 
 const MOIS_FR = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Aoùt", "Septembre", "Octobre", "Novembre", "Décembre",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
 ];
 
 function libelleMois(annee: number, mois: number) {

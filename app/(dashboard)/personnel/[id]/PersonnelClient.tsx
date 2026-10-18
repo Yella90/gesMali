@@ -416,7 +416,7 @@ export function GererAffectations({
             onChange={(e) => setType(e.target.value as any)}
             className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
           >
-            <option value="PROFESSEUR_MATIERE">Professeur de matiére</option>
+            <option value="PROFESSEUR_MATIERE">Professeur de matière</option>
             <option value="TITULAIRE">Titulaire de classe</option>
           </select>
         </div>
@@ -436,7 +436,7 @@ export function GererAffectations({
 
         <div className="space-y-1.5">
           <Label htmlFor="matiereId">
-            Matiére {type === "TITULAIRE" && <span className="text-[var(--color-ink-muted)]">(optionnel)</span>}
+            Matière {type === "TITULAIRE" && <span className="text-[var(--color-ink-muted)]">(optionnel)</span>}
           </Label>
           <select
             id="matiereId" name="matiereId"
@@ -451,7 +451,7 @@ export function GererAffectations({
           </select>
           {classeSel && matieresFiltrees.length === 0 && (
             <p className="text-xs text-red-600">
-              Aucune matiére pour le cycle {classeSel.cycle}.
+              Aucune matière pour le cycle {classeSel.cycle}.
             </p>
           )}
         </div>

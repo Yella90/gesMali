@@ -48,15 +48,15 @@ function badgeAction(action: string): { bg: string; label: string } {
 // Label lisible pour les actions
 function labelAction(action: string): string {
   const labels: Record<string, string> = {
-    CREATE_ELEVE: "Création éléve",
-    UPDATE_ELEVE: "Modification éléve",
-    RADIER_ELEVE: "Radiation éléve",
+    CREATE_ELEVE: "Création élève",
+    UPDATE_ELEVE: "Modification élève",
+    RADIER_ELEVE: "Radiation élève",
     CREATE_CLASSE: "Création classe",
     UPDATE_CLASSE: "Modification classe",
     DELETE_CLASSE: "Suppression classe",
-    CREATE_MATIERE: "Création matiére",
-    UPDATE_MATIERE: "Modification matiére",
-    DELETE_MATIERE: "Suppression matiére",
+    CREATE_MATIERE: "Création matière",
+    UPDATE_MATIERE: "Modification matière",
+    DELETE_MATIERE: "Suppression matière",
     CREATE_TRIMESTRE: "Création trimestre",
     UPDATE_TRIMESTRE: "Modification trimestre",
     CREATE_ANNEE: "Création année",
