@@ -31,6 +31,7 @@ npm run typecheck && npm run lint && npm run build
 | `AUTH_SECRET` | Secret de session, aléatoire (`npx auth secret`). Un secret différent par environnement. |
 | `AUTH_URL` | URL publique de l'application, en `https://`. |
 | `AUTH_TRUST_HOST` | `true` derrière un reverse proxy (Nginx, Docker…). Inutile sur Vercel. |
+| `DIRECT_URL` | Facultatif. URL directe (sans pooler) utilisée par les migrations. |
 | `APP_URL` | URL utilisée dans les liens et QR codes parents (par défaut `AUTH_URL`). Elle doit être joignable depuis le téléphone des parents. |
 
 ### Déploiement
@@ -39,8 +40,13 @@ npm run typecheck && npm run lint && npm run build
 2. Appliquer les migrations **avant** de démarrer la nouvelle version : `npm run db:deploy`.
 3. Construire et démarrer : `npm run build` puis `npm run start`.
 
-Sur **Vercel** : importer le dépôt, renseigner les variables (`AUTH_TRUST_HOST` inutile),
-et lancer les migrations depuis un poste (`npm run db:deploy`) avant chaque déploiement qui en contient.
+Sur **Vercel** : importer le dépôt et renseigner les variables (`AUTH_TRUST_HOST` inutile).
+Les **migrations sont appliquées automatiquement** au build des déploiements de production
+(script `vercel-build` → `scripts/migrer-au-build.mjs`). Elles sont ignorées pour les
+prévisualisations, qui partagent la même base. Si une migration échoue, le build échoue et la
+version précédente reste en ligne. Ne pas définir de « Build Command » personnalisée dans les
+réglages Vercel, sinon `vercel-build` n'est pas utilisé.
+Recommandé avec Neon : définir aussi `DIRECT_URL` (URL sans `-pooler`) pour les migrations.
 `vercel.json` fixe la région des fonctions à `fra1` (Francfort), à côté de la base Neon.
 
 > Pages légales : `/conditions-utilisation`, `/confidentialite`, `/cookies`. Compléter le nom et

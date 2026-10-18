@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:deploy": "prisma migrate deploy",
-    "db:status": "prisma migrate status"
+    "db:status": "prisma migrate status",
+    "vercel-build": "node scripts/migrer-au-build.mjs && next build --webpack"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
