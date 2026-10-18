@@ -1,83 +1,74 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { LoginForm } from "./LoginForm";
 import { LiensLegaux } from "@/components/legal/PageLegale";
+import { BoutonConnexion, FenetreConnexion } from "./Connexion";
 import { Bogolan, Cycles, DocumentsDefilants, Fonctionnalites, Personnes, Scene } from "./vitrine/Vitrine";
 
-function Logo({ clair = false }: { clair?: boolean }) {
-  return (
-    <div className="flex items-center gap-3">
-      <div
-        className={
-          "flex h-10 w-10 items-center justify-center rounded-xl font-serif text-lg font-semibold " +
-          (clair ? "bg-white/10 text-[#E2C17E]" : "bg-[var(--color-brand)] text-white")
-        }
-      >
-        G
-      </div>
-      <span className="text-lg font-semibold">GES Mali</span>
-    </div>
-  );
-}
+const boutonPrincipal =
+  "inline-flex h-11 items-center justify-center rounded-lg bg-[#E2C17E] px-5 text-sm font-semibold text-[#152A47] hover:bg-[#EBCF95]";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ connexion?: string; callbackUrl?: string }>;
+}) {
   let session = null;
   try { session = await auth(); } catch { session = null; }
   if (session?.user) redirect("/dashboard");
 
+  // Arrivee depuis une page protegee : le formulaire s'ouvre directement
+  const { connexion, callbackUrl } = await searchParams;
+  const ouverte = connexion !== undefined || callbackUrl !== undefined;
+
   return (
-    <div className="min-h-screen bg-[var(--color-surface)] lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-      {/* Connexion : en premier sur mobile, fixe a droite sur grand ecran */}
-      <section className="flex items-center justify-center px-6 py-12 lg:sticky lg:top-0 lg:order-2 lg:h-screen">
-        <div className="w-full max-w-sm">
-          <div className="mb-10 lg:hidden">
-            <Logo />
+    <div className="relative min-h-screen overflow-hidden bg-[var(--color-brand)] text-white">
+      <Bogolan />
+
+      <div className="relative mx-auto max-w-6xl px-6 sm:px-10">
+        <header className="flex items-center justify-between py-5">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 font-serif text-lg font-semibold text-[#E2C17E]">
+              G
+            </div>
+            <span className="text-lg font-semibold">GES Mali</span>
+          </div>
+          <BoutonConnexion className="inline-flex h-10 items-center rounded-lg border border-white/25 px-4 text-sm font-medium hover:bg-white/10" />
+        </header>
+
+        <main>
+          <div className="grid items-center gap-10 pb-6 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14 lg:pt-16">
+            <div>
+              <h1 className="max-w-[21ch] font-serif text-[34px] font-semibold leading-[1.08] tracking-[-0.01em] sm:text-[48px]">
+                Toute la vie de l&apos;école, de l&apos;inscription au bulletin.
+              </h1>
+              <p className="mt-5 max-w-[56ch] text-[15px] leading-relaxed text-white/75">
+                Inscriptions, notes, bulletins, frais de scolarité, emploi du temps et personnel : la direction, le
+                secrétariat, les enseignants et les parents travaillent sur les mêmes informations.
+              </p>
+              <BoutonConnexion className={"mt-8 " + boutonPrincipal} />
+
+              <div className="mt-10 md:hidden">
+                <Personnes />
+                <DocumentsDefilants className="mt-6" />
+              </div>
+            </div>
+
+            <Scene className="hidden md:block" />
           </div>
 
-          <h1 className="font-serif text-[28px] font-semibold leading-tight text-[var(--color-ink)]">Connexion</h1>
-          <p className="mb-8 mt-1.5 text-sm text-[var(--color-ink-muted)]">
-            Utilisez l&apos;adresse e-mail fournie par votre établissement.
-          </p>
-
-          <LoginForm />
-
-          <p className="mt-6 text-xs text-[var(--color-ink-muted)]">
-            En vous connectant, vous acceptez les conditions d&apos;utilisation et la politique de confidentialité.
-          </p>
-          <LiensLegaux className="mt-2 text-[var(--color-ink-muted)]" />
-        </div>
-      </section>
-
-      {/* Vitrine : ce que GES Mali gere */}
-      <section className="relative overflow-hidden bg-[var(--color-brand)] text-white lg:order-1">
-        <Bogolan />
-        <div className="relative mx-auto max-w-[760px] px-6 py-12 sm:px-10 lg:px-14 lg:py-12">
-          <div className="hidden lg:block">
-            <Logo clair />
-          </div>
-
-          <h2 className="max-w-[21ch] font-serif text-[34px] font-semibold leading-[1.08] tracking-[-0.01em] sm:text-[44px] lg:mt-14">
-            Toute la vie de l&apos;école, de l&apos;inscription au bulletin.
-          </h2>
-          <p className="mt-5 max-w-[58ch] text-[15px] leading-relaxed text-white/75">
-            Inscriptions, notes, bulletins, frais de scolarité, emploi du temps et personnel : la direction, le
-            secrétariat, les enseignants et les parents travaillent sur les mêmes informations.
-          </p>
-
-          <div className="mt-8 md:hidden">
-            <Personnes />
-            <DocumentsDefilants className="mt-6" />
-          </div>
-          <Scene className="mt-12 hidden md:block" />
-
-          <div className="mt-14 space-y-12">
+          <div className="grid gap-12 border-t border-white/10 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-16">
             <Cycles />
             <Fonctionnalites />
           </div>
+        </main>
 
-          <p className="mt-14 text-xs text-white/45">© {new Date().getFullYear()} GES Mali</p>
-        </div>
-      </section>
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 py-6 text-xs text-white/50">
+          <p>© {new Date().getFullYear()} GES Mali</p>
+          <LiensLegaux className="text-white/60" />
+        </footer>
+      </div>
+
+      <FenetreConnexion ouverte={ouverte} />
     </div>
   );
 }

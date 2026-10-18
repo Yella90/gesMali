@@ -6,7 +6,7 @@ import { ConfirmProvider } from "@/components/ui/ConfirmProvider";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getUtilisateurCourant();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?connexion");
   const permissions = Array.from(allPermissionsFor(user.roles));
 
   return (
