@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
+import { reponsePdf } from "@/lib/pdf/reponse";
 import { prisma } from "@/lib/db";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
-import { FicheInscriptionPDF } from "@/lib/pdf/FicheInscriptionPDF";
 import { assurerCodeParent, qrCodeDataUrl, urlPortailParent } from "@/lib/portail/acces";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ eleveId: string }> }) {
@@ -37,7 +36,13 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ eleveI
   const payeInscription = trancheInscription?.paiements.reduce((s, p) => s + p.montant, 0) ?? 0;
   const c = eleve.classe;
 
-  const buffer = await renderToBuffer(
+  return reponsePdf(
+    "fiche-inscription-" + eleve.matricule + ".pdf",
+    // Moteur PDF charge ici : une erreur de chargement est aussi capturee et journalisee
+    async () => {
+      const { renderToBuffer } = await import("@react-pdf/renderer");
+      const { FicheInscriptionPDF } = await import("@/lib/pdf/FicheInscriptionPDF");
+      return renderToBuffer(
     FicheInscriptionPDF({
       etablissement: eleve.etablissement,
       eleve,
@@ -54,13 +59,8 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ eleveI
       urlParent,
       qrDataUrl: await qrCodeDataUrl(urlParent),
     })
-  );
-
-  return new NextResponse(new Uint8Array(buffer), {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "inline; filename=\"fiche-inscription-" + eleve.matricule + ".pdf\"",
-      "Cache-Control": "private, no-store",
+      );
     },
-  });
+    { detail: true, prive: true }
+  );
 }
