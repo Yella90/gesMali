@@ -213,8 +213,30 @@ export async function modifierEleve(id: string, formData: FormData) {
     throw new Error("Acces refuse");
   }
 
+  // Changement de classe : meme etablissement, annee active, place disponible
+  if (data.classeId && data.classeId !== eleve.classeId) {
+    const classe = await prisma.classe.findUnique({
+      where: { id: data.classeId },
+      include: {
+        anneeScolaire: { select: { active: true } },
+        _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
+      },
+    });
+    if (!classe || classe.etablissementId !== user.etablissementId) throw new Error("Classe invalide");
+    if (!classe.anneeScolaire.active) throw new Error("Cette classe appartient a une annee scolaire archivee");
+    if (classe._count.eleves >= classe.capaciteMax) {
+      throw new Error("Classe pleine (" + classe.capaciteMax + " eleves max)");
+    }
+  }
+
   await prisma.eleve.update({ where: { id }, data });
-  await enregistrerAudit({ userId: user.id, action: "UPDATE_ELEVE", entite: "Eleve", entiteId: id });
+  await enregistrerAudit({
+    userId: user.id,
+    action: "UPDATE_ELEVE",
+    entite: "Eleve",
+    entiteId: id,
+    details: data.classeId !== eleve.classeId ? { ancienneClasseId: eleve.classeId, nouvelleClasseId: data.classeId } : undefined,
+  });
   revalidatePath("/eleves");
   revalidatePath("/eleves/" + id);
 }

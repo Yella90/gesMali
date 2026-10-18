@@ -5,6 +5,7 @@ import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { assurerCodeParent, qrCodeSvg, urlPortailParent } from "@/lib/portail/acces";
 import { AccesParent } from "./AccesParent";
+import { EditerEleve } from "./EditerEleve";
 
 export default async function EleveDetailPage({
   params,
@@ -32,6 +33,17 @@ export default async function EleveDetailPage({
   });
   if (!eleve || eleve.etablissementId !== user.etablissementId) notFound();
 
+  const peutModifier = peut(user.roles, "eleve.update");
+  const classesActives = peutModifier
+    ? await prisma.classe.findMany({
+        where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } },
+        select: {
+          id: true, nom: true, niveau: true, section: true, capaciteMax: true,
+          _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
+        },
+        orderBy: [{ niveau: "asc" }, { section: "asc" }],
+      })
+    : [];
   const urlParent = await urlPortailParent(await assurerCodeParent(eleve.id));
   const qrSvg = await qrCodeSvg(urlParent);
 
@@ -73,7 +85,27 @@ export default async function EleveDetailPage({
           <h1 className="text-2xl font-semibold mt-1">{eleve.nom} {eleve.prenom}</h1>
           <p className="text-sm text-[var(--color-ink-muted)] font-mono mt-0.5">{eleve.matricule}</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          {peutModifier && (
+            <EditerEleve
+              eleve={{
+                id: eleve.id,
+                nom: eleve.nom,
+                prenom: eleve.prenom,
+                dateNaissance: eleve.dateNaissance.toISOString().slice(0, 10),
+                sexe: eleve.sexe,
+                tuteurNom: eleve.tuteurNom ?? "",
+                tuteurTelephone: eleve.tuteurTelephone ?? "",
+                emailParent: eleve.emailParent ?? "",
+                classeId: eleve.classeId ?? "",
+              }}
+              classes={classesActives.map((c) => ({
+                id: c.id,
+                label: c.nom || c.niveau + (c.section ? " " + c.section : ""),
+                complet: c._count.eleves >= c.capaciteMax,
+              }))}
+            />
+          )}
           {frais && (
             <Link
               href={"/frais/eleve/" + eleve.id}
@@ -141,7 +173,7 @@ export default async function EleveDetailPage({
         eleveId={eleve.id}
         url={urlParent}
         qrSvg={qrSvg}
-        peutModifier={peut(user.roles, "eleve.update")}
+        peutModifier={peutModifier}
       />
 
       {/* Classe + frais */}

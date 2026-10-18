@@ -34,6 +34,8 @@ export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
   const calculHoraire = nbHeuresNum * tauxHoraireNum;
 
   const employeSel = employes.find((e) => e.id === employeId);
+  // Le salaire se paie selon le mode de remuneration de l'employe : au mois OU a l'heure
+  const typeSalaire = employeSel?.typeRemuneration === "HORAIRE" ? "HORAIRE" : "MENSUEL";
 
   // ═════════════════════════════════════════════
   // Pre-remplir quand on change d'employe
@@ -43,6 +45,8 @@ export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
     setInfoPreRemplissage(null);
 
     const e = employes.find((x) => x.id === id);
+    // Toujours repartir du type de salaire de l'employe choisi
+    setType(e?.typeRemuneration === "HORAIRE" ? "HORAIRE" : "MENSUEL");
     if (!e || !e.salaireReference) return;
 
     // Type de remuneration determine le mode par defaut
@@ -170,16 +174,29 @@ export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
           <Label htmlFor="type">Type de paiement</Label>
           <select
             id="type" name="type" required
-            value={type}
+            value={employeSel ? type : ""}
             onChange={(e) => onTypeChange(e.target.value)}
-            className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
+            disabled={!employeSel}
+            className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm disabled:bg-[var(--color-surface)] disabled:text-[var(--color-ink-muted)]"
           >
-            <option value="MENSUEL">Mensuel (salaire fixe)</option>
-            <option value="HORAIRE">Horaire (heures x taux)</option>
+            {!employeSel && <option value="">Choisissez d'abord l'employé</option>}
+            {typeSalaire === "HORAIRE" ? (
+              <option value="HORAIRE">Heures travaillées (heures × taux)</option>
+            ) : (
+              <option value="MENSUEL">Salaire mensuel</option>
+            )}
             <option value="PRIME">Prime</option>
             <option value="AVANCE">Avance sur salaire</option>
             <option value="REMBOURSEMENT">Remboursement</option>
           </select>
+          {employeSel && (
+            <p className="text-xs text-[var(--color-ink-muted)]">
+              {typeSalaire === "HORAIRE"
+                ? "Cet employé est payé à l'heure : le salaire se calcule à partir des heures travaillées."
+                : "Cet employé est payé au mois : un seul salaire mensuel par mois."}{" "}
+              Le mode de rémunération se change dans sa fiche du personnel.
+            </p>
+          )}
         </div>
 
         {infoPreRemplissage && (
@@ -265,10 +282,10 @@ export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
             id="modePaiement" name="modePaiement" required
             className="w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
           >
-            <option value="ESPECES">Espéces</option>
+            <option value="ESPECES">Espèces</option>
             <option value="VIREMENT">Virement bancaire</option>
             <option value="MOBILE_MONEY">Mobile Money</option>
-            <option value="CHEQUE">Chéque</option>
+            <option value="CHEQUE">Chèque</option>
           </select>
         </div>
 

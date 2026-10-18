@@ -26,12 +26,31 @@ export async function creerPaiement(formData: FormData) {
 
   const employe = await prisma.employe.findUnique({
     where: { id: employeId },
-    select: { etablissementId: true, actif: true },
+    select: { etablissementId: true, actif: true, typeRemuneration: true },
   });
   if (!employe || employe.etablissementId !== user.etablissementId) {
     throw new Error("Employe introuvable");
   }
   if (!employe.actif) throw new Error("Cet employe est inactif");
+
+  // Le salaire suit le mode de remuneration de l'employe (au mois OU a l'heure)
+  const payeALHeure = employe.typeRemuneration === "HORAIRE";
+  if (type === "MENSUEL" && payeALHeure) {
+    throw new Error("Cet employe est paye a l'heure : enregistrez ses heures travaillees, pas un salaire mensuel");
+  }
+  if (type === "HORAIRE" && !payeALHeure) {
+    throw new Error("Cet employe est paye au mois : enregistrez un salaire mensuel, pas des heures");
+  }
+  if (type === "HORAIRE" && (!nombreHeures || nombreHeures <= 0 || !tauxHoraire || tauxHoraire <= 0)) {
+    throw new Error("Indiquez le nombre d'heures et le taux horaire");
+  }
+  if (type === "MENSUEL") {
+    const dejaPaye = await prisma.paiement.findFirst({
+      where: { employeId, periode, type: "MENSUEL", statut: { not: "ANNULE" } },
+      select: { id: true },
+    });
+    if (dejaPaye) throw new Error("Le salaire de ce mois a deja ete enregistre pour cet employe");
+  }
 
   const paiement = await prisma.paiement.create({
     data: {
