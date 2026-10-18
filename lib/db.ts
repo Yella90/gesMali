@@ -14,6 +14,9 @@ if (!rawUrl) throw new Error("DATABASE_URL manquant");
 const url = new URL(rawUrl);
 url.searchParams.delete("sslmode");
 url.searchParams.delete("channel_binding");
+// Parametres propres a Prisma, inconnus du driver pg
+url.searchParams.delete("schema");
+url.searchParams.delete("pgbouncer");
 const connectionString = url.toString();
 
 const isLocal =
@@ -42,7 +45,12 @@ function creerPool() {
 
 const pool = globalForPrisma.pool ?? creerPool();
 
-const adapter = new PrismaPg(pool);
+// Schema PostgreSQL de l'application ("public" par defaut). Une instance de demonstration
+// peut vivre dans un schema dedie d'un projet partage (ex. DATABASE_SCHEMA=ges_mali).
+export const DB_SCHEMA = process.env.DATABASE_SCHEMA || "public";
+if (!/^[a-z_][a-z0-9_]*$/.test(DB_SCHEMA)) throw new Error("DATABASE_SCHEMA invalide");
+
+const adapter = new PrismaPg(pool, { schema: DB_SCHEMA });
 
 export const prisma =
   globalForPrisma.prisma ??

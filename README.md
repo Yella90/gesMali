@@ -3,7 +3,7 @@
 Gestion d'établissement scolaire : élèves, classes, notes, bulletins, frais de scolarité,
 personnel, transition annuelle, et **espace parent** accessible par QR code.
 
-Stack : Next.js 16 (App Router, webpack), React 19, Prisma 7 + PostgreSQL (Neon),
+Stack : Next.js 16 (App Router, webpack), React 19, Prisma 7 + PostgreSQL (Supabase ou Neon),
 Auth.js v5 (identifiants), `@react-pdf/renderer` pour les PDF.
 
 ## Démarrer en local
@@ -27,11 +27,12 @@ npm run typecheck && npm run lint && npm run build
 
 | Variable | Rôle |
 | --- | --- |
-| `DATABASE_URL` | PostgreSQL. Avec Neon, l'URL « pooled » avec `?sslmode=require`. Le certificat TLS est vérifié. |
+| `DATABASE_URL` | PostgreSQL. Supabase : URL « Transaction pooler » (port 6543). Neon : URL « pooled » avec `?sslmode=require`. Le certificat TLS est vérifié. |
 | `AUTH_SECRET` | Secret de session, aléatoire (`npx auth secret`). Un secret différent par environnement. |
 | `AUTH_URL` | URL publique de l'application, en `https://`. |
 | `AUTH_TRUST_HOST` | `true` derrière un reverse proxy (Nginx, Docker…). Inutile sur Vercel. |
-| `DIRECT_URL` | Facultatif. URL directe (sans pooler) utilisée par les migrations. |
+| `DIRECT_URL` | Facultatif. URL des migrations : Supabase « Session pooler » (port 5432), Neon URL sans `-pooler`. |
+| `DATABASE_SCHEMA` | Facultatif, défaut `public`. Schéma PostgreSQL de l'application et des migrations. |
 | `APP_URL` | URL utilisée dans les liens et QR codes parents (par défaut `AUTH_URL`). Elle doit être joignable depuis le téléphone des parents. |
 
 ### Déploiement
@@ -46,14 +47,14 @@ Les **migrations sont appliquées automatiquement** au build des déploiements d
 prévisualisations, qui partagent la même base. Si une migration échoue, le build échoue et la
 version précédente reste en ligne. Ne pas définir de « Build Command » personnalisée dans les
 réglages Vercel, sinon `vercel-build` n'est pas utilisé.
-Recommandé avec Neon : définir aussi `DIRECT_URL` (URL sans `-pooler`) pour les migrations.
-`vercel.json` fixe la région des fonctions à `fra1` (Francfort), à côté de la base Neon.
+Recommandé : définir aussi `DIRECT_URL` pour les migrations (voir le tableau).
+`vercel.json` fixe la région des fonctions à `fra1` (Francfort), à côté de la base.
 
 > Pages légales : `/conditions-utilisation`, `/confidentialite`, `/cookies`. Compléter le nom et
 > l'adresse de l'éditeur dans `lib/legal.ts`, et faire relire les textes par un juriste.
 
 > Performance : héberger l'application dans la **même région que la base**
-> (Neon `eu-central-1`, Francfort). Le volume de données entre l'application et la base
+> (`eu-central-1`, Francfort). Le volume de données entre l'application et la base
 > est le facteur dominant ; depuis une connexion lointaine, les pages sont nettement plus lentes.
 
 ### Checklist sécurité
@@ -66,6 +67,17 @@ Recommandé avec Neon : définir aussi `DIRECT_URL` (URL sans `-pooler`) pour le
 Déjà en place : en-têtes de sécurité (`next.config.ts`), limitation des tentatives de connexion
 (5 échecs / 15 min par e-mail, mémoire du processus), contrôle des permissions par rôle sur
 chaque page, action serveur et route API.
+
+## Instances : démonstration et clients
+
+- **Démonstration** : projet Supabase partagé « Unitech ERP Mali », schéma dédié `ges_mali`
+  (`DATABASE_SCHEMA=ges_mali`). Le schéma n'est pas exposé par l'API Supabase (aucun droit pour
+  `anon` / `authenticated`, RLS activé) ; seule l'application y accède, avec le rôle `postgres`.
+- **Client** : son propre projet Supabase et son propre projet Vercel, schéma `public` par défaut.
+  Les migrations créent les tables au premier déploiement de production.
+- Déplacer les données d'une instance à une autre (base cible migrée et vide) :
+  `SOURCE_URL=… SOURCE_SCHEMA=public CIBLE_URL=… CIBLE_SCHEMA=ges_mali node scripts/copier-donnees.mjs`
+  (transactionnel, nombres de lignes vérifiés).
 
 ## Espace parent
 

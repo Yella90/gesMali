@@ -4,19 +4,30 @@
 // ramenaient toutes les tranches et tous les paiements ; ici les sommes, comptes
 // et filtres sont faits en base et on ne renvoie que ce qui est affiche.
 
-import { prisma } from "@/lib/db";
+import { prisma, DB_SCHEMA } from "@/lib/db";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { periodeActuelle } from "@/lib/frais/periode";
 import type { TotauxFrais } from "@/lib/frais/calculs";
 
 export type ClasseLib = { nom: string | null; niveau: number; section: string | null };
 
+// Les requetes brutes ne passent pas par le schema de l'adaptateur Prisma :
+// les tables sont qualifiees explicitement (DB_SCHEMA est valide dans lib/db.ts)
+const T = (table: string) => Prisma.raw('"' + DB_SCHEMA + '"."' + table + '"');
+const ELEVE = T("Eleve");
+const CLASSE = T("Classe");
+const ANNEE = T("AnneeScolaire");
+const FRAIS = T("FraisScolarite");
+const TRANCHE = T("TrancheFrais");
+const PAIEMENT = T("PaiementFrais");
+const RAPPEL = T("Rappel");
+
 type ColonnesClasse = { classeNom: string | null; classeNiveau: number | null; classeSection: string | null };
 
 // Somme des paiements non annules, par tranche
 const PAYES = Prisma.sql`
   SELECT "trancheId", SUM(montant) AS paye
-  FROM "PaiementFrais"
+  FROM ${PAIEMENT}
   WHERE NOT annule
   GROUP BY "trancheId"
 `;
@@ -54,8 +65,8 @@ function impayesFiltres(etablissementId: string, f: FiltresImpayes) {
   return Prisma.sql`
     SELECT t.id, t."fraisId", t.ordre, t.libelle, t.montant, t."dateEcheance",
            COALESCE(p.paye, 0)::float8 AS paye
-    FROM "TrancheFrais" t
-    JOIN "FraisScolarite" f ON f.id = t."fraisId"
+    FROM ${TRANCHE} t
+    JOIN ${FRAIS} f ON f.id = t."fraisId"
     LEFT JOIN payes p ON p."trancheId" = t.id
     WHERE f."etablissementId" = ${etablissementId}
       AND t.montant - COALESCE(p.paye, 0) > 0.01
@@ -96,9 +107,9 @@ export async function tranchesImpayees(
            e.id AS "eleveId", e.matricule, e.nom, e.prenom,
            c.nom AS "classeNom", c.niveau AS "classeNiveau", c.section AS "classeSection"
     FROM imp i
-    JOIN "FraisScolarite" f ON f.id = i."fraisId"
-    JOIN "Eleve" e ON e.id = f."eleveId"
-    LEFT JOIN "Classe" c ON c.id = e."classeId"
+    JOIN ${FRAIS} f ON f.id = i."fraisId"
+    JOIN ${ELEVE} e ON e.id = f."eleveId"
+    LEFT JOIN ${CLASSE} c ON c.id = e."classeId"
     ORDER BY i."dateEcheance" ASC, i.id
     LIMIT ${limite} OFFSET ${decalage}
   `;
@@ -118,8 +129,8 @@ export async function tranchesImpayees(
 export async function periodesEcoulees(etablissementId: string): Promise<string[]> {
   const rows = await prisma.$queryRaw<{ periode: string }[]>`
     SELECT DISTINCT t.periode
-    FROM "TrancheFrais" t
-    JOIN "FraisScolarite" f ON f.id = t."fraisId"
+    FROM ${TRANCHE} t
+    JOIN ${FRAIS} f ON f.id = t."fraisId"
     WHERE f."etablissementId" = ${etablissementId}
       AND t.periode <= ${periodeActuelle()}
     ORDER BY t.periode DESC
@@ -132,8 +143,8 @@ export async function periodesImpayeesEcoulees(etablissementId: string): Promise
   const rows = await prisma.$queryRaw<{ periode: string }[]>`
     WITH payes AS (${PAYES})
     SELECT DISTINCT t.periode
-    FROM "TrancheFrais" t
-    JOIN "FraisScolarite" f ON f.id = t."fraisId"
+    FROM ${TRANCHE} t
+    JOIN ${FRAIS} f ON f.id = t."fraisId"
     LEFT JOIN payes p ON p."trancheId" = t.id
     WHERE f."etablissementId" = ${etablissementId}
       AND t.periode <= ${periodeActuelle()}
@@ -171,7 +182,7 @@ export async function elevesAvecFrais(etablissementId: string): Promise<EleveAve
   >`
     WITH payes AS (${PAYES}),
     annee AS (
-      SELECT id FROM "AnneeScolaire"
+      SELECT id FROM ${ANNEE}
       WHERE "etablissementId" = ${etablissementId} AND active
       LIMIT 1
     ),
@@ -184,7 +195,7 @@ export async function elevesAvecFrais(etablissementId: string): Promise<EleveAve
              (COUNT(*) FILTER (WHERE t.ordre > 0))::int AS "moisTotal",
              COALESCE(SUM(p.paye) FILTER (WHERE t.ordre > 0), 0)::float8 AS "payeMensuel",
              COALESCE(SUM(p.paye), 0)::float8 AS "totalPaye"
-      FROM "TrancheFrais" t
+      FROM ${TRANCHE} t
       LEFT JOIN payes p ON p."trancheId" = t.id
       GROUP BY t."fraisId"
     )
@@ -196,10 +207,10 @@ export async function elevesAvecFrais(etablissementId: string): Promise<EleveAve
            COALESCE(tt."moisTotal", 0)::int AS "moisTotal",
            COALESCE(tt."payeMensuel", 0)::float8 AS "payeMensuel",
            COALESCE(tt."totalPaye", 0)::float8 AS "totalPaye"
-    FROM "Eleve" e
-    LEFT JOIN "Classe" c ON c.id = e."classeId"
+    FROM ${ELEVE} e
+    LEFT JOIN ${CLASSE} c ON c.id = e."classeId"
     LEFT JOIN LATERAL (
-      SELECT fs.* FROM "FraisScolarite" fs
+      SELECT fs.* FROM ${FRAIS} fs
       WHERE fs."eleveId" = e.id
         AND (NOT EXISTS (SELECT 1 FROM annee) OR fs."anneeScolaireId" = (SELECT id FROM annee))
       ORDER BY fs."dateDebut" DESC
@@ -259,11 +270,11 @@ export async function listeRappels(etablissementId: string, envoye: boolean | un
            (t.montant - COALESCE(p.paye, 0))::float8 AS reste,
            e.id AS "eleveId", e.nom, e.prenom,
            c.nom AS "classeNom", c.niveau AS "classeNiveau", c.section AS "classeSection"
-    FROM "Rappel" r
-    JOIN "TrancheFrais" t ON t.id = r."trancheId"
-    JOIN "FraisScolarite" f ON f.id = t."fraisId"
-    JOIN "Eleve" e ON e.id = f."eleveId"
-    LEFT JOIN "Classe" c ON c.id = e."classeId"
+    FROM ${RAPPEL} r
+    JOIN ${TRANCHE} t ON t.id = r."trancheId"
+    JOIN ${FRAIS} f ON f.id = t."fraisId"
+    JOIN ${ELEVE} e ON e.id = f."eleveId"
+    LEFT JOIN ${CLASSE} c ON c.id = e."classeId"
     LEFT JOIN payes p ON p."trancheId" = t.id
     WHERE f."etablissementId" = ${etablissementId}
       ${envoye === undefined ? Prisma.empty : Prisma.sql`AND r.envoye = ${envoye}`}
