@@ -11,6 +11,16 @@ const enTetesSecurite = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
 
+  // Le moteur PDF (pdfkit) charge ses polices standard (Helvetica...) par un chemin
+  // calcule a l'execution : le tracage du build ne les voit pas et elles manquent
+  // sur Vercel ("Cannot find module .../pdfkit/js/standard-fonts/Helvetica.cjs").
+  outputFileTracingIncludes: {
+    "/*": [
+      "./node_modules/pdfkit/js/standard-fonts/**/*", // npm (Vercel)
+      "./node_modules/.pnpm/pdfkit@*/node_modules/pdfkit/js/standard-fonts/**/*", // pnpm (local)
+    ],
+  },
+
   async headers() {
     return [
       { source: "/:path*", headers: enTetesSecurite },
