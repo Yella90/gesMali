@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { CalendarClock, FileText, QrCode, Receipt, UserRoundPlus, Users } from "lucide-react";
+import { CalendarClock, ClipboardCheck, FileText, Landmark, QrCode, Receipt, UserRoundPlus, Users } from "lucide-react";
 import { urlApplication } from "@/lib/portail/acces";
 import { AvatarEleve, AvatarEleveGarcon, AvatarEnseignant, AvatarParent } from "./Avatars";
 import { Compteur } from "./Compteur";
@@ -313,10 +313,12 @@ export function Cycles() {
 const FONCTIONS = [
   { icone: UserRoundPlus, titre: "Inscriptions", texte: "Dossier de l'élève, matricule et fiche d'inscription imprimable." },
   { icone: FileText, titre: "Notes et bulletins", texte: "Moyennes, rangs et bulletins PDF calculés automatiquement." },
+  { icone: ClipboardCheck, titre: "Présences", texte: "Appel du jour, retards, absences justifiées et fiche mensuelle." },
   { icone: Receipt, titre: "Frais de scolarité", texte: "Échéances mensuelles, reçus, impayés et rappels aux parents." },
-  { icone: CalendarClock, titre: "Emploi du temps", texte: "Cours et enseignants de chaque classe, jour par jour." },
+  { icone: Landmark, titre: "Trésorerie", texte: "Soldes par caisse, dépenses, apports et rapport financier." },
   { icone: Users, titre: "Personnel et paie", texte: "Fiches du personnel, rôles et paiements des salaires." },
-  { icone: QrCode, titre: "Espace parent", texte: "Notes et bulletins consultables par simple QR code." },
+  { icone: CalendarClock, titre: "Emploi du temps", texte: "Cours et enseignants de chaque classe, jour par jour." },
+  { icone: QrCode, titre: "Espace parent", texte: "Notes, bulletins et scolarité consultables par QR code." },
 ];
 
 export function Fonctionnalites() {
@@ -325,6 +327,9 @@ export function Fonctionnalites() {
       <h3 id="titre-fonctions" className="font-serif text-lg font-semibold">
         Tout l&apos;établissement au même endroit
       </h3>
+      <p className="mt-1 text-xs text-white/60">
+        Démarrage rapide : les classes, les élèves et les notes de l&apos;ancien système se reprennent depuis un fichier Excel.
+      </p>
       <ul className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {FONCTIONS.map((f) => (
           <li key={f.titre} className="flex gap-3">

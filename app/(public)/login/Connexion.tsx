@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { X } from "lucide-react";
+import { QrCode, X } from "lucide-react";
 import { LoginForm } from "./LoginForm";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 
@@ -27,7 +27,7 @@ export function BoutonConnexion({ className = "", children = "Se connecter" }: {
   );
 }
 
-export function FenetreConnexion({ ouverte }: { ouverte: boolean }) {
+export function FenetreConnexion({ ouverte, retour }: { ouverte: boolean; retour: string }) {
   const ref = useRef<HTMLDialogElement>(null);
 
   const fermer = useCallback(() => ref.current?.close(), []);
@@ -53,7 +53,7 @@ export function FenetreConnexion({ ouverte }: { ouverte: boolean }) {
       id={ID}
       ref={ref}
       aria-labelledby="titre-connexion"
-      className="m-auto w-[min(26rem,calc(100vw-2rem))] rounded-2xl bg-white p-0 text-[var(--color-ink)] shadow-[0_30px_80px_-20px_rgba(4,14,30,0.6)] backdrop:bg-[#0B1D33]/70 backdrop:backdrop-blur-[3px]"
+      className="m-auto max-h-[calc(100dvh-2rem)] w-[min(26rem,calc(100vw-2rem))] overflow-y-auto overscroll-contain rounded-2xl bg-white p-0 text-[var(--color-ink)] shadow-[0_30px_80px_-20px_rgba(4,14,30,0.6)] backdrop:bg-[#0B1D33]/70 backdrop:backdrop-blur-[3px]"
     >
       <div className="relative px-6 pb-6 pt-7 sm:px-8 sm:pb-8">
         <button
@@ -70,8 +70,18 @@ export function FenetreConnexion({ ouverte }: { ouverte: boolean }) {
         <p className="mb-7 mt-1.5 text-sm text-[var(--color-ink-muted)]">
           Utilisez l&apos;adresse e-mail fournie par votre établissement.
         </p>
-        <LoginForm />
-        <p className="mt-6 text-xs text-[var(--color-ink-muted)]">
+        <LoginForm retour={retour} />
+        <p className="mt-4 text-xs text-[var(--color-ink-muted)]">
+          Mot de passe oublié ? La direction de votre établissement peut le réinitialiser depuis votre fiche du personnel.
+        </p>
+        <div className="mt-5 flex gap-3 rounded-xl bg-[var(--color-gold-soft)] px-3.5 py-3 text-xs leading-relaxed text-[#5C4416]">
+          <QrCode className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <p>
+            <span className="font-semibold">Vous êtes parent ?</span> Aucun compte n&apos;est nécessaire : scannez le QR code de la
+            fiche d&apos;inscription de votre enfant pour consulter ses notes, ses bulletins et sa scolarité.
+          </p>
+        </div>
+        <p className="mt-5 text-xs text-[var(--color-ink-muted)]">
           En vous connectant, vous acceptez les conditions d&apos;utilisation et la politique de confidentialité.
         </p>
         <LiensLegaux className="mt-2 text-[var(--color-ink-muted)]" />

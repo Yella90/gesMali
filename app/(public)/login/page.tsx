@@ -19,6 +19,8 @@ export default async function LoginPage({
   // Arrivee depuis une page protegee : le formulaire s'ouvre directement
   const { connexion, callbackUrl } = await searchParams;
   const ouverte = connexion !== undefined || callbackUrl !== undefined;
+  // Retour vers la page demandee : chemin interne seulement
+  const retour = callbackUrl && /^\/(?!\/)/.test(callbackUrl) && !callbackUrl.startsWith("/login") ? callbackUrl : "/dashboard";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--color-brand)] text-white">
@@ -36,14 +38,15 @@ export default async function LoginPage({
         </header>
 
         <main>
-          <div className="grid items-center gap-10 pb-6 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14 lg:pt-16">
-            <div>
+          <div className="grid grid-cols-1 items-center gap-10 pb-6 pt-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-14 lg:pt-16">
+            {/* min-w-0 : la bande de documents defilante ne doit pas elargir la colonne */}
+            <div className="min-w-0">
               <h1 className="max-w-[21ch] font-serif text-[34px] font-semibold leading-[1.08] tracking-[-0.01em] sm:text-[48px]">
                 Toute la vie de l&apos;école, de l&apos;inscription au bulletin.
               </h1>
               <p className="mt-5 max-w-[56ch] text-[15px] leading-relaxed text-white/75">
-                Inscriptions, notes, bulletins, frais de scolarité, emploi du temps et personnel : la direction, le
-                secrétariat, les enseignants et les parents travaillent sur les mêmes informations.
+                Inscriptions, notes et bulletins, présences, frais de scolarité, trésorerie, emploi du temps et personnel :
+                la direction, le secrétariat, les enseignants et les parents travaillent sur les mêmes informations.
               </p>
               <BoutonConnexion className={"mt-8 " + boutonPrincipal} />
 
@@ -56,7 +59,7 @@ export default async function LoginPage({
             <Scene className="hidden md:block" />
           </div>
 
-          <div className="grid gap-12 border-t border-white/10 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-16">
+          <div className="grid grid-cols-1 gap-12 border-t border-white/10 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-16">
             <Cycles />
             <Fonctionnalites />
           </div>
@@ -68,7 +71,7 @@ export default async function LoginPage({
         </footer>
       </div>
 
-      <FenetreConnexion ouverte={ouverte} />
+      <FenetreConnexion ouverte={ouverte} retour={retour} />
     </div>
   );
 }
