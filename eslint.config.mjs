@@ -33,6 +33,7 @@ const eslintConfig = defineConfig([
     files: [
       "auth.ts",
       "lib/auth/session.ts",
+      "lib/auth/limite.ts",
       "lib/audit.ts",
       "lib/data/ecole.ts",
       "lib/etablissement/logo.ts",

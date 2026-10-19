@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
-import { connexionBloquee, effacerEchecs, noterEchec } from "@/lib/auth/limite";
+import { adresseIp, connexionBloquee, effacerEchecs, noterEchec } from "@/lib/auth/limite";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -11,27 +11,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const email = credentials?.email as string | undefined;
         const password = credentials?.password as string | undefined;
         if (!email || !password) return null;
-        if (connexionBloquee(email)) return null;
+        const ip = adresseIp(request.headers);
+        if (await connexionBloquee(email, ip)) return null;
 
         const user = await prisma.user.findUnique({
           where: { email },
           include: { employe: true },
         });
         if (!user || !user.actif || !user.employe.actif) {
-          noterEchec(email);
+          await noterEchec(email, ip);
           return null;
         }
 
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) {
-          noterEchec(email);
+          await noterEchec(email, ip);
           return null;
         }
-        effacerEchecs(email);
+        await effacerEchecs(email);
 
         return {
           id: user.id,

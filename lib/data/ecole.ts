@@ -44,7 +44,7 @@ export const PORTEE: Record<string, Filtre> = {
 };
 
 // Tables de la plateforme, communes a toutes les ecoles (jamais filtrees)
-export const HORS_ECOLE: string[] = [];
+export const HORS_ECOLE: string[] = ["EchecConnexion"];
 
 // Tables portant directement la colonne etablissementId
 const DIRECTES = new Set(Object.entries(PORTEE).filter(([, f]) => f === direct).map(([m]) => m));

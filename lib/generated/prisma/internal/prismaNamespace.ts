@@ -419,7 +419,8 @@ export const ModelName = {
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
   DepenseRecurrente: 'DepenseRecurrente',
-  Presence: 'Presence'
+  Presence: 'Presence',
+  EchecConnexion: 'EchecConnexion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "employe" | "user" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence"
+    modelProps: "employe" | "user" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2141,6 +2142,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    EchecConnexion: {
+      payload: Prisma.$EchecConnexionPayload<ExtArgs>
+      fields: Prisma.EchecConnexionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EchecConnexionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EchecConnexionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        findFirst: {
+          args: Prisma.EchecConnexionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EchecConnexionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        findMany: {
+          args: Prisma.EchecConnexionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>[]
+        }
+        create: {
+          args: Prisma.EchecConnexionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        createMany: {
+          args: Prisma.EchecConnexionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EchecConnexionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>[]
+        }
+        delete: {
+          args: Prisma.EchecConnexionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        update: {
+          args: Prisma.EchecConnexionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        deleteMany: {
+          args: Prisma.EchecConnexionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EchecConnexionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EchecConnexionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>[]
+        }
+        upsert: {
+          args: Prisma.EchecConnexionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EchecConnexionPayload>
+        }
+        aggregate: {
+          args: Prisma.EchecConnexionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEchecConnexion>
+        }
+        groupBy: {
+          args: Prisma.EchecConnexionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EchecConnexionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EchecConnexionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EchecConnexionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2572,6 +2647,15 @@ export const PresenceScalarFieldEnum = {
 } as const
 
 export type PresenceScalarFieldEnum = (typeof PresenceScalarFieldEnum)[keyof typeof PresenceScalarFieldEnum]
+
+
+export const EchecConnexionScalarFieldEnum = {
+  cle: 'cle',
+  nombre: 'nombre',
+  depuis: 'depuis'
+} as const
+
+export type EchecConnexionScalarFieldEnum = (typeof EchecConnexionScalarFieldEnum)[keyof typeof EchecConnexionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3109,6 +3193,7 @@ export type GlobalOmitConfig = {
   mouvementTresorerie?: Prisma.MouvementTresorerieOmit
   depenseRecurrente?: Prisma.DepenseRecurrenteOmit
   presence?: Prisma.PresenceOmit
+  echecConnexion?: Prisma.EchecConnexionOmit
 }
 
 /* Types for Logging */

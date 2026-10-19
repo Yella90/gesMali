@@ -73,7 +73,8 @@ export const ModelName = {
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
   DepenseRecurrente: 'DepenseRecurrente',
-  Presence: 'Presence'
+  Presence: 'Presence',
+  EchecConnexion: 'EchecConnexion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -484,6 +485,15 @@ export const PresenceScalarFieldEnum = {
 } as const
 
 export type PresenceScalarFieldEnum = (typeof PresenceScalarFieldEnum)[keyof typeof PresenceScalarFieldEnum]
+
+
+export const EchecConnexionScalarFieldEnum = {
+  cle: 'cle',
+  nombre: 'nombre',
+  depuis: 'depuis'
+} as const
+
+export type EchecConnexionScalarFieldEnum = (typeof EchecConnexionScalarFieldEnum)[keyof typeof EchecConnexionScalarFieldEnum]
 
 
 export const SortOrder = {

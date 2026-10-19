@@ -761,3 +761,17 @@ model Presence {
   @@unique([eleveId, date])
   @@index([classeId, date])
 }
+
+// ═════════════════════════════════════════════
+// CONNEXION
+// ═════════════════════════════════════════════
+
+// Echecs de connexion recents, par e-mail ("email:...") et par adresse IP ("ip:...") :
+// blocage temporaire commun a tous les serveurs. Table de la plateforme, sans ecole.
+model EchecConnexion {
+  cle    String   @id
+  nombre Int      @default(1)
+  depuis DateTime @default(now())
+
+  @@index([depuis])
+}

@@ -132,3 +132,8 @@ export type DepenseRecurrente = Prisma.DepenseRecurrenteModel
  * 
  */
 export type Presence = Prisma.PresenceModel
+/**
+ * Model EchecConnexion
+ * 
+ */
+export type EchecConnexion = Prisma.EchecConnexionModel
