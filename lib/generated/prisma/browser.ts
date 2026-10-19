@@ -117,3 +117,18 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type InscriptionAnnuelle = Prisma.InscriptionAnnuelleModel
+/**
+ * Model MouvementTresorerie
+ * 
+ */
+export type MouvementTresorerie = Prisma.MouvementTresorerieModel
+/**
+ * Model DepenseRecurrente
+ * 
+ */
+export type DepenseRecurrente = Prisma.DepenseRecurrenteModel
+/**
+ * Model Presence
+ * 
+ */
+export type Presence = Prisma.PresenceModel

@@ -416,7 +416,10 @@ export const ModelName = {
   PaiementFrais: 'PaiementFrais',
   Rappel: 'Rappel',
   AuditLog: 'AuditLog',
-  InscriptionAnnuelle: 'InscriptionAnnuelle'
+  InscriptionAnnuelle: 'InscriptionAnnuelle',
+  MouvementTresorerie: 'MouvementTresorerie',
+  DepenseRecurrente: 'DepenseRecurrente',
+  Presence: 'Presence'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -432,7 +435,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "employe" | "user" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle"
+    modelProps: "employe" | "user" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1916,6 +1919,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MouvementTresorerie: {
+      payload: Prisma.$MouvementTresoreriePayload<ExtArgs>
+      fields: Prisma.MouvementTresorerieFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MouvementTresorerieFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MouvementTresorerieFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        findFirst: {
+          args: Prisma.MouvementTresorerieFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MouvementTresorerieFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        findMany: {
+          args: Prisma.MouvementTresorerieFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>[]
+        }
+        create: {
+          args: Prisma.MouvementTresorerieCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        createMany: {
+          args: Prisma.MouvementTresorerieCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MouvementTresorerieCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>[]
+        }
+        delete: {
+          args: Prisma.MouvementTresorerieDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        update: {
+          args: Prisma.MouvementTresorerieUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        deleteMany: {
+          args: Prisma.MouvementTresorerieDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MouvementTresorerieUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MouvementTresorerieUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>[]
+        }
+        upsert: {
+          args: Prisma.MouvementTresorerieUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MouvementTresoreriePayload>
+        }
+        aggregate: {
+          args: Prisma.MouvementTresorerieAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMouvementTresorerie>
+        }
+        groupBy: {
+          args: Prisma.MouvementTresorerieGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MouvementTresorerieGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MouvementTresorerieCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MouvementTresorerieCountAggregateOutputType> | number
+        }
+      }
+    }
+    DepenseRecurrente: {
+      payload: Prisma.$DepenseRecurrentePayload<ExtArgs>
+      fields: Prisma.DepenseRecurrenteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DepenseRecurrenteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DepenseRecurrenteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        findFirst: {
+          args: Prisma.DepenseRecurrenteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DepenseRecurrenteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        findMany: {
+          args: Prisma.DepenseRecurrenteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>[]
+        }
+        create: {
+          args: Prisma.DepenseRecurrenteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        createMany: {
+          args: Prisma.DepenseRecurrenteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DepenseRecurrenteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>[]
+        }
+        delete: {
+          args: Prisma.DepenseRecurrenteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        update: {
+          args: Prisma.DepenseRecurrenteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        deleteMany: {
+          args: Prisma.DepenseRecurrenteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DepenseRecurrenteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DepenseRecurrenteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>[]
+        }
+        upsert: {
+          args: Prisma.DepenseRecurrenteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepenseRecurrentePayload>
+        }
+        aggregate: {
+          args: Prisma.DepenseRecurrenteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDepenseRecurrente>
+        }
+        groupBy: {
+          args: Prisma.DepenseRecurrenteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DepenseRecurrenteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DepenseRecurrenteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DepenseRecurrenteCountAggregateOutputType> | number
+        }
+      }
+    }
+    Presence: {
+      payload: Prisma.$PresencePayload<ExtArgs>
+      fields: Prisma.PresenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PresenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PresenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        findFirst: {
+          args: Prisma.PresenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PresenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        findMany: {
+          args: Prisma.PresenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>[]
+        }
+        create: {
+          args: Prisma.PresenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        createMany: {
+          args: Prisma.PresenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PresenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>[]
+        }
+        delete: {
+          args: Prisma.PresenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        update: {
+          args: Prisma.PresenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        deleteMany: {
+          args: Prisma.PresenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PresenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PresenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>[]
+        }
+        upsert: {
+          args: Prisma.PresenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PresencePayload>
+        }
+        aggregate: {
+          args: Prisma.PresenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePresence>
+        }
+        groupBy: {
+          args: Prisma.PresenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PresenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PresenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PresenceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2296,6 +2521,59 @@ export const InscriptionAnnuelleScalarFieldEnum = {
 export type InscriptionAnnuelleScalarFieldEnum = (typeof InscriptionAnnuelleScalarFieldEnum)[keyof typeof InscriptionAnnuelleScalarFieldEnum]
 
 
+export const MouvementTresorerieScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  type: 'type',
+  caisse: 'caisse',
+  date: 'date',
+  montant: 'montant',
+  libelle: 'libelle',
+  categorie: 'categorie',
+  reference: 'reference',
+  derogation: 'derogation',
+  motifDerogation: 'motifDerogation',
+  annule: 'annule',
+  motifAnnulation: 'motifAnnulation',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt'
+} as const
+
+export type MouvementTresorerieScalarFieldEnum = (typeof MouvementTresorerieScalarFieldEnum)[keyof typeof MouvementTresorerieScalarFieldEnum]
+
+
+export const DepenseRecurrenteScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  libelle: 'libelle',
+  categorie: 'categorie',
+  montant: 'montant',
+  jourEcheance: 'jourEcheance',
+  caisse: 'caisse',
+  actif: 'actif',
+  createdAt: 'createdAt'
+} as const
+
+export type DepenseRecurrenteScalarFieldEnum = (typeof DepenseRecurrenteScalarFieldEnum)[keyof typeof DepenseRecurrenteScalarFieldEnum]
+
+
+export const PresenceScalarFieldEnum = {
+  id: 'id',
+  eleveId: 'eleveId',
+  classeId: 'classeId',
+  date: 'date',
+  statut: 'statut',
+  justifie: 'justifie',
+  motif: 'motif',
+  dureeMinutes: 'dureeMinutes',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PresenceScalarFieldEnum = (typeof PresenceScalarFieldEnum)[keyof typeof PresenceScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2615,6 +2893,48 @@ export type EnumDecisionEleveFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 export type ListEnumDecisionEleveFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DecisionEleve[]'>
     
 
+
+/**
+ * Reference to a field of type 'TypeMouvement'
+ */
+export type EnumTypeMouvementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeMouvement'>
+    
+
+
+/**
+ * Reference to a field of type 'TypeMouvement[]'
+ */
+export type ListEnumTypeMouvementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeMouvement[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Caisse'
+ */
+export type EnumCaisseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Caisse'>
+    
+
+
+/**
+ * Reference to a field of type 'Caisse[]'
+ */
+export type ListEnumCaisseFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Caisse[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StatutPresence'
+ */
+export type EnumStatutPresenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPresence'>
+    
+
+
+/**
+ * Reference to a field of type 'StatutPresence[]'
+ */
+export type ListEnumStatutPresenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPresence[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -2786,6 +3106,9 @@ export type GlobalOmitConfig = {
   rappel?: Prisma.RappelOmit
   auditLog?: Prisma.AuditLogOmit
   inscriptionAnnuelle?: Prisma.InscriptionAnnuelleOmit
+  mouvementTresorerie?: Prisma.MouvementTresorerieOmit
+  depenseRecurrente?: Prisma.DepenseRecurrenteOmit
+  presence?: Prisma.PresenceOmit
 }
 
 /* Types for Logging */

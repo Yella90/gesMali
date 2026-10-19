@@ -15,7 +15,7 @@ type EmployeOption = {
   typeRemuneration: string | null;
 };
 
-export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
+export function PaiementForm({ employes, estDirecteur = false }: { employes: EmployeOption[]; estDirecteur?: boolean }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -316,6 +316,16 @@ export function PaiementForm({ employes }: { employes: EmployeOption[] }) {
 
       {erreur && (
         <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</div>
+      )}
+
+      {estDirecteur && erreur?.startsWith("Solde insuffisant") && (
+        <div className="space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <label className="flex items-start gap-2">
+            <input type="checkbox" name="derogation" className="mt-0.5 h-4 w-4" />
+            <span>Payer malgré le solde insuffisant (dérogation du directeur, tracée dans le journal)</span>
+          </label>
+          <Input name="motifDerogation" placeholder="Motif : ex. apport de capital prévu demain" />
+        </div>
       )}
 
       <div className="flex gap-3">

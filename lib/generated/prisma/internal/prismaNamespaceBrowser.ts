@@ -70,7 +70,10 @@ export const ModelName = {
   PaiementFrais: 'PaiementFrais',
   Rappel: 'Rappel',
   AuditLog: 'AuditLog',
-  InscriptionAnnuelle: 'InscriptionAnnuelle'
+  InscriptionAnnuelle: 'InscriptionAnnuelle',
+  MouvementTresorerie: 'MouvementTresorerie',
+  DepenseRecurrente: 'DepenseRecurrente',
+  Presence: 'Presence'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,6 +431,59 @@ export const InscriptionAnnuelleScalarFieldEnum = {
 } as const
 
 export type InscriptionAnnuelleScalarFieldEnum = (typeof InscriptionAnnuelleScalarFieldEnum)[keyof typeof InscriptionAnnuelleScalarFieldEnum]
+
+
+export const MouvementTresorerieScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  type: 'type',
+  caisse: 'caisse',
+  date: 'date',
+  montant: 'montant',
+  libelle: 'libelle',
+  categorie: 'categorie',
+  reference: 'reference',
+  derogation: 'derogation',
+  motifDerogation: 'motifDerogation',
+  annule: 'annule',
+  motifAnnulation: 'motifAnnulation',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt'
+} as const
+
+export type MouvementTresorerieScalarFieldEnum = (typeof MouvementTresorerieScalarFieldEnum)[keyof typeof MouvementTresorerieScalarFieldEnum]
+
+
+export const DepenseRecurrenteScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  libelle: 'libelle',
+  categorie: 'categorie',
+  montant: 'montant',
+  jourEcheance: 'jourEcheance',
+  caisse: 'caisse',
+  actif: 'actif',
+  createdAt: 'createdAt'
+} as const
+
+export type DepenseRecurrenteScalarFieldEnum = (typeof DepenseRecurrenteScalarFieldEnum)[keyof typeof DepenseRecurrenteScalarFieldEnum]
+
+
+export const PresenceScalarFieldEnum = {
+  id: 'id',
+  eleveId: 'eleveId',
+  classeId: 'classeId',
+  date: 'date',
+  statut: 'statut',
+  justifie: 'justifie',
+  motif: 'motif',
+  dureeMinutes: 'dureeMinutes',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PresenceScalarFieldEnum = (typeof PresenceScalarFieldEnum)[keyof typeof PresenceScalarFieldEnum]
 
 
 export const SortOrder = {

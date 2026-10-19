@@ -528,6 +528,57 @@ export type EnumDecisionEleveWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumDecisionEleveFilter<$PrismaModel>
 }
 
+export type EnumTypeMouvementFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel> | $Enums.TypeMouvement
+}
+
+export type EnumCaisseFilter<$PrismaModel = never> = {
+  equals?: $Enums.Caisse | Prisma.EnumCaisseFieldRefInput<$PrismaModel>
+  in?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCaisseFilter<$PrismaModel> | $Enums.Caisse
+}
+
+export type EnumTypeMouvementWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeMouvementWithAggregatesFilter<$PrismaModel> | $Enums.TypeMouvement
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel>
+}
+
+export type EnumCaisseWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Caisse | Prisma.EnumCaisseFieldRefInput<$PrismaModel>
+  in?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCaisseWithAggregatesFilter<$PrismaModel> | $Enums.Caisse
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCaisseFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCaisseFilter<$PrismaModel>
+}
+
+export type EnumStatutPresenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPresence | Prisma.EnumStatutPresenceFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel> | $Enums.StatutPresence
+}
+
+export type EnumStatutPresenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPresence | Prisma.EnumStatutPresenceFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPresenceWithAggregatesFilter<$PrismaModel> | $Enums.StatutPresence
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1004,6 +1055,57 @@ export type NestedEnumDecisionEleveWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumDecisionEleveFilter<$PrismaModel>
   _max?: Prisma.NestedEnumDecisionEleveFilter<$PrismaModel>
+}
+
+export type NestedEnumTypeMouvementFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel> | $Enums.TypeMouvement
+}
+
+export type NestedEnumCaisseFilter<$PrismaModel = never> = {
+  equals?: $Enums.Caisse | Prisma.EnumCaisseFieldRefInput<$PrismaModel>
+  in?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCaisseFilter<$PrismaModel> | $Enums.Caisse
+}
+
+export type NestedEnumTypeMouvementWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeMouvementWithAggregatesFilter<$PrismaModel> | $Enums.TypeMouvement
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTypeMouvementFilter<$PrismaModel>
+}
+
+export type NestedEnumCaisseWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.Caisse | Prisma.EnumCaisseFieldRefInput<$PrismaModel>
+  in?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  notIn?: $Enums.Caisse[] | Prisma.ListEnumCaisseFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCaisseWithAggregatesFilter<$PrismaModel> | $Enums.Caisse
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCaisseFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCaisseFilter<$PrismaModel>
+}
+
+export type NestedEnumStatutPresenceFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPresence | Prisma.EnumStatutPresenceFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel> | $Enums.StatutPresence
+}
+
+export type NestedEnumStatutPresenceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutPresence | Prisma.EnumStatutPresenceFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutPresence[] | Prisma.ListEnumStatutPresenceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutPresenceWithAggregatesFilter<$PrismaModel> | $Enums.StatutPresence
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
 }
 
 

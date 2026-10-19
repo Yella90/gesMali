@@ -66,6 +66,8 @@ model User {
   fraisSaisis      PaiementFrais[]
   rappelsSaisis    Rappel[]
   auditLogs        AuditLog[]
+  mouvementsSaisis MouvementTresorerie[] @relation("MouvementsSaisis")
+  presencesSaisies Presence[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -102,6 +104,8 @@ model Etablissement {
   eleves          Eleve[]
   paiements       Paiement[]
   fraisScolarite  FraisScolarite[]
+  mouvements          MouvementTresorerie[]
+  depensesRecurrentes DepenseRecurrente[]
   parametres      ParametresEtablissement?
 
   createdAt DateTime @default(now())
@@ -239,6 +243,7 @@ model Classe {
   inscriptions InscriptionAnnuelle[]
   affectations Affectation[]
   notes        Note[]
+  presences    Presence[]
   bulletins    Bulletin[]
 
   createdAt DateTime @default(now())
@@ -276,6 +281,7 @@ model Eleve {
   notes          Note[]
   inscriptions   InscriptionAnnuelle[]
   bulletins      Bulletin[]
+  presences      Presence[]
   fraisScolarite FraisScolarite[]
 
   createdAt DateTime @default(now())
@@ -654,4 +660,104 @@ enum DecisionEleve {
   REDOUBLE
   DIPLOME
   TRANSFERE
+}
+// ═════════════════════════════════════════════
+// TRESORERIE
+// Encaissements de frais (PaiementFrais) et paiements du personnel (Paiement)
+// ne sont pas recopies : le solde les calcule. Ici, les mouvements manuels.
+// ═════════════════════════════════════════════
+
+enum Caisse {
+  ESPECES
+  BANQUE
+  MOBILE_MONEY
+}
+
+enum TypeMouvement {
+  APPORT_CAPITAL
+  DEPENSE
+  RETRAIT_PROMOTEUR
+}
+
+model MouvementTresorerie {
+  id String @id @default(cuid())
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  type      TypeMouvement
+  caisse    Caisse
+  date      DateTime
+  montant   Float
+  libelle   String
+  categorie String? // depenses : Loyer, Electricite, Fournitures...
+  reference String?
+
+  // Sortie acceptee malgre un solde insuffisant (directeur, motif obligatoire)
+  derogation      Boolean @default(false)
+  motifDerogation String?
+
+  annule          Boolean @default(false)
+  motifAnnulation String?
+
+  saisieParId String
+  saisiePar   User   @relation("MouvementsSaisis", fields: [saisieParId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([etablissementId, date])
+}
+
+// Depenses qui reviennent chaque mois (loyer, electricite...) : alerte de tresorerie
+model DepenseRecurrente {
+  id String @id @default(cuid())
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  libelle      String
+  categorie    String
+  montant      Float
+  jourEcheance Int // 1 a 28
+  caisse       Caisse
+  actif        Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  @@index([etablissementId])
+}
+
+// ═════════════════════════════════════════════
+// PRESENCES
+// ═════════════════════════════════════════════
+
+enum StatutPresence {
+  PRESENT
+  ABSENT
+  RETARD
+}
+
+model Presence {
+  id String @id @default(cuid())
+
+  eleveId String
+  eleve   Eleve  @relation(fields: [eleveId], references: [id], onDelete: Cascade)
+
+  classeId String
+  classe   Classe @relation(fields: [classeId], references: [id])
+
+  date         DateTime @db.Date
+  statut       StatutPresence
+  justifie     Boolean  @default(false)
+  motif        String?
+  dureeMinutes Int?
+
+  saisieParId String
+  saisiePar   User   @relation(fields: [saisieParId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eleveId, date])
+  @@index([classeId, date])
 }

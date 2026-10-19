@@ -316,6 +316,7 @@ export type ClasseWhereInput = {
   inscriptions?: Prisma.InscriptionAnnuelleListRelationFilter
   affectations?: Prisma.AffectationListRelationFilter
   notes?: Prisma.NoteListRelationFilter
+  presences?: Prisma.PresenceListRelationFilter
   bulletins?: Prisma.BulletinListRelationFilter
 }
 
@@ -343,6 +344,7 @@ export type ClasseOrderByWithRelationInput = {
   inscriptions?: Prisma.InscriptionAnnuelleOrderByRelationAggregateInput
   affectations?: Prisma.AffectationOrderByRelationAggregateInput
   notes?: Prisma.NoteOrderByRelationAggregateInput
+  presences?: Prisma.PresenceOrderByRelationAggregateInput
   bulletins?: Prisma.BulletinOrderByRelationAggregateInput
 }
 
@@ -374,6 +376,7 @@ export type ClasseWhereUniqueInput = Prisma.AtLeast<{
   inscriptions?: Prisma.InscriptionAnnuelleListRelationFilter
   affectations?: Prisma.AffectationListRelationFilter
   notes?: Prisma.NoteListRelationFilter
+  presences?: Prisma.PresenceListRelationFilter
   bulletins?: Prisma.BulletinListRelationFilter
 }, "id" | "etablissementId_anneeScolaireId_niveau_section">
 
@@ -441,6 +444,7 @@ export type ClasseCreateInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -464,6 +468,7 @@ export type ClasseUncheckedCreateInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -487,6 +492,7 @@ export type ClasseUpdateInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -510,6 +516,7 @@ export type ClasseUncheckedUpdateInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -898,6 +905,20 @@ export type ClasseUpdateOneRequiredWithoutInscriptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClasseUpdateToOneWithWhereWithoutInscriptionsInput, Prisma.ClasseUpdateWithoutInscriptionsInput>, Prisma.ClasseUncheckedUpdateWithoutInscriptionsInput>
 }
 
+export type ClasseCreateNestedOneWithoutPresencesInput = {
+  create?: Prisma.XOR<Prisma.ClasseCreateWithoutPresencesInput, Prisma.ClasseUncheckedCreateWithoutPresencesInput>
+  connectOrCreate?: Prisma.ClasseCreateOrConnectWithoutPresencesInput
+  connect?: Prisma.ClasseWhereUniqueInput
+}
+
+export type ClasseUpdateOneRequiredWithoutPresencesNestedInput = {
+  create?: Prisma.XOR<Prisma.ClasseCreateWithoutPresencesInput, Prisma.ClasseUncheckedCreateWithoutPresencesInput>
+  connectOrCreate?: Prisma.ClasseCreateOrConnectWithoutPresencesInput
+  upsert?: Prisma.ClasseUpsertWithoutPresencesInput
+  connect?: Prisma.ClasseWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ClasseUpdateToOneWithWhereWithoutPresencesInput, Prisma.ClasseUpdateWithoutPresencesInput>, Prisma.ClasseUncheckedUpdateWithoutPresencesInput>
+}
+
 export type ClasseCreateWithoutTitulaireInput = {
   id?: string
   nom?: string | null
@@ -917,6 +938,7 @@ export type ClasseCreateWithoutTitulaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -939,6 +961,7 @@ export type ClasseUncheckedCreateWithoutTitulaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -971,6 +994,7 @@ export type ClasseCreateWithoutProfesseurPrincipalInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -993,6 +1017,7 @@ export type ClasseUncheckedCreateWithoutProfesseurPrincipalInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1078,6 +1103,7 @@ export type ClasseCreateWithoutEtablissementInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1100,6 +1126,7 @@ export type ClasseUncheckedCreateWithoutEtablissementInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1148,6 +1175,7 @@ export type ClasseCreateWithoutAnneeScolaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1170,6 +1198,7 @@ export type ClasseUncheckedCreateWithoutAnneeScolaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1218,6 +1247,7 @@ export type ClasseCreateWithoutElevesInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1240,6 +1270,7 @@ export type ClasseUncheckedCreateWithoutElevesInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1278,6 +1309,7 @@ export type ClasseUpdateWithoutElevesInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1300,6 +1332,7 @@ export type ClasseUncheckedUpdateWithoutElevesInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1322,6 +1355,7 @@ export type ClasseCreateWithoutAffectationsInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutClasseInput
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1344,6 +1378,7 @@ export type ClasseUncheckedCreateWithoutAffectationsInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutClasseInput
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1382,6 +1417,7 @@ export type ClasseUpdateWithoutAffectationsInput = {
   eleves?: Prisma.EleveUpdateManyWithoutClasseNestedInput
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1404,6 +1440,7 @@ export type ClasseUncheckedUpdateWithoutAffectationsInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutClasseNestedInput
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1426,6 +1463,7 @@ export type ClasseCreateWithoutNotesInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutClasseInput
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1448,6 +1486,7 @@ export type ClasseUncheckedCreateWithoutNotesInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutClasseInput
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1486,6 +1525,7 @@ export type ClasseUpdateWithoutNotesInput = {
   eleves?: Prisma.EleveUpdateManyWithoutClasseNestedInput
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1508,6 +1548,7 @@ export type ClasseUncheckedUpdateWithoutNotesInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutClasseNestedInput
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1531,6 +1572,7 @@ export type ClasseCreateWithoutBulletinsInput = {
   inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
 }
 
 export type ClasseUncheckedCreateWithoutBulletinsInput = {
@@ -1553,6 +1595,7 @@ export type ClasseUncheckedCreateWithoutBulletinsInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
 }
 
 export type ClasseCreateOrConnectWithoutBulletinsInput = {
@@ -1591,6 +1634,7 @@ export type ClasseUpdateWithoutBulletinsInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
 }
 
 export type ClasseUncheckedUpdateWithoutBulletinsInput = {
@@ -1613,6 +1657,7 @@ export type ClasseUncheckedUpdateWithoutBulletinsInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
 }
 
 export type ClasseCreateWithoutInscriptionsInput = {
@@ -1634,6 +1679,7 @@ export type ClasseCreateWithoutInscriptionsInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
 }
 
@@ -1656,6 +1702,7 @@ export type ClasseUncheckedCreateWithoutInscriptionsInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutClasseInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
   notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  presences?: Prisma.PresenceUncheckedCreateNestedManyWithoutClasseInput
   bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
 }
 
@@ -1694,6 +1741,7 @@ export type ClasseUpdateWithoutInscriptionsInput = {
   eleves?: Prisma.EleveUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1714,6 +1762,115 @@ export type ClasseUncheckedUpdateWithoutInscriptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutClasseNestedInput
+  affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
+  notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
+  bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
+}
+
+export type ClasseCreateWithoutPresencesInput = {
+  id?: string
+  nom?: string | null
+  niveau: number
+  cycle: $Enums.Cycle
+  section?: string | null
+  salle?: string | null
+  fraisInscription?: number
+  fraisScolariteMensuel?: number
+  capaciteMax?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutClassesInput
+  anneeScolaire: Prisma.AnneeScolaireCreateNestedOneWithoutClassesInput
+  titulaire?: Prisma.EmployeCreateNestedOneWithoutClassesTitulaireInput
+  professeurPrincipal?: Prisma.EmployeCreateNestedOneWithoutClassesPrincipalInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutClasseInput
+  inscriptions?: Prisma.InscriptionAnnuelleCreateNestedManyWithoutClasseInput
+  affectations?: Prisma.AffectationCreateNestedManyWithoutClasseInput
+  notes?: Prisma.NoteCreateNestedManyWithoutClasseInput
+  bulletins?: Prisma.BulletinCreateNestedManyWithoutClasseInput
+}
+
+export type ClasseUncheckedCreateWithoutPresencesInput = {
+  id?: string
+  etablissementId: string
+  anneeScolaireId: string
+  nom?: string | null
+  niveau: number
+  cycle: $Enums.Cycle
+  section?: string | null
+  salle?: string | null
+  fraisInscription?: number
+  fraisScolariteMensuel?: number
+  capaciteMax?: number
+  titulaireId?: string | null
+  professeurPrincipalId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutClasseInput
+  inscriptions?: Prisma.InscriptionAnnuelleUncheckedCreateNestedManyWithoutClasseInput
+  affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutClasseInput
+  notes?: Prisma.NoteUncheckedCreateNestedManyWithoutClasseInput
+  bulletins?: Prisma.BulletinUncheckedCreateNestedManyWithoutClasseInput
+}
+
+export type ClasseCreateOrConnectWithoutPresencesInput = {
+  where: Prisma.ClasseWhereUniqueInput
+  create: Prisma.XOR<Prisma.ClasseCreateWithoutPresencesInput, Prisma.ClasseUncheckedCreateWithoutPresencesInput>
+}
+
+export type ClasseUpsertWithoutPresencesInput = {
+  update: Prisma.XOR<Prisma.ClasseUpdateWithoutPresencesInput, Prisma.ClasseUncheckedUpdateWithoutPresencesInput>
+  create: Prisma.XOR<Prisma.ClasseCreateWithoutPresencesInput, Prisma.ClasseUncheckedCreateWithoutPresencesInput>
+  where?: Prisma.ClasseWhereInput
+}
+
+export type ClasseUpdateToOneWithWhereWithoutPresencesInput = {
+  where?: Prisma.ClasseWhereInput
+  data: Prisma.XOR<Prisma.ClasseUpdateWithoutPresencesInput, Prisma.ClasseUncheckedUpdateWithoutPresencesInput>
+}
+
+export type ClasseUpdateWithoutPresencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  niveau?: Prisma.IntFieldUpdateOperationsInput | number
+  cycle?: Prisma.EnumCycleFieldUpdateOperationsInput | $Enums.Cycle
+  section?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fraisInscription?: Prisma.FloatFieldUpdateOperationsInput | number
+  fraisScolariteMensuel?: Prisma.FloatFieldUpdateOperationsInput | number
+  capaciteMax?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutClassesNestedInput
+  anneeScolaire?: Prisma.AnneeScolaireUpdateOneRequiredWithoutClassesNestedInput
+  titulaire?: Prisma.EmployeUpdateOneWithoutClassesTitulaireNestedInput
+  professeurPrincipal?: Prisma.EmployeUpdateOneWithoutClassesPrincipalNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutClasseNestedInput
+  inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
+  affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
+  notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
+}
+
+export type ClasseUncheckedUpdateWithoutPresencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  anneeScolaireId?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  niveau?: Prisma.IntFieldUpdateOperationsInput | number
+  cycle?: Prisma.EnumCycleFieldUpdateOperationsInput | $Enums.Cycle
+  section?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  salle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fraisInscription?: Prisma.FloatFieldUpdateOperationsInput | number
+  fraisScolariteMensuel?: Prisma.FloatFieldUpdateOperationsInput | number
+  capaciteMax?: Prisma.IntFieldUpdateOperationsInput | number
+  titulaireId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  professeurPrincipalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutClasseNestedInput
+  inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
@@ -1772,6 +1929,7 @@ export type ClasseUpdateWithoutTitulaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1794,6 +1952,7 @@ export type ClasseUncheckedUpdateWithoutTitulaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1833,6 +1992,7 @@ export type ClasseUpdateWithoutProfesseurPrincipalInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1855,6 +2015,7 @@ export type ClasseUncheckedUpdateWithoutProfesseurPrincipalInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1911,6 +2072,7 @@ export type ClasseUpdateWithoutEtablissementInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -1933,6 +2095,7 @@ export type ClasseUncheckedUpdateWithoutEtablissementInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -1989,6 +2152,7 @@ export type ClasseUpdateWithoutAnneeScolaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUpdateManyWithoutClasseNestedInput
 }
 
@@ -2011,6 +2175,7 @@ export type ClasseUncheckedUpdateWithoutAnneeScolaireInput = {
   inscriptions?: Prisma.InscriptionAnnuelleUncheckedUpdateManyWithoutClasseNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutClasseNestedInput
   notes?: Prisma.NoteUncheckedUpdateManyWithoutClasseNestedInput
+  presences?: Prisma.PresenceUncheckedUpdateManyWithoutClasseNestedInput
   bulletins?: Prisma.BulletinUncheckedUpdateManyWithoutClasseNestedInput
 }
 
@@ -2041,6 +2206,7 @@ export type ClasseCountOutputType = {
   inscriptions: number
   affectations: number
   notes: number
+  presences: number
   bulletins: number
 }
 
@@ -2049,6 +2215,7 @@ export type ClasseCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   inscriptions?: boolean | ClasseCountOutputTypeCountInscriptionsArgs
   affectations?: boolean | ClasseCountOutputTypeCountAffectationsArgs
   notes?: boolean | ClasseCountOutputTypeCountNotesArgs
+  presences?: boolean | ClasseCountOutputTypeCountPresencesArgs
   bulletins?: boolean | ClasseCountOutputTypeCountBulletinsArgs
 }
 
@@ -2093,6 +2260,13 @@ export type ClasseCountOutputTypeCountNotesArgs<ExtArgs extends runtime.Types.Ex
 /**
  * ClasseCountOutputType without action
  */
+export type ClasseCountOutputTypeCountPresencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PresenceWhereInput
+}
+
+/**
+ * ClasseCountOutputType without action
+ */
 export type ClasseCountOutputTypeCountBulletinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.BulletinWhereInput
 }
@@ -2122,6 +2296,7 @@ export type ClasseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   inscriptions?: boolean | Prisma.Classe$inscriptionsArgs<ExtArgs>
   affectations?: boolean | Prisma.Classe$affectationsArgs<ExtArgs>
   notes?: boolean | Prisma.Classe$notesArgs<ExtArgs>
+  presences?: boolean | Prisma.Classe$presencesArgs<ExtArgs>
   bulletins?: boolean | Prisma.Classe$bulletinsArgs<ExtArgs>
   _count?: boolean | Prisma.ClasseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["classe"]>
@@ -2198,6 +2373,7 @@ export type ClasseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   inscriptions?: boolean | Prisma.Classe$inscriptionsArgs<ExtArgs>
   affectations?: boolean | Prisma.Classe$affectationsArgs<ExtArgs>
   notes?: boolean | Prisma.Classe$notesArgs<ExtArgs>
+  presences?: boolean | Prisma.Classe$presencesArgs<ExtArgs>
   bulletins?: boolean | Prisma.Classe$bulletinsArgs<ExtArgs>
   _count?: boolean | Prisma.ClasseCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2225,6 +2401,7 @@ export type $ClassePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     inscriptions: Prisma.$InscriptionAnnuellePayload<ExtArgs>[]
     affectations: Prisma.$AffectationPayload<ExtArgs>[]
     notes: Prisma.$NotePayload<ExtArgs>[]
+    presences: Prisma.$PresencePayload<ExtArgs>[]
     bulletins: Prisma.$BulletinPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2645,6 +2822,7 @@ export interface Prisma__ClasseClient<T, Null = never, ExtArgs extends runtime.T
   inscriptions<T extends Prisma.Classe$inscriptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classe$inscriptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InscriptionAnnuellePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   affectations<T extends Prisma.Classe$affectationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classe$affectationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AffectationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notes<T extends Prisma.Classe$notesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classe$notesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  presences<T extends Prisma.Classe$presencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classe$presencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bulletins<T extends Prisma.Classe$bulletinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Classe$bulletinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulletinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3222,6 +3400,30 @@ export type Classe$notesArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.NoteScalarFieldEnum | Prisma.NoteScalarFieldEnum[]
+}
+
+/**
+ * Classe.presences
+ */
+export type Classe$presencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Presence
+   */
+  select?: Prisma.PresenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Presence
+   */
+  omit?: Prisma.PresenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PresenceInclude<ExtArgs> | null
+  where?: Prisma.PresenceWhereInput
+  orderBy?: Prisma.PresenceOrderByWithRelationInput | Prisma.PresenceOrderByWithRelationInput[]
+  cursor?: Prisma.PresenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PresenceScalarFieldEnum | Prisma.PresenceScalarFieldEnum[]
 }
 
 /**

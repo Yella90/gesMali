@@ -140,3 +140,30 @@ export const DecisionEleve = {
 } as const
 
 export type DecisionEleve = (typeof DecisionEleve)[keyof typeof DecisionEleve]
+
+
+export const Caisse = {
+  ESPECES: 'ESPECES',
+  BANQUE: 'BANQUE',
+  MOBILE_MONEY: 'MOBILE_MONEY'
+} as const
+
+export type Caisse = (typeof Caisse)[keyof typeof Caisse]
+
+
+export const TypeMouvement = {
+  APPORT_CAPITAL: 'APPORT_CAPITAL',
+  DEPENSE: 'DEPENSE',
+  RETRAIT_PROMOTEUR: 'RETRAIT_PROMOTEUR'
+} as const
+
+export type TypeMouvement = (typeof TypeMouvement)[keyof typeof TypeMouvement]
+
+
+export const StatutPresence = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  RETARD: 'RETARD'
+} as const
+
+export type StatutPresence = (typeof StatutPresence)[keyof typeof StatutPresence]

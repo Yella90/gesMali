@@ -230,6 +230,8 @@ export type EtablissementWhereInput = {
   eleves?: Prisma.EleveListRelationFilter
   paiements?: Prisma.PaiementListRelationFilter
   fraisScolarite?: Prisma.FraisScolariteListRelationFilter
+  mouvements?: Prisma.MouvementTresorerieListRelationFilter
+  depensesRecurrentes?: Prisma.DepenseRecurrenteListRelationFilter
   parametres?: Prisma.XOR<Prisma.ParametresEtablissementNullableScalarRelationFilter, Prisma.ParametresEtablissementWhereInput> | null
 }
 
@@ -252,6 +254,8 @@ export type EtablissementOrderByWithRelationInput = {
   eleves?: Prisma.EleveOrderByRelationAggregateInput
   paiements?: Prisma.PaiementOrderByRelationAggregateInput
   fraisScolarite?: Prisma.FraisScolariteOrderByRelationAggregateInput
+  mouvements?: Prisma.MouvementTresorerieOrderByRelationAggregateInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteOrderByRelationAggregateInput
   parametres?: Prisma.ParametresEtablissementOrderByWithRelationInput
 }
 
@@ -277,6 +281,8 @@ export type EtablissementWhereUniqueInput = Prisma.AtLeast<{
   eleves?: Prisma.EleveListRelationFilter
   paiements?: Prisma.PaiementListRelationFilter
   fraisScolarite?: Prisma.FraisScolariteListRelationFilter
+  mouvements?: Prisma.MouvementTresorerieListRelationFilter
+  depensesRecurrentes?: Prisma.DepenseRecurrenteListRelationFilter
   parametres?: Prisma.XOR<Prisma.ParametresEtablissementNullableScalarRelationFilter, Prisma.ParametresEtablissementWhereInput> | null
 }, "id">
 
@@ -331,6 +337,8 @@ export type EtablissementCreateInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -353,6 +361,8 @@ export type EtablissementUncheckedCreateInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -375,6 +385,8 @@ export type EtablissementUpdateInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -397,6 +409,8 @@ export type EtablissementUncheckedUpdateInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -613,6 +627,34 @@ export type EtablissementUpdateOneRequiredWithoutFraisScolariteNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutFraisScolariteInput, Prisma.EtablissementUpdateWithoutFraisScolariteInput>, Prisma.EtablissementUncheckedUpdateWithoutFraisScolariteInput>
 }
 
+export type EtablissementCreateNestedOneWithoutMouvementsInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutMouvementsInput, Prisma.EtablissementUncheckedCreateWithoutMouvementsInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutMouvementsInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneRequiredWithoutMouvementsNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutMouvementsInput, Prisma.EtablissementUncheckedCreateWithoutMouvementsInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutMouvementsInput
+  upsert?: Prisma.EtablissementUpsertWithoutMouvementsInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutMouvementsInput, Prisma.EtablissementUpdateWithoutMouvementsInput>, Prisma.EtablissementUncheckedUpdateWithoutMouvementsInput>
+}
+
+export type EtablissementCreateNestedOneWithoutDepensesRecurrentesInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedCreateWithoutDepensesRecurrentesInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutDepensesRecurrentesInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneRequiredWithoutDepensesRecurrentesNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedCreateWithoutDepensesRecurrentesInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutDepensesRecurrentesInput
+  upsert?: Prisma.EtablissementUpsertWithoutDepensesRecurrentesInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutDepensesRecurrentesInput, Prisma.EtablissementUpdateWithoutDepensesRecurrentesInput>, Prisma.EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput>
+}
+
 export type EtablissementCreateWithoutEmployesInput = {
   id?: string
   nom: string
@@ -631,6 +673,8 @@ export type EtablissementCreateWithoutEmployesInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -652,6 +696,8 @@ export type EtablissementUncheckedCreateWithoutEmployesInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -689,6 +735,8 @@ export type EtablissementUpdateWithoutEmployesInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -710,6 +758,8 @@ export type EtablissementUncheckedUpdateWithoutEmployesInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -731,6 +781,8 @@ export type EtablissementCreateWithoutUsersInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -752,6 +804,8 @@ export type EtablissementUncheckedCreateWithoutUsersInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -789,6 +843,8 @@ export type EtablissementUpdateWithoutUsersInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -810,6 +866,8 @@ export type EtablissementUncheckedUpdateWithoutUsersInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -832,6 +890,8 @@ export type EtablissementCreateWithoutParametresInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
 }
 
 export type EtablissementUncheckedCreateWithoutParametresInput = {
@@ -853,6 +913,8 @@ export type EtablissementUncheckedCreateWithoutParametresInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
 }
 
 export type EtablissementCreateOrConnectWithoutParametresInput = {
@@ -890,6 +952,8 @@ export type EtablissementUpdateWithoutParametresInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
 }
 
 export type EtablissementUncheckedUpdateWithoutParametresInput = {
@@ -911,6 +975,8 @@ export type EtablissementUncheckedUpdateWithoutParametresInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
 }
 
 export type EtablissementCreateWithoutAnneesScolairesInput = {
@@ -931,6 +997,8 @@ export type EtablissementCreateWithoutAnneesScolairesInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -952,6 +1020,8 @@ export type EtablissementUncheckedCreateWithoutAnneesScolairesInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -989,6 +1059,8 @@ export type EtablissementUpdateWithoutAnneesScolairesInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1010,6 +1082,8 @@ export type EtablissementUncheckedUpdateWithoutAnneesScolairesInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1031,6 +1105,8 @@ export type EtablissementCreateWithoutMatieresInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1052,6 +1128,8 @@ export type EtablissementUncheckedCreateWithoutMatieresInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1089,6 +1167,8 @@ export type EtablissementUpdateWithoutMatieresInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1110,6 +1190,8 @@ export type EtablissementUncheckedUpdateWithoutMatieresInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1131,6 +1213,8 @@ export type EtablissementCreateWithoutClassesInput = {
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1152,6 +1236,8 @@ export type EtablissementUncheckedCreateWithoutClassesInput = {
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1189,6 +1275,8 @@ export type EtablissementUpdateWithoutClassesInput = {
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1210,6 +1298,8 @@ export type EtablissementUncheckedUpdateWithoutClassesInput = {
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1231,6 +1321,8 @@ export type EtablissementCreateWithoutElevesInput = {
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1252,6 +1344,8 @@ export type EtablissementUncheckedCreateWithoutElevesInput = {
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1289,6 +1383,8 @@ export type EtablissementUpdateWithoutElevesInput = {
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1310,6 +1406,8 @@ export type EtablissementUncheckedUpdateWithoutElevesInput = {
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1331,6 +1429,8 @@ export type EtablissementCreateWithoutPaiementsInput = {
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1352,6 +1452,8 @@ export type EtablissementUncheckedCreateWithoutPaiementsInput = {
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1389,6 +1491,8 @@ export type EtablissementUpdateWithoutPaiementsInput = {
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1410,6 +1514,8 @@ export type EtablissementUncheckedUpdateWithoutPaiementsInput = {
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1431,6 +1537,8 @@ export type EtablissementCreateWithoutFraisScolariteInput = {
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
   eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1452,6 +1560,8 @@ export type EtablissementUncheckedCreateWithoutFraisScolariteInput = {
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
   eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
   parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
 }
 
@@ -1489,6 +1599,8 @@ export type EtablissementUpdateWithoutFraisScolariteInput = {
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1510,6 +1622,224 @@ export type EtablissementUncheckedUpdateWithoutFraisScolariteInput = {
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutMouvementsInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutMouvementsInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutMouvementsInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutMouvementsInput, Prisma.EtablissementUncheckedCreateWithoutMouvementsInput>
+}
+
+export type EtablissementUpsertWithoutMouvementsInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutMouvementsInput, Prisma.EtablissementUncheckedUpdateWithoutMouvementsInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutMouvementsInput, Prisma.EtablissementUncheckedCreateWithoutMouvementsInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutMouvementsInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutMouvementsInput, Prisma.EtablissementUncheckedUpdateWithoutMouvementsInput>
+}
+
+export type EtablissementUpdateWithoutMouvementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutMouvementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutDepensesRecurrentesInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutDepensesRecurrentesInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutDepensesRecurrentesInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedCreateWithoutDepensesRecurrentesInput>
+}
+
+export type EtablissementUpsertWithoutDepensesRecurrentesInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedCreateWithoutDepensesRecurrentesInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutDepensesRecurrentesInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutDepensesRecurrentesInput, Prisma.EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput>
+}
+
+export type EtablissementUpdateWithoutDepensesRecurrentesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
 }
 
@@ -1527,6 +1857,8 @@ export type EtablissementCountOutputType = {
   eleves: number
   paiements: number
   fraisScolarite: number
+  mouvements: number
+  depensesRecurrentes: number
 }
 
 export type EtablissementCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1538,6 +1870,8 @@ export type EtablissementCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   eleves?: boolean | EtablissementCountOutputTypeCountElevesArgs
   paiements?: boolean | EtablissementCountOutputTypeCountPaiementsArgs
   fraisScolarite?: boolean | EtablissementCountOutputTypeCountFraisScolariteArgs
+  mouvements?: boolean | EtablissementCountOutputTypeCountMouvementsArgs
+  depensesRecurrentes?: boolean | EtablissementCountOutputTypeCountDepensesRecurrentesArgs
 }
 
 /**
@@ -1606,6 +1940,20 @@ export type EtablissementCountOutputTypeCountFraisScolariteArgs<ExtArgs extends 
   where?: Prisma.FraisScolariteWhereInput
 }
 
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountMouvementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MouvementTresorerieWhereInput
+}
+
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountDepensesRecurrentesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DepenseRecurrenteWhereInput
+}
+
 
 export type EtablissementSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1626,6 +1974,8 @@ export type EtablissementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   eleves?: boolean | Prisma.Etablissement$elevesArgs<ExtArgs>
   paiements?: boolean | Prisma.Etablissement$paiementsArgs<ExtArgs>
   fraisScolarite?: boolean | Prisma.Etablissement$fraisScolariteArgs<ExtArgs>
+  mouvements?: boolean | Prisma.Etablissement$mouvementsArgs<ExtArgs>
+  depensesRecurrentes?: boolean | Prisma.Etablissement$depensesRecurrentesArgs<ExtArgs>
   parametres?: boolean | Prisma.Etablissement$parametresArgs<ExtArgs>
   _count?: boolean | Prisma.EtablissementCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["etablissement"]>
@@ -1679,6 +2029,8 @@ export type EtablissementInclude<ExtArgs extends runtime.Types.Extensions.Intern
   eleves?: boolean | Prisma.Etablissement$elevesArgs<ExtArgs>
   paiements?: boolean | Prisma.Etablissement$paiementsArgs<ExtArgs>
   fraisScolarite?: boolean | Prisma.Etablissement$fraisScolariteArgs<ExtArgs>
+  mouvements?: boolean | Prisma.Etablissement$mouvementsArgs<ExtArgs>
+  depensesRecurrentes?: boolean | Prisma.Etablissement$depensesRecurrentesArgs<ExtArgs>
   parametres?: boolean | Prisma.Etablissement$parametresArgs<ExtArgs>
   _count?: boolean | Prisma.EtablissementCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1696,6 +2048,8 @@ export type $EtablissementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     eleves: Prisma.$ElevePayload<ExtArgs>[]
     paiements: Prisma.$PaiementPayload<ExtArgs>[]
     fraisScolarite: Prisma.$FraisScolaritePayload<ExtArgs>[]
+    mouvements: Prisma.$MouvementTresoreriePayload<ExtArgs>[]
+    depensesRecurrentes: Prisma.$DepenseRecurrentePayload<ExtArgs>[]
     parametres: Prisma.$ParametresEtablissementPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2111,6 +2465,8 @@ export interface Prisma__EtablissementClient<T, Null = never, ExtArgs extends ru
   eleves<T extends Prisma.Etablissement$elevesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$elevesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ElevePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paiements<T extends Prisma.Etablissement$paiementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$paiementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaiementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fraisScolarite<T extends Prisma.Etablissement$fraisScolariteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$fraisScolariteArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FraisScolaritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  mouvements<T extends Prisma.Etablissement$mouvementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$mouvementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MouvementTresoreriePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  depensesRecurrentes<T extends Prisma.Etablissement$depensesRecurrentesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$depensesRecurrentesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepenseRecurrentePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   parametres<T extends Prisma.Etablissement$parametresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$parametresArgs<ExtArgs>>): Prisma.Prisma__ParametresEtablissementClient<runtime.Types.Result.GetResult<Prisma.$ParametresEtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2733,6 +3089,54 @@ export type Etablissement$fraisScolariteArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.FraisScolariteScalarFieldEnum | Prisma.FraisScolariteScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.mouvements
+ */
+export type Etablissement$mouvementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MouvementTresorerie
+   */
+  select?: Prisma.MouvementTresorerieSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MouvementTresorerie
+   */
+  omit?: Prisma.MouvementTresorerieOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MouvementTresorerieInclude<ExtArgs> | null
+  where?: Prisma.MouvementTresorerieWhereInput
+  orderBy?: Prisma.MouvementTresorerieOrderByWithRelationInput | Prisma.MouvementTresorerieOrderByWithRelationInput[]
+  cursor?: Prisma.MouvementTresorerieWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MouvementTresorerieScalarFieldEnum | Prisma.MouvementTresorerieScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.depensesRecurrentes
+ */
+export type Etablissement$depensesRecurrentesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DepenseRecurrente
+   */
+  select?: Prisma.DepenseRecurrenteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DepenseRecurrente
+   */
+  omit?: Prisma.DepenseRecurrenteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DepenseRecurrenteInclude<ExtArgs> | null
+  where?: Prisma.DepenseRecurrenteWhereInput
+  orderBy?: Prisma.DepenseRecurrenteOrderByWithRelationInput | Prisma.DepenseRecurrenteOrderByWithRelationInput[]
+  cursor?: Prisma.DepenseRecurrenteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DepenseRecurrenteScalarFieldEnum | Prisma.DepenseRecurrenteScalarFieldEnum[]
 }
 
 /**

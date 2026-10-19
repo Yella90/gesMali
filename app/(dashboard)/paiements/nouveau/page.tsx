@@ -33,6 +33,7 @@ export default async function NouveauPaiementPage() {
       </div>
 
       <PaiementForm
+        estDirecteur={user.roles.includes("DIRECTEUR")}
         employes={employes.map((e) => ({
           id: e.id,
           label: e.nom + " " + e.prenom,

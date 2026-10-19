@@ -10,7 +10,10 @@ export type Permission =
   | "paiement.read" | "paiement.create" | "paiement.annuler"
   | "personnel.read" | "personnel.manage"
   | "parametres.read" | "parametres.manage"
-  | "audit.read";
+  | "audit.read"
+  | "tresorerie.read" | "tresorerie.depense" | "tresorerie.capital"
+  | "presence.read" | "presence.manage"
+  | "reprise.manage";
 
 export type Role = "DIRECTEUR" | "SECRETAIRE" | "COMPTABLE" | "ENSEIGNANT";
 
@@ -28,6 +31,9 @@ export const PERMISSIONS_PAR_ROLE: Record<Role, readonly Permission[]> = {
     "personnel.read","personnel.manage",
     "parametres.read","parametres.manage",
     "audit.read",
+    "tresorerie.read","tresorerie.depense","tresorerie.capital",
+    "presence.read","presence.manage",
+    "reprise.manage",
   ] as const,
   SECRETAIRE: [
     "eleve.read","eleve.create","eleve.update",
@@ -37,17 +43,20 @@ export const PERMISSIONS_PAR_ROLE: Record<Role, readonly Permission[]> = {
     "frais.read","frais.manage","frais.encaisser",
     // Pas d'acces aux paiements du personnel (salaires)
     "personnel.read",
+    "presence.read","presence.manage",
   ] as const,
   COMPTABLE: [
     "eleve.read",
     "classe.read",
     "frais.read","frais.manage","frais.encaisser",
     "paiement.read","paiement.create",
+    "tresorerie.read","tresorerie.depense",
   ] as const,
   ENSEIGNANT: [
     "eleve.read","classe.read","matiere.read","trimestre.read",
     "note.read","note.create","note.update.own",
     "bulletin.read",
+    "presence.read","presence.manage",
   ] as const,
 };
 

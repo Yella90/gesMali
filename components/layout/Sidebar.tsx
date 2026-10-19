@@ -10,7 +10,7 @@ import { LiensLegaux } from "@/components/legal/PageLegale";
 import { libRole } from "@/lib/libelles";
 import {
   ArrowRightLeft, Banknote, BookOpen, BriefcaseBusiness, CalendarClock, CalendarRange, FileText,
-  GraduationCap, LayoutDashboard, LogOut, PencilLine, School, ScrollText, Settings, Wallet,
+  ClipboardCheck, GraduationCap, Landmark, LayoutDashboard, LogOut, Upload, PencilLine, School, ScrollText, Settings, Wallet,
   type LucideIcon,
 } from "lucide-react";
 
@@ -28,13 +28,16 @@ const MENU: Item[] = [
   { href: "/classes", label: "Classes", permission: "classe.read", icon: School, mobile: true },
   { href: "/emploi-du-temps", label: "Emploi du temps", permission: "classe.read", icon: CalendarClock },
   { href: "/notes", label: "Notes", permission: "note.create", icon: PencilLine, mobile: true },
+  { href: "/presences", label: "Présences", permission: "presence.read", icon: ClipboardCheck },
   { href: "/bulletins", label: "Bulletins", permission: "bulletin.read", icon: FileText },
   { href: "/frais", label: "Frais", permission: "frais.read", icon: Wallet, mobile: true },
   { href: "/paiements", label: "Paiements", permission: "paiement.read", icon: Banknote },
+  { href: "/tresorerie", label: "Trésorerie", permission: "tresorerie.read", icon: Landmark },
   { href: "/matieres", label: "Matières", permission: "matiere.read", icon: BookOpen },
   { href: "/trimestres", label: "Trimestres", permission: "trimestre.read", icon: CalendarRange },
   { href: "/personnel", label: "Personnel", permission: "personnel.read", icon: BriefcaseBusiness },
   { href: "/transition", label: "Transition annuelle", permission: "parametres.read", icon: ArrowRightLeft },
+  { href: "/reprise", label: "Reprise des données", permission: "reprise.manage", icon: Upload },
   { href: "/parametres", label: "Paramètres", permission: "parametres.read", icon: Settings },
   { href: "/audit", label: "Journal", permission: "audit.read", icon: ScrollText },
 ];

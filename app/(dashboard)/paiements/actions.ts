@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
+import { caisseDuMode, LIB_CAISSE, soldeCaisse } from "@/lib/tresorerie/tresorerie";
 
 export async function creerPaiement(formData: FormData) {
   const user = await requirePermission("paiement.create");
@@ -52,6 +53,19 @@ export async function creerPaiement(formData: FormData) {
     if (dejaPaye) throw new Error("Le salaire de ce mois a deja ete enregistre pour cet employe");
   }
 
+  // Le solde de la caisse doit couvrir le versement, sauf derogation du directeur
+  const caisse = caisseDuMode(modePaiement);
+  const disponible = await soldeCaisse(user.etablissementId, caisse);
+  let derogation: string | null = null;
+  if (montant > disponible + 0.01) {
+    const motif = String(formData.get("motifDerogation") ?? "").trim();
+    if (formData.get("derogation") !== "on" || !user.roles.includes("DIRECTEUR")) {
+      throw new Error("Solde insuffisant en caisse " + LIB_CAISSE[caisse] + " : " + disponible.toLocaleString("fr-FR") + " F disponibles");
+    }
+    if (motif.length < 5) throw new Error("Motif de dérogation obligatoire (5 caractères minimum)");
+    derogation = motif;
+  }
+
   const paiement = await prisma.paiement.create({
     data: {
       etablissementId: user.etablissementId,
@@ -75,7 +89,7 @@ export async function creerPaiement(formData: FormData) {
     action: "CREATE_PAIEMENT",
     entite: "Paiement",
     entiteId: paiement.id,
-    details: { employeId, montant, periode, type },
+    details: { employeId, montant, periode, type, ...(derogation ? { derogation } : {}) },
   });
 
   revalidatePath("/paiements");

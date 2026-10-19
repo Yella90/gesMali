@@ -7,6 +7,8 @@ import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
 import { elevesAvecFrais } from "@/lib/frais/requetes";
 import { financesMensuelles, moisValide, optionsMois, salairesPrevus } from "@/lib/tableau-de-bord/finances";
 import { Finances, type SituationEleves } from "./Finances";
+import { previsionMois } from "@/lib/tresorerie/tresorerie";
+import { AlertePrevision } from "@/components/tresorerie/AlertePrevision";
 
 const JOURS = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"];
 
@@ -133,6 +135,9 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       },
     };
   }
+
+  // Alerte de tresorerie (direction et comptabilite)
+  const prevision = peut(user.roles, "tresorerie.read") ? await previsionMois(user.etablissementId) : null;
 
   const pourcentFilles = nbElevesTotal > 0 ? Math.round((nbFilles / nbElevesTotal) * 100) : 0;
   const pourcentGarcons = nbElevesTotal > 0 ? Math.round((nbGarcons / nbElevesTotal) * 100) : 0;
@@ -493,6 +498,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             </div>
           )}
 
+          {prevision && <AlertePrevision prevision={prevision} peutCapital={peut(user.roles, "tresorerie.capital")} compacte />}
+
           {finances && (
             <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} avecSalaires={peut(user.roles, "paiement.read")} />
           )}
@@ -607,6 +614,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
             <StatCard href="/frais" label="Recettes du mois" value={statsComptable.recettesMois.toLocaleString("fr-FR") + " F"} icon={Wallet} accent="accent" />
             <StatCard href="/frais" label="Paiements reçus" value={String(statsComptable.nbPaiements)} icon={Receipt} accent="brand" />
           </div>
+
+          {prevision && <AlertePrevision prevision={prevision} peutCapital={peut(user.roles, "tresorerie.capital")} compacte />}
 
           {finances && (
             <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} avecSalaires={peut(user.roles, "paiement.read")} />
