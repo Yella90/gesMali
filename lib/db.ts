@@ -64,10 +64,13 @@ export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
+    // Tests (npm test) : les erreurs attendues (acces refuses) ne sont pas journalisees
     log:
       process.env.NODE_ENV === "development"
         ? ["error", "warn"]
-        : ["error"],
+        : process.env.NODE_ENV === "test"
+          ? []
+          : ["error"],
   });
 
 if (process.env.NODE_ENV !== "production") {
