@@ -210,9 +210,14 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
                   {(totalAnnee._sum.montant ?? 0).toLocaleString("fr-FR")} F versés depuis le 1er janvier
                 </p>
               </div>
-              <Link href="/paiements/nouveau" className="whitespace-nowrap text-xs text-[var(--color-brand)] hover:underline">
-                Enregistrer un paiement
-              </Link>
+              <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-1">
+                <a href={"/api/personnel/" + employe.id + "/paiements/pdf"} target="_blank" className="whitespace-nowrap text-xs text-[var(--color-brand)] hover:underline">
+                  Fiche des paiements (PDF)
+                </a>
+                <Link href="/paiements/nouveau" className="whitespace-nowrap text-xs text-[var(--color-brand)] hover:underline">
+                  Enregistrer un paiement
+                </Link>
+              </div>
             </div>
             {employe.paiements.length === 0 ? (
               <p className="p-6 text-center text-sm text-[var(--color-ink-muted)]">Aucun paiement enregistré.</p>

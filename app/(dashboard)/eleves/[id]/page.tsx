@@ -111,6 +111,11 @@ export default async function EleveDetailPage({
               }))}
             />
           )}
+          {peut(user.roles, "frais.read") && (
+            <a href={"/api/eleves/" + eleve.id + "/scolarite/pdf"} target="_blank" className="inline-flex items-center h-10 px-4 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm font-medium hover:bg-neutral-50">
+              Fiche de scolarité (PDF)
+            </a>
+          )}
           {frais && (
             <Link
               href={"/frais/eleve/" + eleve.id}

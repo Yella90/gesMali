@@ -135,9 +135,14 @@ export default async function FraisElevePage({ params }: { params: Promise<{ ele
               {libelleStatut(situation.statut)}
             </span>
           </div>
-          <Link href={"/eleves/" + eleve.id} className="text-xs text-[var(--color-ink-muted)] hover:underline">
-            Voir le profil →
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <a href={"/api/eleves/" + eleve.id + "/scolarite/pdf"} target="_blank" className="inline-flex items-center h-10 px-4 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm font-medium hover:bg-neutral-50">
+              Fiche de scolarité (PDF)
+            </a>
+            <Link href={"/eleves/" + eleve.id} className="text-xs text-[var(--color-ink-muted)] hover:underline">
+              Voir le profil
+            </Link>
+          </div>
         </div>
       </div>
 
