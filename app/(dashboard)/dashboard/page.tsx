@@ -55,6 +55,7 @@ function labelAction(action: string): string {
     UPDATE_EMPLOYE: "Modification employé",
     CREATE_COMPTE: "Création compte",
     CREATE_AFFECTATION: "Affectation",
+    UPDATE_AFFECTATION: "Modification affectation",
     DELETE_AFFECTATION: "Suppression affectation",
     GENERER_RAPPELS: "Génération rappels",
     CLOTURER_TRIMESTRE: "Clôture trimestre",

@@ -52,16 +52,9 @@ export default async function EmploiDuTempsPage({ searchParams }: { searchParams
               : sansHoraire + " classe(s) sans emploi du temps."}
           </p>
           <p className="mt-0.5 text-xs">
-            Les créneaux se planifient dans la fiche de chaque enseignant : Personnel, puis l&apos;enseignant, rubrique
-            Affectations (classe, matière, jour et heures).
-            {peutPlanifier && (
-              <>
-                {" "}
-                <Link href="/personnel" className="font-medium underline">
-                  Ouvrir le personnel
-                </Link>
-              </>
-            )}
+            {peutPlanifier
+              ? "Ouvrez une classe pour planifier ses cours directement sur sa grille : jour, heures, matière et enseignant."
+              : "La direction planifie les cours depuis la grille de chaque classe."}
           </p>
         </div>
       )}

@@ -80,6 +80,7 @@ function labelAction(action: string): string {
     UPDATE_PERSONNEL: "Modification personnel",
     CHANGER_MOT_DE_PASSE: "Changement mot de passe",
     CREATE_AFFECTATION: "Affectation créée",
+    UPDATE_AFFECTATION: "Affectation modifiée",
     DELETE_AFFECTATION: "Affectation supprimée",
     UPDATE_ETABLISSEMENT: "Modification établissement",
     UPDATE_PARAMETRES_NOTES: "Modification paramètres notes",
