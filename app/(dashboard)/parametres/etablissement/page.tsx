@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { EtablissementForm } from "./EtablissementForm";
+import { LogoEtablissement } from "./LogoEtablissement";
 import { libTypeEtablissement } from "@/lib/libelles";
 
 export default async function EtablissementPage() {
@@ -44,6 +45,8 @@ export default async function EtablissementPage() {
           }}
         />
       )}
+
+      {peutEditer && <LogoEtablissement logo={etablissement.logo} nom={etablissement.nom} />}
 
       {!peutEditer && (
         <div className="bg-white rounded-xl border border-[var(--color-border)] p-5 space-y-3 text-sm">

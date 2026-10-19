@@ -46,10 +46,12 @@ export function Sidebar({
   permissions,
   nom,
   roles,
+  etablissement,
 }: {
   permissions: Permission[];
   nom: string;
   roles: Role[];
+  etablissement: { nom: string; logo: string | null };
 }) {
   const pathname = usePathname();
   const [loadingOut, setLoadingOut] = useState(false);
@@ -72,11 +74,9 @@ export function Sidebar({
       {/* Header mobile */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-40 h-14 bg-white border-b border-[var(--color-border)] flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] text-white flex items-center justify-center font-bold text-sm">
-            G
-          </div>
-          <div className="leading-tight">
-            <p className="text-sm font-semibold">GES Mali</p>
+          <Embleme etablissement={etablissement} taille="w-8 h-8 rounded-lg text-sm" />
+          <div className="leading-tight min-w-0">
+            <p className="text-sm font-semibold truncate max-w-[180px]">{etablissement.nom}</p>
             <p className="text-[10px] text-[var(--color-ink-muted)] truncate max-w-[140px]">
               {nom}
             </p>
@@ -144,11 +144,9 @@ export function Sidebar({
       <aside className="hidden lg:flex w-64 bg-white border-r border-[var(--color-border)] flex-col h-screen sticky top-0">
         <div className="p-5 border-b border-[var(--color-border)]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[var(--color-brand)] text-white flex items-center justify-center font-bold">
-              G
-            </div>
+            <Embleme etablissement={etablissement} taille="w-10 h-10 rounded-xl" />
             <div className="min-w-0">
-              <p className="font-semibold text-sm">GES Mali</p>
+              <p className="font-semibold text-sm truncate" title={etablissement.nom}>{etablissement.nom}</p>
               <p className="text-xs text-[var(--color-ink-muted)] truncate">{nom}</p>
             </div>
           </div>
@@ -219,5 +217,19 @@ export function Sidebar({
         </ul>
       </nav>
     </>
+  );
+}
+// Logo de l etablissement, ou son initiale
+function Embleme({ etablissement, taille }: { etablissement: { nom: string; logo: string | null }; taille: string }) {
+  if (etablissement.logo) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- image servie par l API, deja reduite
+      <img src={etablissement.logo} alt="" className={taille + " shrink-0 object-contain bg-white border border-[var(--color-border)]"} />
+    );
+  }
+  return (
+    <div className={taille + " shrink-0 bg-[var(--color-brand)] text-white flex items-center justify-center font-bold"}>
+      {etablissement.nom.charAt(0).toUpperCase() || "G"}
+    </div>
   );
 }

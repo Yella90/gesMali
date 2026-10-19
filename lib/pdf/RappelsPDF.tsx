@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 
 const C = {
   ink: "#0F172A",
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  logoImage: { width: 40, height: 40, objectFit: "contain" },
   logoText: { fontSize: 7, color: C.gold, textAlign: "center" },
   etabNom: { fontSize: 12, fontWeight: "bold", color: C.brand },
   etabInfo: { fontSize: 7, color: C.inkMuted, marginTop: 2 },
@@ -141,9 +142,14 @@ export function RappelsPDF({
         {/* En-tete */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <View style={styles.logo}>
-              <Text style={styles.logoText}>LOGO</Text>
-            </View>
+            {etablissement.logo ? (
+              // eslint-disable-next-line jsx-a11y/alt-text -- Image react-pdf, pas une balise HTML
+              <Image src={etablissement.logo} style={styles.logoImage} />
+            ) : (
+              <View style={styles.logo}>
+                <Text style={styles.logoText}>{String(etablissement.nom ?? "").charAt(0).toUpperCase()}</Text>
+              </View>
+            )}
             <View>
               <Text style={styles.etabNom}>{etablissement.nom}</Text>
               <Text style={styles.etabInfo}>

@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 
 const C = {
   ink: "#0F172A",
@@ -13,6 +13,7 @@ const C = {
 
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 10, fontFamily: "Helvetica", color: C.ink },
+  logoImage: { width: 48, height: 48, objectFit: "contain", alignSelf: "center", marginBottom: 6 },
   header: {
     textAlign: "center",
     borderBottomWidth: 2,
@@ -119,6 +120,10 @@ export function RecuPDF({
       <Page size="A4" style={styles.page}>
         {/* En-tete */}
         <View style={styles.header}>
+          {etablissement.logo && (
+            // eslint-disable-next-line jsx-a11y/alt-text -- Image react-pdf, pas une balise HTML
+            <Image src={etablissement.logo} style={styles.logoImage} />
+          )}
           <Text style={styles.etabNom}>{etablissement.nom}</Text>
           <Text style={styles.etabInfo}>
             {etablissement.adresse || ""}

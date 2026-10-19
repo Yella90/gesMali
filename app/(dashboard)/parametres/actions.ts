@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
 export async function modifierEtablissement(formData: FormData) {
   const user = await requirePermission("parametres.manage");
@@ -104,4 +105,25 @@ export async function basculerAnnee(id: string) {
   revalidatePath("/parametres/etablissement");
   revalidatePath("/");
   return { success: true };
+}
+// Logo de l'etablissement : image PNG ou JPEG deja reduite par le navigateur,
+// enregistree en data URL (affichee sur les PDF, la barre laterale et l'espace parent)
+const TAILLE_MAX_LOGO = 400_000;
+
+export async function modifierLogo(logo: string | null) {
+  return capter(async () => {
+    const user = await requirePermission("parametres.manage");
+    if (logo !== null) {
+      if (!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(logo)) throw new Error("Format non pris en charge : utilisez une image PNG ou JPEG");
+      if (logo.length > TAILLE_MAX_LOGO) throw new Error("Image trop lourde (300 Ko maximum après réduction)");
+    }
+    await prisma.etablissement.update({ where: { id: user.etablissementId }, data: { logo } });
+    await enregistrerAudit({
+      userId: user.id,
+      action: logo ? "UPDATE_LOGO" : "DELETE_LOGO",
+      entite: "Etablissement",
+      entiteId: user.etablissementId,
+    });
+    revalidatePath("/", "layout");
+  });
 }

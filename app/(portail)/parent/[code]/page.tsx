@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { eleveParCodeParent } from "@/lib/portail/eleve";
 import { calculerSituation, libelleStatut } from "@/lib/frais/calculs";
 import { LiensLegaux } from "@/components/legal/PageLegale";
+import { identiteEtablissement } from "@/lib/etablissement/logo";
 
 // Espace parent : page publique, accessible uniquement avec le code secret de l'eleve.
 // Lecture seule. Seules les notes validees ou verrouillees sont montrees.
@@ -102,10 +103,17 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
     ? eleve.classe.nom || eleve.classe.niveau + (eleve.classe.section ? " " + eleve.classe.section : "")
     : null;
 
+  const { logo } = await identiteEtablissement(eleve.etablissement.id);
+
   return (
     <div className="min-h-screen bg-[var(--color-surface)]">
       <header className="bg-[var(--color-brand)] text-white">
-        <div className="mx-auto max-w-3xl px-4 py-5">
+        <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-5">
+          {logo && (
+            // eslint-disable-next-line @next/next/no-img-element -- image servie par l API, deja reduite
+            <img src={logo} alt="" className="h-12 w-12 shrink-0 rounded-lg bg-white object-contain p-1" />
+          )}
+          <div className="min-w-0">
           <p className="text-xs uppercase tracking-wide text-white/60">Espace parent</p>
           <p className="font-semibold mt-0.5">{eleve.etablissement.nom}</p>
           {(eleve.etablissement.adresse || eleve.etablissement.telephone) && (
@@ -115,6 +123,7 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
               {eleve.etablissement.telephone}
             </p>
           )}
+          </div>
         </div>
       </header>
 

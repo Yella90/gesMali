@@ -11,7 +11,7 @@ export const eleveParCodeParent = cache(async (code: string) => {
   const eleve = await prisma.eleve.findUnique({
     where: { codeParent: code },
     include: {
-      etablissement: { select: { nom: true, adresse: true, telephone: true, email: true } },
+      etablissement: { select: { id: true, nom: true, adresse: true, telephone: true, email: true } },
       classe: { include: { anneeScolaire: true } },
     },
   });

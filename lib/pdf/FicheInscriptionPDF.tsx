@@ -12,6 +12,7 @@ const C = {
 
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 10, fontFamily: "Helvetica", color: C.ink },
+  logoImage: { width: 48, height: 48, objectFit: "contain", alignSelf: "center", marginBottom: 6 },
   header: {
     textAlign: "center",
     borderBottomWidth: 2,
@@ -88,7 +89,7 @@ function fmtMontant(n: number): string {
 }
 
 export type FicheInscriptionData = {
-  etablissement: { nom: string; adresse: string | null; telephone: string | null };
+  etablissement: { nom: string; adresse: string | null; telephone: string | null; logo?: string | null };
   eleve: {
     matricule: string;
     nom: string;
@@ -129,6 +130,10 @@ export function FicheInscriptionPDF({ etablissement, eleve, classe, anneeScolair
       <Page size="A4" style={styles.page}>
         {/* En-tete */}
         <View style={styles.header}>
+          {etablissement.logo && (
+            // eslint-disable-next-line jsx-a11y/alt-text -- Image react-pdf, pas une balise HTML
+            <Image src={etablissement.logo} style={styles.logoImage} />
+          )}
           <Text style={styles.etabNom}>{etablissement.nom}</Text>
           <Text style={styles.etabInfo}>
             {etablissement.adresse || ""}
