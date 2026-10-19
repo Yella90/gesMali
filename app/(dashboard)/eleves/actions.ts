@@ -213,32 +213,106 @@ export async function modifierEleve(id: string, formData: FormData) {
     throw new Error("Acces refuse");
   }
 
-  // Changement de classe : meme etablissement, annee active, place disponible
-  if (data.classeId && data.classeId !== eleve.classeId) {
-    const classe = await prisma.classe.findUnique({
-      where: { id: data.classeId },
-      include: {
-        anneeScolaire: { select: { active: true } },
-        _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
-      },
-    });
-    if (!classe || classe.etablissementId !== user.etablissementId) throw new Error("Classe invalide");
-    if (!classe.anneeScolaire.active) throw new Error("Cette classe appartient a une annee scolaire archivee");
-    if (classe._count.eleves >= classe.capaciteMax) {
-      throw new Error("Classe pleine (" + classe.capaciteMax + " eleves max)");
+  const changeDeClasse = (data.classeId ?? null) !== (eleve.classeId ?? null);
+  if (!changeDeClasse) {
+    await prisma.eleve.update({ where: { id }, data });
+    await enregistrerAudit({ userId: user.id, action: "UPDATE_ELEVE", entite: "Eleve", entiteId: id });
+    revalidatePath("/eleves");
+    revalidatePath("/eleves/" + id);
+    return;
+  }
+
+  // Changement de classe : directeur seulement
+  if (!user.roles.includes("DIRECTEUR")) throw new Error("Seul le directeur peut changer un eleve de classe");
+
+  const nouvelle = data.classeId
+    ? await prisma.classe.findUnique({
+        where: { id: data.classeId },
+        include: {
+          anneeScolaire: true,
+          _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
+        },
+      })
+    : null;
+  if (data.classeId) {
+    if (!nouvelle || nouvelle.etablissementId !== user.etablissementId) throw new Error("Classe invalide");
+    if (!nouvelle.anneeScolaire.active) throw new Error("Cette classe appartient a une annee scolaire archivee");
+    if (nouvelle._count.eleves >= nouvelle.capaciteMax) {
+      throw new Error("Classe pleine (" + nouvelle.capaciteMax + " eleves max)");
     }
   }
 
-  await prisma.eleve.update({ where: { id }, data });
+  const bilan = { notesDeplacees: 0, echeancesRecalculees: 0, fraisGeneres: false };
+
+  await prisma.$transaction(async (tx) => {
+    await tx.eleve.update({ where: { id }, data });
+    if (!nouvelle || !eleve.classeId) return;
+
+    // 1. Notes des trimestres non clotures de l'annee : elles suivent l'eleve
+    //    (matieres du cycle de la nouvelle classe seulement)
+    const notes = await tx.note.updateMany({
+      where: {
+        eleveId: id,
+        classeId: eleve.classeId,
+        trimestre: { anneeScolaireId: nouvelle.anneeScolaireId, cloture: false },
+        matiere: { cycle: nouvelle.cycle },
+      },
+      data: { classeId: nouvelle.id },
+    });
+    bilan.notesDeplacees = notes.count;
+
+    // 2. Frais : echeances futures non payees au tarif de la nouvelle classe
+    const frais = await tx.fraisScolarite.findUnique({
+      where: { eleveId_anneeScolaireId: { eleveId: id, anneeScolaireId: nouvelle.anneeScolaireId } },
+      include: { tranches: { include: { paiements: { where: { annule: false }, select: { id: true } } } } },
+    });
+    if (frais) {
+      const aujourdhui = new Date();
+      const aRecalculer = frais.tranches.filter(
+        (t) => t.ordre > 0 && t.dateEcheance > aujourdhui && t.paiements.length === 0 && t.montant !== nouvelle.fraisScolariteMensuel
+      );
+      if (aRecalculer.length) {
+        await tx.trancheFrais.updateMany({
+          where: { id: { in: aRecalculer.map((t) => t.id) } },
+          data: { montant: nouvelle.fraisScolariteMensuel },
+        });
+      }
+      await tx.fraisScolarite.update({ where: { id: frais.id }, data: { fraisScolariteMensuel: nouvelle.fraisScolariteMensuel } });
+      bilan.echeancesRecalculees = aRecalculer.length;
+    }
+  });
+
+  // Eleve sans frais pour l'annee : generation selon la nouvelle classe
+  if (nouvelle && (nouvelle.fraisInscription > 0 || nouvelle.fraisScolariteMensuel > 0)) {
+    const existe = await prisma.fraisScolarite.findUnique({
+      where: { eleveId_anneeScolaireId: { eleveId: id, anneeScolaireId: nouvelle.anneeScolaireId } },
+      select: { id: true },
+    });
+    if (!existe) {
+      await genererFraisPourEleve(
+        id,
+        nouvelle.anneeScolaireId,
+        nouvelle.fraisInscription,
+        nouvelle.fraisScolariteMensuel,
+        nouvelle.anneeScolaire.dateDebut,
+        nouvelle.anneeScolaire.dateFin,
+        user.etablissementId
+      );
+      bilan.fraisGeneres = true;
+    }
+  }
+
   await enregistrerAudit({
     userId: user.id,
-    action: "UPDATE_ELEVE",
+    action: "CHANGEMENT_CLASSE_ELEVE",
     entite: "Eleve",
     entiteId: id,
-    details: data.classeId !== eleve.classeId ? { ancienneClasseId: eleve.classeId, nouvelleClasseId: data.classeId } : undefined,
+    details: { ancienneClasseId: eleve.classeId, nouvelleClasseId: data.classeId, ...bilan },
   });
   revalidatePath("/eleves");
   revalidatePath("/eleves/" + id);
+  revalidatePath("/frais");
+  return bilan;
 }
 
 export async function radierEleve(id: string) {

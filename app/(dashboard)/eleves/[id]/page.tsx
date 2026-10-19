@@ -103,6 +103,7 @@ export default async function EleveDetailPage({
                 emailParent: eleve.emailParent ?? "",
                 classeId: eleve.classeId ?? "",
               }}
+              peutChangerClasse={user.roles.includes("DIRECTEUR")}
               classes={classesActives.map((c) => ({
                 id: c.id,
                 label: c.nom || c.niveau + (c.section ? " " + c.section : ""),

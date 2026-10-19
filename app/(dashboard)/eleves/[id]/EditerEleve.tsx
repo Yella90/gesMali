@@ -26,9 +26,11 @@ const champSelect = "w-full h-10 rounded-lg border border-[var(--color-border-st
 export function EditerEleve({
   eleve,
   classes,
+  peutChangerClasse,
 }: {
   eleve: EleveModifiable;
   classes: { id: string; label: string; complet: boolean }[];
+  peutChangerClasse: boolean;
 }) {
   const router = useRouter();
   const ref = useRef<HTMLDialogElement>(null);
@@ -142,7 +144,8 @@ export function EditerEleve({
                 value={classeId}
                 onChange={(e) => setClasseId(e.target.value)}
                 aria-label="Classe"
-                className={champSelect}
+                disabled={!peutChangerClasse}
+                className={champSelect + " disabled:bg-[var(--color-surface)] disabled:text-[var(--color-ink-muted)]"}
               >
                 <option value="">Sans classe</option>
                 {classes.map((c) => (
@@ -152,10 +155,17 @@ export function EditerEleve({
                   </option>
                 ))}
               </select>
+              {!peutChangerClasse && (
+                <>
+                  {/* Valeur transmise malgre le champ desactive */}
+                  <input type="hidden" name="classeId" value={eleve.classeId} />
+                  <p className="text-xs text-[var(--color-ink-muted)]">Seul le directeur peut changer un élève de classe.</p>
+                </>
+              )}
               {changeDeClasse && (
-                <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
-                  Les frais de scolarité déjà générés pour cette année ne changent pas avec la classe. Ajustez-les si
-                  besoin dans la page Frais de l&apos;élève.
+                <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                  Les notes des trimestres en cours suivent l&apos;élève dans sa nouvelle classe. Les échéances futures non
+                  payées passent au tarif mensuel de la nouvelle classe ; les échéances payées ou passées ne changent pas.
                 </p>
               )}
             </fieldset>
