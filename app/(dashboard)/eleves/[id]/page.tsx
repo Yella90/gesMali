@@ -7,6 +7,7 @@ import { assurerCodeParent, qrCodeSvg, urlPortailParent } from "@/lib/portail/ac
 import { AccesParent } from "./AccesParent";
 import { EditerEleve } from "./EditerEleve";
 import { libStatutEleve, libTypeNote } from "@/lib/libelles";
+import { classeVisible } from "@/lib/data/guard";
 
 export default async function EleveDetailPage({
   params,
@@ -33,6 +34,7 @@ export default async function EleveDetailPage({
     },
   });
   if (!eleve || eleve.etablissementId !== user.etablissementId) notFound();
+  if (!(await classeVisible(user, eleve.classeId))) notFound();
 
   const peutModifier = peut(user.roles, "eleve.update");
   const classesActives = peutModifier
@@ -48,7 +50,8 @@ export default async function EleveDetailPage({
   const urlParent = await urlPortailParent(await assurerCodeParent(eleve.id));
   const qrSvg = await qrCodeSvg(urlParent);
 
-  const frais = eleve.fraisScolarite[0];
+  // Frais visibles seulement avec le droit frais.read (pas pour un enseignant)
+  const frais = peut(user.roles, "frais.read") ? eleve.fraisScolarite[0] : undefined;
   const total = frais
     ? frais.fraisInscription + frais.fraisScolariteMensuel * frais.tranches.filter((t) => t.ordre > 0).length
     : 0;

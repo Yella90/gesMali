@@ -11,12 +11,15 @@ export function Finances({
   flux,
   salairesPrevus,
   situation,
+  avecSalaires = true,
 }: {
   mois: string;
   options: { valeur: string; libelle: string }[];
   flux: MoisFinances[];
   salairesPrevus: number;
   situation: SituationEleves;
+  // Salaires et solde : reserves a qui voit les paiements du personnel
+  avecSalaires?: boolean;
 }) {
   const courant = flux[flux.length - 1];
   const libelleMois = fmtPeriode(mois);
@@ -85,7 +88,7 @@ export function Finances({
             ]}
             categories={[
               { libelle: "Frais de scolarité", valeurs: [courant.attendu, courant.encaisse] },
-              { libelle: "Salaires", valeurs: [salairesPrevus, courant.salaires] },
+              ...(avecSalaires ? [{ libelle: "Salaires", valeurs: [salairesPrevus, courant.salaires] }] : []),
             ]}
           />
           <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-[var(--color-border)] pt-3 text-xs">
@@ -96,6 +99,7 @@ export function Finances({
                 <span className="text-[var(--color-ink-muted)]"> encaissés sur {fcfa(courant.attendu)}</span>
               </dd>
             </div>
+            {avecSalaires && (
             <div>
               <dt className="text-[var(--color-ink-muted)]">Salaires</dt>
               <dd className="mt-0.5">
@@ -103,11 +107,13 @@ export function Finances({
                 <span className="text-[var(--color-ink-muted)]"> versés sur {fcfa(salairesPrevus)}</span>
               </dd>
             </div>
+            )}
           </dl>
         </CarteGraphique>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+      <div className={"grid gap-4 " + (avecSalaires ? "lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]" : "lg:grid-cols-2")}>
+        {avecSalaires && (
         <CarteGraphique
           titre="Solde mensuel"
           sousTitre="Frais encaissés moins salaires versés"
@@ -126,6 +132,7 @@ export function Finances({
             points={flux.map((m) => ({ libelle: m.libelle, court: m.libelle.split(" ")[0], valeur: m.encaisse - m.salaires }))}
           />
         </CarteGraphique>
+        )}
 
         <CarteGraphique
           titre="Situation des élèves"

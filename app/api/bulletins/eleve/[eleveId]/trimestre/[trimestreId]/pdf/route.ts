@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { rendreBulletinEleve } from "@/lib/pdf/bulletinEleve";
+import { getUtilisateurCourant } from "@/lib/auth/session";
+import { classeVisible } from "@/lib/data/guard";
 
 export async function GET(
   _: NextRequest,
@@ -21,6 +23,13 @@ export async function GET(
 
   const pdf = await rendreBulletinEleve(eleveId, trimestreId);
   if (!pdf) return NextResponse.json({ error: "Bulletin introuvable" }, { status: 404 });
+  if (pdf.etablissementId === user.etablissementId) {
+    // Enseignant : uniquement ses classes
+    const courant = await getUtilisateurCourant();
+    if (!courant || !(await classeVisible(courant, pdf.classeId))) {
+      return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
+    }
+  }
   if (pdf.etablissementId !== user.etablissementId) {
     return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
   }

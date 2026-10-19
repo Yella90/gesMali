@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { classeVisible } from "@/lib/data/guard";
 
 const JOURS = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"];
 
@@ -58,6 +59,7 @@ export default async function EmploiDuTempsClassePage({ params }: { params: Prom
     },
   });
   if (!classe || classe.etablissementId !== user.etablissementId) notFound();
+  if (!(await classeVisible(user, classe.id))) notFound();
 
   const lib = classe.nom || (classe.niveau + (classe.section ? " " + classe.section : ""));
 

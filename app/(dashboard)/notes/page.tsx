@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { SaisieNotes } from "./SaisieNotes";
+import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
 
 export default async function NotesPage() {
   const user = await requirePermission("note.read");
 
   const [classes, matieres, trimestres, paramsEtab] = await Promise.all([
     prisma.classe.findMany({
-      where: { etablissementId: user.etablissementId },
+      where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
       orderBy: [{ niveau: "asc" }, { section: "asc" }],
     }),
     prisma.matiere.findMany({

@@ -35,7 +35,7 @@ export const PERMISSIONS_PAR_ROLE: Record<Role, readonly Permission[]> = {
     "note.read","note.create","note.update.own","note.update.any",
     "bulletin.read",
     "frais.read","frais.manage","frais.encaisser",
-    "paiement.read","paiement.create",
+    // Pas d'acces aux paiements du personnel (salaires)
     "personnel.read",
   ] as const,
   COMPTABLE: [

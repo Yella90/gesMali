@@ -39,6 +39,7 @@ export async function rendreBulletinEleve(eleveId: string, trimestreId: string) 
   return {
     buffer,
     etablissementId: bulletin.classe.etablissementId,
+    classeId: bulletin.classeId,
     nomFichier: "bulletin-" + bulletin.eleve.matricule + ".pdf",
   };
 }

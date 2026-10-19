@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeClassement } from "./ListeClassement";
+import { classeVisible } from "@/lib/data/guard";
 
 export default async function ClassementPage({
   params,
@@ -20,7 +21,7 @@ export default async function ClassementPage({
     where: { id: trimestreId },
   });
 
-  if (!classe || !trimestre || classe.etablissementId !== user.etablissementId) {
+  if (!classe || !trimestre || classe.etablissementId !== user.etablissementId || !(await classeVisible(user, classe.id))) {
     notFound();
   }
 

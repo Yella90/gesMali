@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { peut } from "@/lib/auth/permissions";
 import { CalendarClock, CalendarDays, PencilLine, Receipt, School, Users, Wallet, type LucideIcon } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getUtilisateurCourant } from "@/lib/auth/session";
@@ -493,7 +494,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           )}
 
           {finances && (
-            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} />
+            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} avecSalaires={peut(user.roles, "paiement.read")} />
           )}
 
           {/* Trimestre en cours */}
@@ -608,7 +609,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
           </div>
 
           {finances && (
-            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} />
+            <Finances mois={mois} options={optionsMois()} flux={finances.flux} salairesPrevus={finances.prevus} situation={finances.situation} avecSalaires={peut(user.roles, "paiement.read")} />
           )}
 
           <div className="grid md:grid-cols-2 gap-4">

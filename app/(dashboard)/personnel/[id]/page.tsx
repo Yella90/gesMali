@@ -37,6 +37,8 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
   const { id } = await params;
   const user = await requirePermission("personnel.read");
   const peutGerer = peut(user.roles, "personnel.manage");
+  // Salaires et versements : direction et comptabilite seulement
+  const voitPaiements = peut(user.roles, "paiement.read");
 
   const employe = await prisma.employe.findUnique({
     where: { id },
@@ -48,7 +50,7 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
           matiere: { select: { nom: true } },
         },
       },
-      paiements: { orderBy: { datePaiement: "desc" }, take: 6 },
+      paiements: voitPaiements ? { orderBy: { datePaiement: "desc" }, take: 6 } : { take: 0 },
     },
   });
   if (!employe || employe.etablissementId !== user.etablissementId) notFound();
@@ -199,6 +201,7 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
           )}
 
           {/* Paiements */}
+          {voitPaiements && (
           <section className="overflow-hidden rounded-xl border border-[var(--color-border)] bg-white">
             <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] p-5">
               <div>
@@ -234,6 +237,7 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
               </ul>
             )}
           </section>
+          )}
         </div>
 
         {/* Gestion (droits personnel.manage) */}

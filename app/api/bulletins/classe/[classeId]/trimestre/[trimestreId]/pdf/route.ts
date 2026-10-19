@@ -3,6 +3,8 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
+import { getUtilisateurCourant } from "@/lib/auth/session";
+import { classeVisible } from "@/lib/data/guard";
 
 export async function GET(
   _: NextRequest,
@@ -32,6 +34,13 @@ export async function GET(
   const trimestre = await prisma.trimestre.findUnique({ where: { id: trimestreId } });
 
   if (!classe || !trimestre) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+  if (classe.etablissementId === user.etablissementId) {
+    // Enseignant : uniquement ses classes
+    const courant = await getUtilisateurCourant();
+    if (!courant || !(await classeVisible(courant, classe.id))) {
+      return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
+    }
+  }
   if (classe.etablissementId !== user.etablissementId) {
     return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
   }

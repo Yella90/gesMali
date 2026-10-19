@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { EditerClasse } from "./EditerClasse";
 import { libCycle } from "@/lib/libelles";
+import { classeVisible } from "@/lib/data/guard";
 
 const JOURS_ORDRE = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"];
 
@@ -26,6 +27,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
     },
   });
   if (!classe || classe.etablissementId !== user.etablissementId) notFound();
+  if (!(await classeVisible(user, classe.id))) notFound();
 
   // Matieres du cycle
   const toutesMatieres = await prisma.matiere.findMany({

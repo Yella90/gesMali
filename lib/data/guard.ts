@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { prisma } from "@/lib/db";
 import type { UtilisateurCourant } from "@/lib/auth/session";
 
@@ -19,7 +20,40 @@ export async function verifierClasse(user: UtilisateurCourant, classeId: string)
   });
   if (!classe) throw new Error("Classe introuvable");
   if (classe.etablissementId !== user.etablissementId) throw new Error("Acces refuse");
+  const visibles = await classesVisibles(user);
+  if (visibles && !visibles.includes(classeId)) throw new Error("Acces refuse : classe non affectee");
   return classe;
+}
+
+// Un utilisateur qui n'est QU'enseignant ne voit que ses classes : affectations,
+// titulaire ou professeur principal. null = toutes les classes de l'etablissement.
+export function estEnseignantSeul(user: UtilisateurCourant): boolean {
+  return user.roles.includes("ENSEIGNANT") && !user.roles.some((r) => r === "DIRECTEUR" || r === "SECRETAIRE" || r === "COMPTABLE");
+}
+
+export const classesVisibles = cache(async (user: UtilisateurCourant): Promise<string[] | null> => {
+  if (!estEnseignantSeul(user)) return null;
+  const [affectations, classes] = await Promise.all([
+    prisma.affectation.findMany({ where: { enseignantId: user.employeId }, select: { classeId: true } }),
+    prisma.classe.findMany({
+      where: {
+        etablissementId: user.etablissementId,
+        OR: [{ titulaireId: user.employeId }, { professeurPrincipalId: user.employeId }],
+      },
+      select: { id: true },
+    }),
+  ]);
+  return [...new Set([...affectations.map((a) => a.classeId), ...classes.map((c) => c.id)])];
+});
+
+// Filtre Prisma a ajouter aux listes de classes (ou d'eleves via classeId)
+export async function filtreClasses(user: UtilisateurCourant) {
+  const v = await classesVisibles(user);
+  return v ? { id: { in: v } } : {};
+}
+export async function filtreClasseId(user: UtilisateurCourant) {
+  const v = await classesVisibles(user);
+  return v ? { classeId: { in: v } } : {};
 }
 
 export async function verifierMatiere(user: UtilisateurCourant, matiereId: string) {
@@ -69,4 +103,9 @@ export async function verifierAffectation(
   if (!affTitulaire) {
     throw new Error("Vous n'enseignez pas cette classe/matiere");
   }
+}
+// Classe consultable par l'utilisateur (false pour un enseignant non affecte)
+export async function classeVisible(user: UtilisateurCourant, classeId: string | null): Promise<boolean> {
+  const v = await classesVisibles(user);
+  return !v || (!!classeId && v.includes(classeId));
 }

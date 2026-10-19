@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeEleves } from "./ListeEleves";
+import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
 
 export default async function ElevesPage() {
   const user = await requirePermission("eleve.read");
@@ -12,6 +13,7 @@ export default async function ElevesPage() {
       where: {
         etablissementId: user.etablissementId,
         statut: { not: "RADIE" },
+        ...(await filtreClasseId(user)),
       },
       include: {
         classe: { select: { nom: true, niveau: true, section: true } },
@@ -19,7 +21,7 @@ export default async function ElevesPage() {
       orderBy: [{ nom: "asc" }, { prenom: "asc" }],
     }),
     prisma.classe.findMany({
-      where: { etablissementId: user.etablissementId },
+      where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
       orderBy: [{ niveau: "asc" }, { section: "asc" }],
     }),
   ]);

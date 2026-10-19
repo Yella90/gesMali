@@ -2,12 +2,13 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { libCycle } from "@/lib/libelles";
+import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
 
 export default async function BulletinsPage() {
   const user = await requirePermission("bulletin.read");
 
   const classes = await prisma.classe.findMany({
-    where: { etablissementId: user.etablissementId },
+    where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
     orderBy: [{ niveau: "asc" }, { section: "asc" }],
   });
 

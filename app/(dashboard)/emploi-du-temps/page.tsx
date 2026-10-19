@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
 
 export default async function EmploiDuTempsPage() {
   const user = await requirePermission("classe.read");
 
   const classes = await prisma.classe.findMany({
-    where: { etablissementId: user.etablissementId },
+    where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
     include: {
       anneeScolaire: { select: { libelle: true } },
       _count: { select: { affectations: true } },
