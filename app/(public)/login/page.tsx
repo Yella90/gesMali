@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import { compteConnecte } from "@/lib/auth/session";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 import { BoutonConnexion, FenetreConnexion } from "./Connexion";
 import { Bogolan, Cycles, DocumentsDefilants, Fonctionnalites, Personnes, Scene } from "./vitrine/Vitrine";
@@ -12,9 +13,9 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ connexion?: string; callbackUrl?: string }>;
 }) {
-  let session = null;
-  try { session = await auth(); } catch { session = null; }
-  if (session?.user) redirect("/dashboard");
+  // Compte connecte et toujours valable (une session dont le compte a ete supprime ou
+  // desactive ne doit pas renvoyer vers le tableau de bord, qui renverrait ici)
+  if (await compteConnecte()) redirect("/dashboard");
 
   // Arrivee depuis une page protegee : le formulaire s'ouvre directement
   const { connexion, callbackUrl } = await searchParams;
@@ -34,7 +35,12 @@ export default async function LoginPage({
             </div>
             <span className="text-lg font-semibold">GES Mali</span>
           </div>
-          <BoutonConnexion className="inline-flex h-10 items-center rounded-lg border border-white/25 px-4 text-sm font-medium hover:bg-white/10" />
+          <div className="flex items-center gap-2">
+            <Link href="/inscription" className="hidden h-10 items-center rounded-lg px-3 text-sm font-medium text-white/85 hover:bg-white/10 sm:inline-flex">
+              Créer mon école
+            </Link>
+            <BoutonConnexion className="inline-flex h-10 items-center rounded-lg border border-white/25 px-4 text-sm font-medium hover:bg-white/10" />
+          </div>
         </header>
 
         <main>
@@ -48,7 +54,15 @@ export default async function LoginPage({
                 Inscriptions, notes et bulletins, présences, frais de scolarité, trésorerie, emploi du temps et personnel :
                 la direction, le secrétariat, les enseignants et les parents travaillent sur les mêmes informations.
               </p>
-              <BoutonConnexion className={"mt-8 " + boutonPrincipal} />
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <BoutonConnexion className={boutonPrincipal} />
+                <Link
+                  href="/inscription"
+                  className="inline-flex h-11 items-center justify-center rounded-lg border border-white/30 px-5 text-sm font-semibold hover:bg-white/10"
+                >
+                  Créer mon école · 30 jours d&apos;essai
+                </Link>
+              </div>
 
               <div className="mt-10 md:hidden">
                 <Personnes />

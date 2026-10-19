@@ -9,6 +9,7 @@ import { prisma, DB_SCHEMA } from "@/lib/db";
 import { Prisma } from "@/lib/generated/prisma/client";
 
 const FENETRE_MS = 15 * 60 * 1000;
+const JOUR_MS = 24 * 3600 * 1000;
 export const MAX_ECHECS = { email: 5, ip: 50 };
 
 const T = Prisma.raw('"' + DB_SCHEMA + '"."EchecConnexion"');
@@ -30,23 +31,38 @@ export async function connexionBloquee(email: string, ip: string | null, mainten
   return lignes.some((l) => l.nombre >= (l.cle.startsWith("ip:") ? MAX_ECHECS.ip : MAX_ECHECS.email));
 }
 
+// Une requete atomique : nouvelle fenetre si la precedente est ecoulee, sinon +1
+async function incrementer(cle: string, fenetreMs: number, maintenant: Date) {
+  const debutFenetre = new Date(maintenant.getTime() - fenetreMs);
+  await prisma.$executeRaw`
+    INSERT INTO ${T} AS e ("cle", "nombre", "depuis") VALUES (${cle}, 1, ${maintenant})
+    ON CONFLICT ("cle") DO UPDATE SET
+      "nombre" = CASE WHEN e."depuis" <= ${debutFenetre} THEN 1 ELSE e."nombre" + 1 END,
+      "depuis" = CASE WHEN e."depuis" <= ${debutFenetre} THEN ${maintenant} ELSE e."depuis" END
+  `;
+}
+
 export async function noterEchec(email: string, ip: string | null, maintenant = new Date()) {
-  const debutFenetre = new Date(maintenant.getTime() - FENETRE_MS);
-  // Une requete atomique par cle : nouvelle fenetre si la precedente est ecoulee, sinon +1
-  for (const cle of cles(email, ip)) {
-    await prisma.$executeRaw`
-      INSERT INTO ${T} AS e ("cle", "nombre", "depuis") VALUES (${cle}, 1, ${maintenant})
-      ON CONFLICT ("cle") DO UPDATE SET
-        "nombre" = CASE WHEN e."depuis" <= ${debutFenetre} THEN 1 ELSE e."nombre" + 1 END,
-        "depuis" = CASE WHEN e."depuis" <= ${debutFenetre} THEN ${maintenant} ELSE e."depuis" END
-    `;
-  }
+  for (const cle of cles(email, ip)) await incrementer(cle, FENETRE_MS, maintenant);
   // Menage : lignes de plus d'un jour
-  await prisma.echecConnexion.deleteMany({ where: { depuis: { lt: new Date(maintenant.getTime() - 24 * 3600 * 1000) } } });
+  await prisma.echecConnexion.deleteMany({ where: { depuis: { lt: new Date(maintenant.getTime() - JOUR_MS) } } });
 }
 
 // Connexion reussie : le compteur du compte repart a zero (pas celui de l'adresse,
 // partagee avec d'autres personnes)
 export async function effacerEchecs(email: string) {
   await prisma.echecConnexion.deleteMany({ where: { cle: cles(email, null)[0] } });
+}
+
+// Inscription d'une ecole en ligne : 5 par jour au plus depuis une meme adresse IP
+export const MAX_INSCRIPTIONS_PAR_JOUR = 5;
+
+export async function inscriptionAutorisee(ip: string | null, maintenant = new Date()): Promise<boolean> {
+  if (!ip) return true;
+  const l = await prisma.echecConnexion.findUnique({ where: { cle: "inscription:" + ip } });
+  return !l || l.depuis.getTime() <= maintenant.getTime() - JOUR_MS || l.nombre < MAX_INSCRIPTIONS_PAR_JOUR;
+}
+
+export async function noterInscription(ip: string | null, maintenant = new Date()) {
+  if (ip) await incrementer("inscription:" + ip, JOUR_MS, maintenant);
 }

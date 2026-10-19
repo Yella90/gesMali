@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { compteConnecte, getUtilisateurCourant } from "@/lib/auth/session";
 import { MotDePasse } from "./MotDePasse";
 
 export const metadata = { title: "Mon compte · GES Mali" };
 
 export default async function MonComptePage() {
-  const compte = (await compteConnecte())!;
+  const compte = await compteConnecte();
+  if (!compte) redirect("/login?connexion");
   const courant = await getUtilisateurCourant();
 
   return (

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { compteConnecte, ecoleChoisie } from "@/lib/auth/session";
 import { accesUtilisable, choisirAcces } from "@/lib/auth/comptes";
 import { etatEcole } from "@/lib/plateforme/etat";
@@ -9,7 +10,8 @@ export const metadata = { title: "Mes écoles · GES Mali" };
 
 // Ecoles du compte : ouvrir l'une d'elles, ou comprendre pourquoi elle est fermee
 export default async function MesEcolesPage() {
-  const compte = (await compteConnecte())!;
+  const compte = await compteConnecte();
+  if (!compte) redirect("/login?connexion");
   const courante = choisirAcces(compte.acces, await ecoleChoisie());
 
   return (
