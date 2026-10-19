@@ -120,7 +120,7 @@ const FILTREES = new Set([
   "update", "updateMany", "updateManyAndReturn", "delete", "deleteMany", "upsert",
 ]);
 const CREATIONS = new Set(["create", "createMany", "createManyAndReturn", "upsert"]);
-const MISES_A_JOUR = new Set(["update", "updateMany", "updateManyAndReturn", "upsert"]);
+const LOTS = new Set(["createMany", "createManyAndReturn", "updateMany", "updateManyAndReturn"]);
 
 type Donnees = Record<string, unknown>;
 const estObjet = (v: unknown): v is Donnees => typeof v === "object" && v !== null && !Array.isArray(v) && !(v instanceof Date);
@@ -133,91 +133,111 @@ function avecEcole(where: unknown, filtre: Donnees): Donnees {
 }
 
 function creer(etablissementId: string) {
-  // Lignes deja verifiees pour cette ecole (une requete par identifiant au plus)
-  const verifiees = new Map<string, Promise<boolean>>();
+  // Lignes connues pour appartenir a l'ecole pendant cette requete : verifiees,
+  // ou creees par ce filtre. Une ecriture qui ne reference que celles-ci part telle quelle.
+  const sures = new Set<string>(["Etablissement:" + etablissementId]);
+  const portee = (modele: string) => PORTEE[modele](etablissementId);
 
-  // Les references d'une ecriture doivent appartenir a l'ecole
-  async function verifierReferences(refs: { modele: string; id: string }[]) {
-    const parModele = new Map<string, string[]>();
-    const attentes: Promise<boolean>[] = [];
+  // Ecritures en lot (createMany, updateMany) : les references sont controlees par une
+  // requete a part. On y cherche les lignes d'une AUTRE ecole : une ligne creee plus tot
+  // dans la meme transaction n'y est pas encore visible et passe (creee par ce filtre),
+  // une reference inexistante est rejetee par la base elle-meme.
+  async function controlerEnLot(refs: { modele: string; id: string }[]) {
+    const parModele = new Map<string, Set<string>>();
     for (const { modele, id } of refs) {
-      if (modele === "Etablissement") {
-        if (id !== etablissementId) throw new Error(REFUS);
-        continue;
-      }
-      const cle = modele + ":" + id;
-      const deja = verifiees.get(cle);
-      if (deja) attentes.push(deja);
-      else parModele.set(modele, [...(parModele.get(modele) ?? []), id]);
+      if (sures.has(modele + ":" + id)) continue;
+      if (modele === "Etablissement") throw new Error(REFUS);
+      parModele.set(modele, (parModele.get(modele) ?? new Set<string>()).add(id));
     }
-    for (const [modele, ids] of parModele) {
-      const uniques = [...new Set(ids)];
-      const delegue = (prisma as unknown as Record<string, { findMany: (a: object) => Promise<{ id: string }[]> }>)[
-        modele.charAt(0).toLowerCase() + modele.slice(1)
-      ];
-      const requete = delegue
-        .findMany({ where: { id: { in: uniques }, ...PORTEE[modele](etablissementId) }, select: { id: true } })
-        .then((rows) => new Set(rows.map((x) => x.id)));
-      for (const id of uniques) {
-        const p = requete.then((trouves) => trouves.has(id));
-        verifiees.set(modele + ":" + id, p);
-        attentes.push(p);
-      }
-    }
-    const resultats = await Promise.all(attentes);
-    if (resultats.some((ok) => !ok)) throw new Error(REFUS);
+    await Promise.all(
+      [...parModele].map(async ([modele, ids]) => {
+        const delegue = (prisma as unknown as Record<string, { findMany: (a: object) => Promise<{ id: string }[]> }>)[
+          modele.charAt(0).toLowerCase() + modele.slice(1)
+        ];
+        const etrangeres = await delegue.findMany({ where: { id: { in: [...ids] }, NOT: portee(modele) }, select: { id: true } });
+        if (etrangeres.length) throw new Error(REFUS);
+        for (const id of ids) sures.add(modele + ":" + id);
+      })
+    );
   }
 
-  // Parcourt les donnees d'une ecriture (et ses creations imbriquees) : references a verifier.
-  // creation : la ligne est creee ici (etablissementId impose pour les tables directes).
-  function references(modele: string, data: Donnees, creation: boolean, refs: { modele: string; id: string }[]): Donnees {
+  // Prepare les donnees d'une ecriture unitaire (create, update, upsert) et de ses creations
+  // imbriquees. Si une reference n'est pas encore sure, toutes les cles etrangeres deviennent
+  // des liaisons limitees a l'ecole (classe: { connect: { id, AND: [ecole] } }) : la base les
+  // controle dans la meme requete et la meme transaction. aConfirmer : references a marquer
+  // sures apres succes.
+  function preparer(modele: string, data: Donnees, creation: boolean, aConfirmer: string[]): Donnees {
     const relations = RELATIONS[modele] ?? {};
-    const sortie: Donnees = { ...data };
+    const cles = Object.entries(relations).filter(([, x]) => x.cle) as [string, Required<Relation>][];
+    const idDe = (v: unknown) => (estObjet(v) && "set" in v ? v.set : v);
 
+    // Parents deja relies par objet (classe: { connect }) : forme "liaisons" obligatoire
+    const parObjet = cles.some(([nom]) => estObjet(data[nom]));
+    const nonSures = cles.filter(([, x]) => {
+      const id = idDe(data[x.cle]);
+      return typeof id === "string" && !sures.has(x.modele + ":" + id);
+    });
+    const parLiaisons = parObjet || nonSures.length > 0;
+
+    const sortie: Donnees = {};
     for (const [champ, valeur] of Object.entries(data)) {
       const relation = relations[champ];
       if (relation && estObjet(valeur)) {
-        // Relation sous forme d'objet : connect / create / connectOrCreate / upsert imbriques
-        for (const c of enListe(valeur.connect as Donnees | Donnees[] | undefined)) {
-          if (typeof c.id !== "string") throw new Error(REFUS);
-          refs.push({ modele: relation.modele, id: c.id });
+        if (valeur.connectOrCreate !== undefined || valeur.upsert !== undefined || valeur.set !== undefined || valeur.createMany !== undefined) {
+          throw new Error("Écriture imbriquée non prise en charge par le filtre d'école (" + modele + "." + champ + ")");
         }
         const imbrique: Donnees = { ...valeur };
+        if (valeur.connect !== undefined) {
+          const liste = enListe(valeur.connect as Donnees | Donnees[]).map((c) => ({
+            ...c,
+            AND: [...enListe(c.AND as Donnees | Donnees[] | undefined), portee(relation.modele)],
+          }));
+          imbrique.connect = Array.isArray(valeur.connect) ? liste : liste[0];
+        }
         if (valeur.create !== undefined) {
-          const liste = enListe(valeur.create as Donnees | Donnees[]).map((d) => references(relation.modele, d, true, refs));
+          const liste = enListe(valeur.create as Donnees | Donnees[]).map((d) => preparer(relation.modele, d, true, aConfirmer));
           imbrique.create = Array.isArray(valeur.create) ? liste : liste[0];
-        }
-        if (estObjet(valeur.createMany)) {
-          imbrique.createMany = {
-            ...valeur.createMany,
-            data: enListe(valeur.createMany.data as Donnees | Donnees[]).map((d) => references(relation.modele, d, true, refs)),
-          };
-        }
-        if (valeur.connectOrCreate !== undefined || valeur.upsert !== undefined) {
-          throw new Error("Écriture imbriquée non prise en charge par le filtre d'école (" + modele + "." + champ + ")");
         }
         sortie[champ] = imbrique;
         continue;
       }
-      // Cle etrangere en clair : classeId, eleveId...
-      const cle = Object.values(relations).find((x) => x.cle === champ);
-      if (cle) {
-        const id = estObjet(valeur) ? valeur.set : valeur;
-        if (typeof id === "string") refs.push({ modele: cle.modele, id });
+
+      const cle = cles.find(([, x]) => x.cle === champ);
+      if (!cle) {
+        sortie[champ] = valeur;
+        continue;
+      }
+      const [nom, x] = cle;
+      const id = idDe(valeur);
+      if (x.modele === "Etablissement" && id !== etablissementId) throw new Error(REFUS);
+      if (!parLiaisons) {
+        sortie[champ] = valeur;
+      } else if (id === null) {
+        if (!creation) sortie[nom] = { disconnect: true };
+      } else if (typeof id === "string") {
+        sortie[nom] = { connect: { id, AND: [portee(x.modele)] } };
+        aConfirmer.push(x.modele + ":" + id);
       }
     }
 
-    // Tables directes : l'ecole d'une ligne creee est imposee, jamais changee ensuite
-    if (DIRECTES.has(modele)) {
-      const relationEcole = estObjet(data.etablissement);
-      if (creation && !relationEcole && data.etablissementId === undefined) {
-        // Parents relies par objet (classe: { connect }) : l'ecole se relie de la meme facon.
-        // Les creations imbriquees d'enfants (tranches: { create }) restent compatibles avec etablissementId.
-        const avecRelations = Object.keys(data).some((k) => relations[k]?.cle && estObjet(data[k]));
-        if (avecRelations) sortie.etablissement = { connect: { id: etablissementId } };
-        else sortie.etablissementId = etablissementId;
-      }
+    // Tables directes : l'ecole d'une ligne creee est imposee
+    if (creation && DIRECTES.has(modele) && data.etablissementId === undefined && !estObjet(data.etablissement)) {
+      if (parLiaisons) sortie.etablissement = { connect: { id: etablissementId } };
+      else sortie.etablissementId = etablissementId;
     }
+    return sortie;
+  }
+
+  // Ecritures en lot : etablissementId impose, references controlees a part
+  function preparerLot(modele: string, data: Donnees, creation: boolean, refs: { modele: string; id: string }[]): Donnees {
+    const sortie: Donnees = { ...data };
+    for (const x of Object.values(RELATIONS[modele] ?? {})) {
+      if (!x.cle) continue;
+      const v = data[x.cle];
+      const id = estObjet(v) && "set" in v ? v.set : v;
+      if (typeof id === "string") refs.push({ modele: x.modele, id });
+    }
+    if (creation && DIRECTES.has(modele) && data.etablissementId === undefined) sortie.etablissementId = etablissementId;
     return sortie;
   }
 
@@ -227,26 +247,43 @@ function creer(etablissementId: string) {
       $allModels: {
         async $allOperations({ model, operation, args, query }) {
           if (HORS_ECOLE.includes(model)) return query(args);
-          const filtre = PORTEE[model];
-          if (!filtre) throw new Error("Table sans rattachement à une école : " + model);
+          if (!PORTEE[model]) throw new Error("Table sans rattachement à une école : " + model);
           if (model === "Etablissement" && CREATIONS.has(operation)) throw new Error("Création d'établissement interdite ici");
 
           const a = { ...(args as Donnees) };
-          if (FILTREES.has(operation)) a.where = avecEcole(a.where, filtre(etablissementId));
+          if (FILTREES.has(operation)) a.where = avecEcole(a.where, portee(model));
 
-          const refs: { modele: string; id: string }[] = [];
-          if (operation === "create") a.data = references(model, a.data as Donnees, true, refs);
-          if (operation === "createMany" || operation === "createManyAndReturn") {
-            a.data = enListe(a.data as Donnees | Donnees[]).map((d) => references(model, d, true, refs));
-          }
+          const aConfirmer: string[] = [];
+          if (operation === "create") a.data = preparer(model, a.data as Donnees, true, aConfirmer);
+          if (operation === "update") a.data = preparer(model, a.data as Donnees, false, aConfirmer);
           if (operation === "upsert") {
-            a.create = references(model, a.create as Donnees, true, refs);
-            a.update = references(model, a.update as Donnees, false, refs);
+            a.create = preparer(model, a.create as Donnees, true, aConfirmer);
+            a.update = preparer(model, a.update as Donnees, false, aConfirmer);
           }
-          if (MISES_A_JOUR.has(operation) && operation !== "upsert") a.data = references(model, a.data as Donnees, false, refs);
-          if (refs.length) await verifierReferences(refs);
+          if (LOTS.has(operation)) {
+            const refs: { modele: string; id: string }[] = [];
+            const creation = operation.startsWith("create");
+            a.data = Array.isArray(a.data)
+              ? a.data.map((d: Donnees) => preparerLot(model, d, creation, refs))
+              : preparerLot(model, a.data as Donnees, creation, refs);
+            await controlerEnLot(refs);
+          }
 
-          return query(a as typeof args);
+          let resultat: unknown;
+          try {
+            resultat = await query(a as typeof args);
+          } catch (e) {
+            // Liaison refusee par la base : reference d'une autre ecole (ou inexistante)
+            if (aConfirmer.length && (e as { code?: string }).code === "P2025") throw new Error(REFUS);
+            throw e;
+          }
+          for (const cle of aConfirmer) sures.add(cle);
+          if (CREATIONS.has(operation)) {
+            for (const ligne of enListe(resultat as Donnees | Donnees[])) {
+              if (estObjet(ligne) && typeof ligne.id === "string") sures.add(model + ":" + ligne.id);
+            }
+          }
+          return resultat;
         },
       },
     },

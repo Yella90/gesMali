@@ -119,6 +119,33 @@ describe("ecritures : references de l'autre ecole refusees", () => {
     await db.trimestre.delete({ where: { id: t2.id } });
   });
 
+  test("ecritures en lot : reference de B refusee", async () => {
+    const db = ecole(a.user);
+    await assert.rejects(
+      db.note.createMany({
+        data: [{
+          eleveId: a.ids.Eleve, matiereId: a.ids.Matiere, classeId: b.ids.Classe, trimestreId: a.ids.Trimestre,
+          type: "DEVOIR", numero: 8, valeur: 10, saisieParId: a.ids.User,
+        }],
+      }),
+      /autre école/
+    );
+    await assert.rejects(db.note.updateMany({ where: { eleveId: a.ids.Eleve }, data: { classeId: b.ids.Classe } }), /autre école/);
+    assert.equal(await prisma.note.count({ where: { classeId: b.ids.Classe, eleveId: a.ids.Eleve } }), 0);
+  });
+
+  test("ecritures en lot valides", async () => {
+    const db = ecole(a.user);
+    const r = await db.note.createMany({
+      data: [{
+        eleveId: a.ids.Eleve, matiereId: a.ids.Matiere, classeId: a.ids.Classe, trimestreId: a.ids.Trimestre,
+        type: "DEVOIR", numero: 7, valeur: 15, saisieParId: a.ids.User,
+      }],
+    });
+    assert.equal(r.count, 1);
+    await db.note.deleteMany({ where: { numero: 7 } });
+  });
+
   test("ligne creee dans l'ecole de B", async () => {
     await assert.rejects(
       ecole(a.user).matiere.create({ data: { etablissementId: b.etablissementId, nom: "Intrus", cycle: "SECOND_CYCLE" } }),
@@ -174,6 +201,22 @@ describe("transactions", () => {
       /autre école/
     );
     await prisma.presence.deleteMany({ where: { date: { in: [date, new Date("2026-10-08")] } } });
+  });
+
+  test("transaction interactive : une ligne creee plus tot dans la transaction peut etre referencee", async () => {
+    const db = ecole(a.user);
+    const userId = await db.$transaction(async (tx) => {
+      const employe = await tx.employe.create({ data: { nom: "Traore", prenom: "Awa", poste: "Enseignant" } as never });
+      const user = await tx.user.create({
+        data: { email: "awa@ecolea.test", passwordHash: "x", roles: ["ENSEIGNANT"], employeId: employe.id } as never,
+      });
+      return user.id;
+    });
+    const cree = await prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { employe: true } });
+    assert.equal(cree.etablissementId, a.etablissementId);
+    assert.equal(cree.employe.etablissementId, a.etablissementId);
+    await prisma.user.delete({ where: { id: userId } });
+    await prisma.employe.delete({ where: { id: cree.employeId } });
   });
 
   test("transaction interactive : le client de transaction reste filtre", async () => {
