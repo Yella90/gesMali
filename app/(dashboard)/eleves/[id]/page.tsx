@@ -47,6 +47,17 @@ export default async function EleveDetailPage({
         orderBy: [{ niveau: "asc" }, { section: "asc" }],
       })
     : [];
+  // Presences de l annee scolaire de la classe
+  const presences = peut(user.roles, "presence.read") && eleve.classe
+    ? await prisma.presence.groupBy({
+        by: ["statut", "justifie"],
+        where: { eleveId: eleve.id, date: { gte: eleve.classe.anneeScolaire.dateDebut, lte: eleve.classe.anneeScolaire.dateFin } },
+        _count: { _all: true },
+        _sum: { dureeMinutes: true },
+      })
+    : null;
+  const nbPresence = (statut: string, justifie?: boolean) =>
+    (presences ?? []).filter((p) => p.statut === statut && (justifie === undefined || p.justifie === justifie)).reduce((s, p) => s + p._count._all, 0);
   const urlParent = await urlPortailParent(await assurerCodeParent(eleve.id));
   const qrSvg = await qrCodeSvg(urlParent);
 
@@ -209,6 +220,29 @@ export default async function EleveDetailPage({
               }
             />
             <Info label="Scolarité mensuelle" value={eleve.classe.fraisScolariteMensuel.toLocaleString("fr-FR") + " F"} />
+          </div>
+        </div>
+      )}
+
+      {/* Presences */}
+      {presences && eleve.classe && (
+        <div className="bg-white rounded-xl border border-[var(--color-border)] p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-medium text-[var(--color-ink-muted)] uppercase tracking-wide">
+              Présences de l&apos;année
+            </h2>
+            <Link href={"/presences?classe=" + eleve.classe.id} className="text-xs text-[var(--color-brand)] hover:underline">
+              Faire l&apos;appel
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <MiniStat label="Jours d'appel" value={String(presences.reduce((s, p) => s + p._count._all, 0))} />
+            <MiniStat label="Absences" value={String(nbPresence("ABSENT"))} tone={nbPresence("ABSENT", false) > 0 ? "danger" : undefined} />
+            <MiniStat label="Absences justifiées" value={String(nbPresence("ABSENT", true))} />
+            <MiniStat
+              label="Retards"
+              value={nbPresence("RETARD") + " (" + presences.filter((p) => p.statut === "RETARD").reduce((s, p) => s + (p._sum.dureeMinutes ?? 0), 0) + " min)"}
+            />
           </div>
         </div>
       )}
