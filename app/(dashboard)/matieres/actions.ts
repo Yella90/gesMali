@@ -5,8 +5,9 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { matiereSchema } from "@/lib/validators/matiere";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
-export async function creerMatiere(formData: FormData) {
+async function creerMatiereCorps(formData: FormData) {
   const user = await requirePermission("matiere.manage");
   const raw = {
     nom: formData.get("nom"),
@@ -30,7 +31,7 @@ export async function creerMatiere(formData: FormData) {
   return { success: true, id: matiere.id };
 }
 
-export async function modifierMatiere(id: string, formData: FormData) {
+async function modifierMatiereCorps(id: string, formData: FormData) {
   const user = await requirePermission("matiere.manage");
   const m = await prisma.matiere.findUnique({ where: { id } });
   if (!m || m.etablissementId !== user.etablissementId) throw new Error("Acces refuse");
@@ -48,7 +49,7 @@ export async function modifierMatiere(id: string, formData: FormData) {
   revalidatePath("/matieres");
 }
 
-export async function supprimerMatiere(id: string) {
+async function supprimerMatiereCorps(id: string) {
   const user = await requirePermission("matiere.manage");
   const m = await prisma.matiere.findUnique({
     where: { id },
@@ -61,4 +62,16 @@ export async function supprimerMatiere(id: string) {
   await prisma.matiere.delete({ where: { id } });
   await enregistrerAudit({ userId: user.id, action: "DELETE_MATIERE", entite: "Matiere", entiteId: id });
   revalidatePath("/matieres");
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerMatiere(...a: Parameters<typeof creerMatiereCorps>) {
+  return capter(() => creerMatiereCorps(...a));
+}
+export async function modifierMatiere(...a: Parameters<typeof modifierMatiereCorps>) {
+  return capter(() => modifierMatiereCorps(...a));
+}
+export async function supprimerMatiere(...a: Parameters<typeof supprimerMatiereCorps>) {
+  return capter(() => supprimerMatiereCorps(...a));
 }

@@ -9,6 +9,11 @@ export async function capter<T>(corps: () => Promise<T>): Promise<Resultat<T>> {
     return { ok: true, data: await corps() };
   } catch (e) {
     unstable_rethrow(e);
+    // Erreur de validation zod : ses messages, pas le JSON brut
+    if (e instanceof Error && e.name === "ZodError" && Array.isArray((e as { issues?: unknown }).issues)) {
+      const issues = (e as unknown as { issues: { message: string }[] }).issues;
+      return { ok: false, erreur: issues.map((i) => i.message).join(" ; ") || "Données invalides" };
+    }
     if (
       e instanceof Prisma.PrismaClientKnownRequestError ||
       e instanceof Prisma.PrismaClientUnknownRequestError ||

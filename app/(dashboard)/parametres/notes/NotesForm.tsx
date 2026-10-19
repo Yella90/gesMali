@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { modifierParametresNotes } from "../actions";
+import { modifierParametresNotes as modifierParametresNotesAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const modifierParametresNotes = relever(modifierParametresNotesAction);
 
 export function NotesForm({
   parametres,

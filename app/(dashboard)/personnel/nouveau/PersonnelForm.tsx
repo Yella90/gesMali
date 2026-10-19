@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { creerEmploye } from "../actions";
+import { creerEmploye as creerEmployeAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const creerEmploye = relever(creerEmployeAction);
 
 const POSTES = [
   "Enseignant",

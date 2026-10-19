@@ -5,8 +5,9 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { classeSchema } from "@/lib/validators/classe";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
-export async function creerClasse(formData: FormData) {
+async function creerClasseCorps(formData: FormData) {
   const user = await requirePermission("classe.manage");
   const raw = {
     nom: formData.get("nom") || null,
@@ -40,7 +41,7 @@ export async function creerClasse(formData: FormData) {
   return { success: true, id: classe.id };
 }
 
-export async function modifierClasse(classeId: string, formData: FormData) {
+async function modifierClasseCorps(classeId: string, formData: FormData) {
   const user = await requirePermission("classe.manage");
 
   const classe = await prisma.classe.findUnique({ where: { id: classeId } });
@@ -96,4 +97,13 @@ export async function supprimerClasse(id: string) {
   await prisma.classe.delete({ where: { id } });
   await enregistrerAudit({ userId: user.id, action: "DELETE_CLASSE", entite: "Classe", entiteId: id });
   revalidatePath("/classes");
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerClasse(...a: Parameters<typeof creerClasseCorps>) {
+  return capter(() => creerClasseCorps(...a));
+}
+export async function modifierClasse(...a: Parameters<typeof modifierClasseCorps>) {
+  return capter(() => modifierClasseCorps(...a));
 }

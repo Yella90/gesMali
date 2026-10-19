@@ -7,6 +7,7 @@ import { eleveSchema } from "@/lib/validators/eleve";
 import { revalidatePath } from "next/cache";
 import { genererCodeParent } from "@/lib/portail/acces";
 import { genererFraisPourEleve, genererMatricule } from "@/lib/eleves/inscription";
+import { capter } from "@/lib/actions/serveur";
 
 function formToRaw(formData: FormData) {
   return {
@@ -21,7 +22,7 @@ function formToRaw(formData: FormData) {
   };
 }
 
-export async function creerEleve(formData: FormData) {
+async function creerEleveCorps(formData: FormData) {
   const user = await requirePermission("eleve.create");
   const data = eleveSchema.parse(formToRaw(formData));
 
@@ -124,7 +125,7 @@ export async function creerEleve(formData: FormData) {
   };
 }
 
-export async function modifierEleve(id: string, formData: FormData) {
+async function modifierEleveCorps(id: string, formData: FormData) {
   const user = await requirePermission("eleve.update");
   const data = eleveSchema.parse(formToRaw(formData));
 
@@ -246,7 +247,7 @@ export async function radierEleve(id: string) {
   revalidatePath("/eleves");
 }
 // Nouveau code d'acces parent : l'ancien lien / QR code cesse de fonctionner
-export async function regenererCodeParent(id: string) {
+async function regenererCodeParentCorps(id: string) {
   const user = await requirePermission("eleve.update");
   const eleve = await prisma.eleve.findUnique({ where: { id } });
   if (!eleve || eleve.etablissementId !== user.etablissementId) {
@@ -255,4 +256,16 @@ export async function regenererCodeParent(id: string) {
   await prisma.eleve.update({ where: { id }, data: { codeParent: genererCodeParent() } });
   await enregistrerAudit({ userId: user.id, action: "REGENERER_CODE_PARENT", entite: "Eleve", entiteId: id });
   revalidatePath("/eleves/" + id);
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerEleve(...a: Parameters<typeof creerEleveCorps>) {
+  return capter(() => creerEleveCorps(...a));
+}
+export async function modifierEleve(...a: Parameters<typeof modifierEleveCorps>) {
+  return capter(() => modifierEleveCorps(...a));
+}
+export async function regenererCodeParent(...a: Parameters<typeof regenererCodeParentCorps>) {
+  return capter(() => regenererCodeParentCorps(...a));
 }

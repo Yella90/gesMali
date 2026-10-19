@@ -2,9 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { genererBulletinsClasse } from "../actions";
+import { genererBulletinsClasse as genererBulletinsClasseAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+
+const genererBulletinsClasse = relever(genererBulletinsClasseAction);
 
 export function GenererForm({
   classes,

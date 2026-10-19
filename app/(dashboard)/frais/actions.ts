@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
 const MOIS_FR = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -120,7 +121,7 @@ export async function configurerFrais(data: {
 }
 
 // Genere les frais d'un eleve a partir de sa classe
-export async function genererFraisEleve(eleveId: string) {
+async function genererFraisEleveCorps(eleveId: string) {
   const user = await requirePermission("frais.manage");
 
   const eleve = await prisma.eleve.findUnique({
@@ -201,7 +202,7 @@ export async function genererFraisEleve(eleveId: string) {
 }
 
 // Encaisser un paiement
-export async function encaisserPaiement(data: {
+async function encaisserPaiementCorps(data: {
   trancheId: string;
   montant: number;
   mode: "ESPECES" | "VIREMENT" | "MOBILE_MONEY" | "CHEQUE";
@@ -284,7 +285,7 @@ export async function annulerPaiement(id: string, motif: string) {
 }
 
 // Genere les rappels pour les echeances impayees
-export async function genererRappels(periode?: string) {
+async function genererRappelsCorps(periode?: string) {
   const user = await requirePermission("frais.manage");
 
   const where: any = { frais: { etablissementId: user.etablissementId } };
@@ -342,4 +343,16 @@ export async function marquerRappelEnvoye(id: string) {
     entiteId: id,
   });
   revalidatePath("/frais/rappels");
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function encaisserPaiement(...a: Parameters<typeof encaisserPaiementCorps>) {
+  return capter(() => encaisserPaiementCorps(...a));
+}
+export async function genererFraisEleve(...a: Parameters<typeof genererFraisEleveCorps>) {
+  return capter(() => genererFraisEleveCorps(...a));
+}
+export async function genererRappels(...a: Parameters<typeof genererRappelsCorps>) {
+  return capter(() => genererRappelsCorps(...a));
 }

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { CAISSES, LIB_CAISSE, soldeCaisse, type CaisseT } from "@/lib/tresorerie/tresorerie";
+import { capter } from "@/lib/actions/serveur";
 
 const TYPES = ["APPORT_CAPITAL", "DEPENSE", "RETRAIT_PROMOTEUR"] as const;
 type TypeM = (typeof TYPES)[number];
@@ -15,7 +16,7 @@ function caisseValide(v: FormDataEntryValue | null): CaisseT {
   return c as CaisseT;
 }
 
-export async function creerMouvement(formData: FormData) {
+async function creerMouvementCorps(formData: FormData) {
   const type = String(formData.get("type") ?? "") as TypeM;
   if (!TYPES.includes(type)) throw new Error("Type de mouvement invalide");
   // Depenses : direction et comptabilite. Apports et retraits : directeur seul.
@@ -77,7 +78,7 @@ export async function creerMouvement(formData: FormData) {
   return { id: m.id };
 }
 
-export async function annulerMouvement(id: string, motif: string) {
+async function annulerMouvementCorps(id: string, motif: string) {
   const user = await requirePermission("tresorerie.capital");
   if (!motif || motif.trim().length < 3) throw new Error("Motif obligatoire (3 caractères minimum)");
   const m = await prisma.mouvementTresorerie.findUnique({ where: { id } });
@@ -89,7 +90,7 @@ export async function annulerMouvement(id: string, motif: string) {
   revalidatePath("/dashboard");
 }
 
-export async function creerDepenseRecurrente(formData: FormData) {
+async function creerDepenseRecurrenteCorps(formData: FormData) {
   const user = await requirePermission("tresorerie.depense");
   const libelle = String(formData.get("libelle") ?? "").trim();
   const categorie = String(formData.get("categorie") ?? "").trim() || "Autre";
@@ -106,10 +107,25 @@ export async function creerDepenseRecurrente(formData: FormData) {
   revalidatePath("/tresorerie");
 }
 
-export async function basculerDepenseRecurrente(id: string) {
+async function basculerDepenseRecurrenteCorps(id: string) {
   const user = await requirePermission("tresorerie.depense");
   const d = await prisma.depenseRecurrente.findUnique({ where: { id } });
   if (!d || d.etablissementId !== user.etablissementId) throw new Error("Dépense introuvable");
   await prisma.depenseRecurrente.update({ where: { id }, data: { actif: !d.actif } });
   revalidatePath("/tresorerie");
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerMouvement(...a: Parameters<typeof creerMouvementCorps>) {
+  return capter(() => creerMouvementCorps(...a));
+}
+export async function annulerMouvement(...a: Parameters<typeof annulerMouvementCorps>) {
+  return capter(() => annulerMouvementCorps(...a));
+}
+export async function creerDepenseRecurrente(...a: Parameters<typeof creerDepenseRecurrenteCorps>) {
+  return capter(() => creerDepenseRecurrenteCorps(...a));
+}
+export async function basculerDepenseRecurrente(...a: Parameters<typeof basculerDepenseRecurrenteCorps>) {
+  return capter(() => basculerDepenseRecurrenteCorps(...a));
 }

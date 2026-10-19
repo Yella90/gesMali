@@ -5,8 +5,9 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { calculerMoyennesEleve } from "@/lib/notes/calculs";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
-export async function genererBulletinsClasse(classeId: string, trimestreId: string) {
+async function genererBulletinsClasseCorps(classeId: string, trimestreId: string) {
   const user = await requirePermission("bulletin.generate");
 
   const trimestre = await prisma.trimestre.findUnique({
@@ -193,4 +194,10 @@ export async function supprimerBulletins(classeId: string, trimestreId: string) 
     entiteId: classeId + "-" + trimestreId,
   });
   revalidatePath("/bulletins");
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function genererBulletinsClasse(...a: Parameters<typeof genererBulletinsClasseCorps>) {
+  return capter(() => genererBulletinsClasseCorps(...a));
 }

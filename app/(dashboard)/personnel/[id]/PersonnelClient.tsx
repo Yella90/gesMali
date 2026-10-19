@@ -3,17 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  modifierEmploye,
-  changerMotDePasse,
-  creerAffectation,
-  supprimerAffectation,
-  creerCompte,
-  supprimerCompte,
+  modifierEmploye as modifierEmployeAction,
+  changerMotDePasse as changerMotDePasseAction,
+  creerAffectation as creerAffectationAction,
+  supprimerAffectation as supprimerAffectationAction,
+  creerCompte as creerCompteAction,
+  supprimerCompte as supprimerCompteAction,
 } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { libCycle, libRole } from "@/lib/libelles";
+
+const modifierEmploye = relever(modifierEmployeAction);
+const changerMotDePasse = relever(changerMotDePasseAction);
+const creerAffectation = relever(creerAffectationAction);
+const supprimerAffectation = relever(supprimerAffectationAction);
+const creerCompte = relever(creerCompteAction);
+const supprimerCompte = relever(supprimerCompteAction);
 
 const POSTES = ["Enseignant", "Directeur", "Secretaire", "Comptable", "Surveillant", "Gardien", "Autre"];
 

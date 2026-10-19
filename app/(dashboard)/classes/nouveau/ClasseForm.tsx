@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { creerClasse } from "../actions";
+import { creerClasse as creerClasseAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const creerClasse = relever(creerClasseAction);
 
 export function ClasseForm({
   annees,

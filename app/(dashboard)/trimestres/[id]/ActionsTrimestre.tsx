@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cloturerTrimestre } from "../actions";
+import { cloturerTrimestre as cloturerTrimestreAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
+
+const cloturerTrimestre = relever(cloturerTrimestreAction);
 
 export function ActionsTrimestre({
   trimestreId,

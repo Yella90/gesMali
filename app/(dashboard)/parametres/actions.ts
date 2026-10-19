@@ -6,7 +6,7 @@ import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
 import { capter } from "@/lib/actions/serveur";
 
-export async function modifierEtablissement(formData: FormData) {
+async function modifierEtablissementCorps(formData: FormData) {
   const user = await requirePermission("parametres.manage");
 
   const nom = (formData.get("nom") as string)?.trim();
@@ -34,7 +34,7 @@ export async function modifierEtablissement(formData: FormData) {
   return { success: true };
 }
 
-export async function modifierParametresNotes(formData: FormData) {
+async function modifierParametresNotesCorps(formData: FormData) {
   const user = await requirePermission("parametres.manage");
 
   const modeSaisieNotes = formData.get("modeSaisieNotes") as "DECENTRALISEE" | "CENTRALISEE" | "MIXTE";
@@ -126,4 +126,13 @@ export async function modifierLogo(logo: string | null) {
     });
     revalidatePath("/", "layout");
   });
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function modifierEtablissement(...a: Parameters<typeof modifierEtablissementCorps>) {
+  return capter(() => modifierEtablissementCorps(...a));
+}
+export async function modifierParametresNotes(...a: Parameters<typeof modifierParametresNotesCorps>) {
+  return capter(() => modifierParametresNotesCorps(...a));
 }

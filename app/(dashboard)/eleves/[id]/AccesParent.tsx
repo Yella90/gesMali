@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfirm } from "@/components/ui/ConfirmProvider";
-import { regenererCodeParent } from "../actions";
+import { regenererCodeParent as regenererCodeParentAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
+
+const regenererCodeParent = relever(regenererCodeParentAction);
 
 export function AccesParent({
   eleveId,

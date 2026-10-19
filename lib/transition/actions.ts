@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
 // ═════════════════════════════════════════════
 // TYPES
@@ -77,7 +78,7 @@ function periodeStr(annee: number, mois: number): string {
 // PREPARER LA TRANSITION (aucune ecriture)
 // ═════════════════════════════════════════════
 
-export async function preparerTransition(params: {
+async function preparerTransitionCorps(params: {
   anneeSourceId: string;
   nouveauLibelle: string;
 }): Promise<ApercuTransition> {
@@ -250,7 +251,7 @@ export async function preparerTransition(params: {
 // APPLIQUER LA TRANSITION
 // ═════════════════════════════════════════════
 
-export async function appliquerTransition(params: {
+async function appliquerTransitionCorps(params: {
   anneeSourceId: string;
   nouveauLibelle: string;
   dateDebut: string;
@@ -725,4 +726,13 @@ export async function getAnneesArchivables() {
       _count: { select: { classes: true } },
     },
   });
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function preparerTransition(...a: Parameters<typeof preparerTransitionCorps>) {
+  return capter(() => preparerTransitionCorps(...a));
+}
+export async function appliquerTransition(...a: Parameters<typeof appliquerTransitionCorps>) {
+  return capter(() => appliquerTransitionCorps(...a));
 }

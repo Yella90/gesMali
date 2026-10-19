@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { creerAnnee, creerTrimestre } from "../actions";
+import { creerAnnee as creerAnneeAction, creerTrimestre as creerTrimestreAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const creerAnnee = relever(creerAnneeAction);
+const creerTrimestre = relever(creerTrimestreAction);
 
 export function TrimestreForm({
   annees,

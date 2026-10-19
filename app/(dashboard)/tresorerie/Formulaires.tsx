@@ -3,10 +3,16 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
-import { annulerMouvement, basculerDepenseRecurrente, creerDepenseRecurrente, creerMouvement } from "./actions";
+import { annulerMouvement as annulerMouvementAction, basculerDepenseRecurrente as basculerDepenseRecurrenteAction, creerDepenseRecurrente as creerDepenseRecurrenteAction, creerMouvement as creerMouvementAction } from "./actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const annulerMouvement = relever(annulerMouvementAction);
+const basculerDepenseRecurrente = relever(basculerDepenseRecurrenteAction);
+const creerDepenseRecurrente = relever(creerDepenseRecurrenteAction);
+const creerMouvement = relever(creerMouvementAction);
 
 const champ = "w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm";
 const CAISSES = [

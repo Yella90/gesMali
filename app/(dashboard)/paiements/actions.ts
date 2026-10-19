@@ -5,8 +5,9 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
 import { caisseDuMode, LIB_CAISSE, soldeCaisse } from "@/lib/tresorerie/tresorerie";
+import { capter } from "@/lib/actions/serveur";
 
-export async function creerPaiement(formData: FormData) {
+async function creerPaiementCorps(formData: FormData) {
   const user = await requirePermission("paiement.create");
 
   const employeId = formData.get("employeId") as string;
@@ -97,7 +98,7 @@ export async function creerPaiement(formData: FormData) {
   return { success: true, id: paiement.id };
 }
 
-export async function annulerPaiement(id: string, motif: string) {
+async function annulerPaiementCorps(id: string, motif: string) {
   const user = await requirePermission("paiement.annuler");
   if (!motif || motif.trim().length < 3) throw new Error("Motif obligatoire (3 caracteres min)");
 
@@ -128,4 +129,13 @@ export async function annulerPaiement(id: string, motif: string) {
   revalidatePath("/paiements/tableau-de-bord");
   revalidatePath("/paiements/" + id);
   return { success: true };
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerPaiement(...a: Parameters<typeof creerPaiementCorps>) {
+  return capter(() => creerPaiementCorps(...a));
+}
+export async function annulerPaiement(...a: Parameters<typeof annulerPaiementCorps>) {
+  return capter(() => annulerPaiementCorps(...a));
 }

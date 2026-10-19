@@ -5,6 +5,7 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { capter } from "@/lib/actions/serveur";
 
 const ROLES_VALIDES = ["DIRECTEUR", "SECRETAIRE", "COMPTABLE", "ENSEIGNANT"];
 const POSTES_VALIDES = [
@@ -20,7 +21,7 @@ const POSTES_VALIDES = [
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CREER UN EMPLOYE (+ compte optionnel)
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function creerEmploye(formData: FormData) {
+async function creerEmployeCorps(formData: FormData) {
   const admin = await requirePermission("personnel.manage");
 
   const nom = (formData.get("nom") as string)?.trim();
@@ -111,7 +112,7 @@ export async function creerEmploye(formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // MODIFIER UN EMPLOYE
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function modifierEmploye(employeId: string, formData: FormData) {
+async function modifierEmployeCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
 
   const cible = await prisma.employe.findUnique({
@@ -230,7 +231,7 @@ export async function desactiverEmploye(employeId: string) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CREER UN COMPTE POUR UN EMPLOYE EXISTANT
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function creerCompte(employeId: string, formData: FormData) {
+async function creerCompteCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
 
   const employe = await prisma.employe.findUnique({
@@ -286,7 +287,7 @@ export async function creerCompte(employeId: string, formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // SUPPRIMER LE COMPTE (garde la fiche Employe)
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function supprimerCompte(employeId: string) {
+async function supprimerCompteCorps(employeId: string) {
   const admin = await requirePermission("personnel.manage");
 
   const employe = await prisma.employe.findUnique({
@@ -344,7 +345,7 @@ export async function supprimerCompte(employeId: string) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // CHANGER MOT DE PASSE
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function changerMotDePasse(employeId: string, nouveauMotDePasse: string) {
+async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: string) {
   const admin = await requirePermission("personnel.manage");
 
   const employe = await prisma.employe.findUnique({
@@ -378,7 +379,7 @@ export async function changerMotDePasse(employeId: string, nouveauMotDePasse: st
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 // AFFECTATIONS (inchangees dans le principe, mais pointent vers Employe)
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-export async function creerAffectation(formData: FormData) {
+async function creerAffectationCorps(formData: FormData) {
   const admin = await requirePermission("personnel.manage");
 
   const enseignantId = formData.get("enseignantId") as string;
@@ -474,7 +475,7 @@ export async function creerAffectation(formData: FormData) {
   return { success: true };
 }
 
-export async function supprimerAffectation(id: string) {
+async function supprimerAffectationCorps(id: string) {
   const admin = await requirePermission("personnel.manage");
 
   const aff = await prisma.affectation.findUnique({
@@ -496,4 +497,28 @@ export async function supprimerAffectation(id: string) {
 
   revalidatePath("/personnel/" + aff.enseignantId);
   return { success: true };
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerEmploye(...a: Parameters<typeof creerEmployeCorps>) {
+  return capter(() => creerEmployeCorps(...a));
+}
+export async function modifierEmploye(...a: Parameters<typeof modifierEmployeCorps>) {
+  return capter(() => modifierEmployeCorps(...a));
+}
+export async function creerCompte(...a: Parameters<typeof creerCompteCorps>) {
+  return capter(() => creerCompteCorps(...a));
+}
+export async function supprimerCompte(...a: Parameters<typeof supprimerCompteCorps>) {
+  return capter(() => supprimerCompteCorps(...a));
+}
+export async function changerMotDePasse(...a: Parameters<typeof changerMotDePasseCorps>) {
+  return capter(() => changerMotDePasseCorps(...a));
+}
+export async function creerAffectation(...a: Parameters<typeof creerAffectationCorps>) {
+  return capter(() => creerAffectationCorps(...a));
+}
+export async function supprimerAffectation(...a: Parameters<typeof supprimerAffectationCorps>) {
+  return capter(() => supprimerAffectationCorps(...a));
 }

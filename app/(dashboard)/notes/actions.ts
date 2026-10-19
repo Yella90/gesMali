@@ -7,10 +7,11 @@ import { verifierClasse, verifierMatiere, verifierTrimestre } from "@/lib/data/g
 import { enregistrerAudit } from "@/lib/audit";
 import { peutSaisirSelonMode } from "@/lib/notes/peutSaisir";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
 type TypeNote = "DEVOIR" | "COMPOSITION";
 
-export async function chargerElevesEtNotes(params: {
+async function chargerElevesEtNotesCorps(params: {
   classeId: string;
   matiereId: string;
   trimestreId: string;
@@ -58,7 +59,7 @@ export async function chargerElevesEtNotes(params: {
   });
 }
 
-export async function enregistrerNotes(data: {
+async function enregistrerNotesCorps(data: {
   classeId: string;
   matiereId: string;
   trimestreId: string;
@@ -236,4 +237,13 @@ export async function validerNotes(params: {
 
   revalidatePath("/notes");
   return { success: true, nombre: resultat.count };
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function chargerElevesEtNotes(...a: Parameters<typeof chargerElevesEtNotesCorps>) {
+  return capter(() => chargerElevesEtNotesCorps(...a));
+}
+export async function enregistrerNotes(...a: Parameters<typeof enregistrerNotesCorps>) {
+  return capter(() => enregistrerNotesCorps(...a));
 }

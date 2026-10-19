@@ -5,8 +5,9 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { trimestreSchema, anneeScolaireSchema } from "@/lib/validators/trimestre";
 import { revalidatePath } from "next/cache";
+import { capter } from "@/lib/actions/serveur";
 
-export async function creerAnnee(formData: FormData) {
+async function creerAnneeCorps(formData: FormData) {
   const user = await requirePermission("trimestre.manage");
   const raw = {
     libelle: formData.get("libelle"),
@@ -24,7 +25,7 @@ export async function creerAnnee(formData: FormData) {
   return { success: true };
 }
 
-export async function creerTrimestre(formData: FormData) {
+async function creerTrimestreCorps(formData: FormData) {
   const user = await requirePermission("trimestre.manage");
   const raw = {
     anneeScolaireId: formData.get("anneeScolaireId"),
@@ -44,7 +45,7 @@ export async function creerTrimestre(formData: FormData) {
   return { success: true };
 }
 
-export async function cloturerTrimestre(id: string) {
+async function cloturerTrimestreCorps(id: string) {
   const user = await requirePermission("note.lock");
   const t = await prisma.trimestre.findUnique({
     where: { id },
@@ -63,7 +64,7 @@ export async function cloturerTrimestre(id: string) {
   await enregistrerAudit({ userId: user.id, action: "CLOTURER_TRIMESTRE", entite: "Trimestre", entiteId: id });
   revalidatePath("/trimestres");
 }
-export async function modifierTrimestre(
+async function modifierTrimestreCorps(
   id: string,
   data: {
     nom: string;
@@ -150,4 +151,19 @@ export async function modifierTrimestre(
   revalidatePath("/trimestres");
   revalidatePath("/trimestres/" + id);
   return { success: true };
+}
+
+// Actions appelees par le client : l'erreur metier est renvoyee au lieu d'etre levee,
+// sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
+export async function creerAnnee(...a: Parameters<typeof creerAnneeCorps>) {
+  return capter(() => creerAnneeCorps(...a));
+}
+export async function creerTrimestre(...a: Parameters<typeof creerTrimestreCorps>) {
+  return capter(() => creerTrimestreCorps(...a));
+}
+export async function cloturerTrimestre(...a: Parameters<typeof cloturerTrimestreCorps>) {
+  return capter(() => cloturerTrimestreCorps(...a));
+}
+export async function modifierTrimestre(...a: Parameters<typeof modifierTrimestreCorps>) {
+  return capter(() => modifierTrimestreCorps(...a));
 }

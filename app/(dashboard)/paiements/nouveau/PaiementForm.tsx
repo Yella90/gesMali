@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { creerPaiement } from "../actions";
+import { creerPaiement as creerPaiementAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const creerPaiement = relever(creerPaiementAction);
 
 type EmployeOption = {
   id: string;

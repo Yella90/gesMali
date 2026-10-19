@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { preparerTransition, appliquerTransition, ApercuTransition, DecisionType, EleveTransition } from "@/lib/transition/actions";
+import { preparerTransition as preparerTransitionAction, appliquerTransition as appliquerTransitionAction, ApercuTransition, DecisionType, EleveTransition } from "@/lib/transition/actions";
+import { relever } from "@/lib/actions/resultat";
 import { useConfirm } from "@/components/ui/ConfirmProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const preparerTransition = relever(preparerTransitionAction);
+const appliquerTransition = relever(appliquerTransitionAction);
 
 type Annee = {
   id: string;

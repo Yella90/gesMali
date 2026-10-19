@@ -3,10 +3,13 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, X } from "lucide-react";
-import { modifierEleve } from "../actions";
+import { modifierEleve as modifierEleveAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
+const modifierEleve = relever(modifierEleveAction);
 
 type EleveModifiable = {
   id: string;

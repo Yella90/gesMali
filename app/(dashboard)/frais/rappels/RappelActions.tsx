@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { genererRappels } from "../actions";
+import { genererRappels as genererRappelsAction } from "../actions";
+import { relever } from "@/lib/actions/resultat";
+
+const genererRappels = relever(genererRappelsAction);
 
 export function RappelActions({
   periodesImpayees,

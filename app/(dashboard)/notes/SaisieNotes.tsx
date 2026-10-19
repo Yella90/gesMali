@@ -1,8 +1,12 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { chargerElevesEtNotes, enregistrerNotes } from "./actions";
+import { chargerElevesEtNotes as chargerElevesEtNotesAction, enregistrerNotes as enregistrerNotesAction } from "./actions";
+import { relever } from "@/lib/actions/resultat";
 import { libModeSaisie } from "@/lib/libelles";
+
+const chargerElevesEtNotes = relever(chargerElevesEtNotesAction);
+const enregistrerNotes = relever(enregistrerNotesAction);
 
 type ClasseOption = { id: string; label: string; cycle: string };
 type MatiereOption = { id: string; nom: string; cycle: string };

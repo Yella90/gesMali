@@ -10,3 +10,9 @@ export async function executer<T>(appel: Promise<Resultat<T>>): Promise<T> {
   if (!r.ok) throw new Error(r.erreur);
   return r.data;
 }
+
+// Cote client : meme signature que l'action, mais renvoie la donnee ou leve l'erreur
+// (les composants gardent leur try/catch habituel)
+export function relever<A extends unknown[], T>(action: (...a: A) => Promise<Resultat<T>>) {
+  return (...a: A): Promise<T> => executer(action(...a));
+}
