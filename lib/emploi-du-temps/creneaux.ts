@@ -103,12 +103,13 @@ export type DonneesCreneau = {
   enseignantId: string;
 };
 
-// Enseignants planifiables : employes actifs au poste d'enseignant ou au compte de role ENSEIGNANT
+// Enseignants planifiables : employes actifs au poste d'enseignant ou dont l'acces a
+// l'application dans l'ecole a le role ENSEIGNANT
 export const FILTRE_ENSEIGNANTS: Prisma.EmployeWhereInput = {
   actif: true,
-  OR: [{ poste: "Enseignant" }, { user: { roles: { has: "ENSEIGNANT" } } }],
+  OR: [{ poste: "Enseignant" }, { acces: { roles: { has: "ENSEIGNANT" } } }],
 };
 
-export function estEnseignant(e: { actif: boolean; poste: string; user: { roles: string[] } | null }): boolean {
-  return e.actif && (e.poste === "Enseignant" || !!e.user?.roles.includes("ENSEIGNANT"));
+export function estEnseignant(e: { actif: boolean; poste: string; acces: { roles: string[] } | null }): boolean {
+  return e.actif && (e.poste === "Enseignant" || !!e.acces?.roles.includes("ENSEIGNANT"));
 }

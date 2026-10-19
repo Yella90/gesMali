@@ -256,7 +256,6 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     }
 
     dernieresActions = await db.auditLog.findMany({
-      where: { user: { etablissementId: user.etablissementId } },
       include: { user: { include: { employe: { select: { nom: true, prenom: true } } } } },
       orderBy: { createdAt: "desc" },
       take: 8,

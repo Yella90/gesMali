@@ -2,12 +2,11 @@
 
 import { ecole } from "@/lib/data/ecole";
 import { emailDejaUtilise, requirePermission } from "@/lib/auth/session";
+import { ouvrirAcces, reinitialiserMotDePasse, retirerAcces, roleValide } from "@/lib/auth/comptes";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
-import bcrypt from "bcryptjs";
 import { capter } from "@/lib/actions/serveur";
 
-const ROLES_VALIDES = ["DIRECTEUR", "SECRETAIRE", "COMPTABLE", "ENSEIGNANT"];
 const POSTES_VALIDES = [
   "Directeur",
   "Enseignant",
@@ -45,68 +44,50 @@ async function creerEmployeCorps(formData: FormData) {
     throw new Error("Precisez le poste libre");
   }
 
+  // Compte : verifie avant de creer la fiche. Un e-mail deja utilise (la meme personne
+  // dans une autre ecole) recoit l'acces a cette ecole et garde son mot de passe.
   if (creerCompte) {
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      throw new Error("Email invalide");
-    }
-    if (!motDePasse || motDePasse.length < 6) {
-      throw new Error("Mot de passe : 6 caracteres minimum");
-    }
-    if (!ROLES_VALIDES.includes(role)) throw new Error("Role invalide");
-
-    if (await emailDejaUtilise(email)) throw new Error("Cet email est deja utilise");
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Email invalide");
+    if (!roleValide(role)) throw new Error("Role invalide");
+    if (!(await emailDejaUtilise(email)) && motDePasse.length < 6) throw new Error("Mot de passe : 6 caracteres minimum");
   }
 
   const salaireReference = salaireRefRaw ? Number(salaireRefRaw) : null;
 
-  const resultat = await db.$transaction(async (tx) => {
-    const employe = await tx.employe.create({
-      data: {
-        etablissementId: admin.etablissementId,
-        nom,
-        prenom,
-        telephone,
-        poste,
-        posteLibre: poste === "Autre" ? posteLibre : null,
-        salaireReference,
-        typeRemuneration: typeRemu,
-      },
-    });
-
-    let user: any = null;
-    if (creerCompte && email && motDePasse) {
-      const passwordHash = await bcrypt.hash(motDePasse, 10);
-      user = await tx.user.create({
-        data: {
-          email,
-          passwordHash,
-          roles: [role as any],
-          actif: true,
-          employeId: employe.id,
-          etablissementId: admin.etablissementId,
-        },
-      });
-    }
-
-    return { employe, user };
+  const employe = await db.employe.create({
+    data: {
+      etablissementId: admin.etablissementId,
+      nom,
+      prenom,
+      telephone,
+      poste,
+      posteLibre: poste === "Autre" ? posteLibre : null,
+      salaireReference,
+      typeRemuneration: typeRemu,
+    },
   });
+
+  const compte = creerCompte && email
+    ? await ouvrirAcces({ etablissementId: admin.etablissementId, employeId: employe.id, email, motDePasse, role })
+    : null;
 
   await enregistrerAudit({
     userId: admin.id,
     action: "CREATE_EMPLOYE",
     entite: "Employe",
-    entiteId: resultat.employe.id,
+    entiteId: employe.id,
     details: {
       nom,
       prenom,
       poste,
-      compte: resultat.user ? email : null,
-      role: resultat.user ? role : null,
+      compte: compte ? email : null,
+      compteExistant: compte?.compteExistant ?? null,
+      role: compte ? role : null,
     },
   });
 
   revalidatePath("/personnel");
-  return { success: true, id: resultat.employe.id };
+  return { success: true, id: employe.id, compteExistant: compte?.compteExistant ?? false };
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -116,10 +97,7 @@ async function modifierEmployeCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
   const db = ecole(admin);
 
-  const cible = await db.employe.findUnique({
-    where: { id: employeId },
-    include: { user: true },
-  });
+  const cible = await db.employe.findUnique({ where: { id: employeId } });
   if (!cible || cible.etablissementId !== admin.etablissementId) {
     throw new Error("Acces refuse");
   }
@@ -160,18 +138,8 @@ async function modifierEmployeCorps(employeId: string, formData: FormData) {
       },
     });
 
-    // Desactivation en cascade du compte
-    if (!actif && cible.user) {
-      await tx.user.update({
-        where: { id: cible.user.id },
-        data: { actif: false },
-      });
-    } else if (actif && cible.user) {
-      await tx.user.update({
-        where: { id: cible.user.id },
-        data: { actif: true },
-      });
-    }
+    // Acces a l'application dans cette ecole : suit l'activite de la fiche
+    await tx.acces.updateMany({ where: { employeId }, data: { actif } });
   });
 
   await enregistrerAudit({
@@ -194,10 +162,7 @@ export async function desactiverEmploye(employeId: string) {
   const admin = await requirePermission("personnel.manage");
   const db = ecole(admin);
 
-  const cible = await db.employe.findUnique({
-    where: { id: employeId },
-    include: { user: true },
-  });
+  const cible = await db.employe.findUnique({ where: { id: employeId } });
   if (!cible || cible.etablissementId !== admin.etablissementId) {
     throw new Error("Acces refuse");
   }
@@ -210,12 +175,7 @@ export async function desactiverEmploye(employeId: string) {
       where: { id: employeId },
       data: { actif: false, dateSortie: new Date() },
     });
-    if (cible.user) {
-      await tx.user.update({
-        where: { id: cible.user.id },
-        data: { actif: false },
-      });
-    }
+    await tx.acces.updateMany({ where: { employeId }, data: { actif: false } });
   });
 
   await enregistrerAudit({
@@ -237,53 +197,28 @@ async function creerCompteCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
   const db = ecole(admin);
 
-  const employe = await db.employe.findUnique({
-    where: { id: employeId },
-    include: { user: true },
-  });
+  const employe = await db.employe.findUnique({ where: { id: employeId } });
   if (!employe || employe.etablissementId !== admin.etablissementId) {
     throw new Error("Acces refuse");
   }
-  if (employe.user) throw new Error("Cet employe a deja un compte");
 
-  const email = (formData.get("email") as string)?.trim().toLowerCase();
-  const motDePasse = formData.get("motDePasse") as string;
+  const email = ((formData.get("email") as string) ?? "").trim().toLowerCase();
+  const motDePasse = (formData.get("motDePasse") as string) || "";
   const role = formData.get("role") as string;
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Email invalide");
-  }
-  if (!motDePasse || motDePasse.length < 6) {
-    throw new Error("Mot de passe : 6 caracteres minimum");
-  }
-  if (!ROLES_VALIDES.includes(role)) throw new Error("Role invalide");
-
-  if (await emailDejaUtilise(email)) throw new Error("Cet email est deja utilise");
-
-  const passwordHash = await bcrypt.hash(motDePasse, 10);
-
-  await db.user.create({
-    data: {
-      email,
-      passwordHash,
-      roles: [role as any],
-      actif: true,
-      employeId,
-      etablissementId: admin.etablissementId,
-    },
-  });
+  const compte = await ouvrirAcces({ etablissementId: admin.etablissementId, employeId, email, motDePasse, role });
 
   await enregistrerAudit({
     userId: admin.id,
     action: "CREATE_COMPTE",
     entite: "User",
     entiteId: employeId,
-    details: { email, role, employe: employe.nom + " " + employe.prenom },
+    details: { email, role, employe: employe.nom + " " + employe.prenom, compteExistant: compte.compteExistant },
   });
 
   revalidatePath("/personnel");
   revalidatePath("/personnel/" + employeId);
-  return { success: true };
+  return { success: true, compteExistant: compte.compteExistant };
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -291,53 +226,19 @@ async function creerCompteCorps(employeId: string, formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function supprimerCompteCorps(employeId: string) {
   const admin = await requirePermission("personnel.manage");
-  const db = ecole(admin);
-
-  const employe = await db.employe.findUnique({
-    where: { id: employeId },
-    include: { user: true },
-  });
-  if (!employe || employe.etablissementId !== admin.etablissementId) {
-    throw new Error("Acces refuse");
-  }
-  if (!employe.user) throw new Error("Aucun compte a supprimer");
-  if (employe.id === admin.employeId) {
+  if (employeId === admin.employeId) {
     throw new Error("Vous ne pouvez pas supprimer votre propre compte");
   }
 
-  // Compter les references pour eviter les erreurs
-  const [notes, bulletins, paiements, frais, rappels, audits] = await Promise.all([
-    db.note.count({ where: { saisieParId: employe.user.id } }),
-    db.bulletin.count({ where: { genereParId: employe.user.id } }),
-    db.paiement.count({
-      where: {
-        OR: [
-          { saisieParId: employe.user.id },
-          { annuleParId: employe.user.id },
-        ],
-      },
-    }),
-    db.paiementFrais.count({ where: { saisieParId: employe.user.id } }),
-    db.rappel.count({ where: { saisieParId: employe.user.id } }),
-    db.auditLog.count({ where: { userId: employe.user.id } }),
-  ]);
-
-  const total = notes + bulletins + paiements + frais + rappels + audits;
-  if (total > 0) {
-    throw new Error(
-      "Impossible de supprimer : ce compte a " + total +
-      " reference(s) dans l'historique. Desactivez-le a la place."
-    );
-  }
-
-  await db.user.delete({ where: { id: employe.user.id } });
+  // L'acces a cette ecole est retire ; le compte reste s'il sert ailleurs ou a un historique
+  const r = await retirerAcces(admin.etablissementId, employeId);
 
   await enregistrerAudit({
     userId: admin.id,
     action: "DELETE_COMPTE",
     entite: "User",
     entiteId: employeId,
-    details: { email: employe.user.email },
+    details: { email: r.email, compteSupprime: r.compteSupprime },
   });
 
   revalidatePath("/personnel");
@@ -350,25 +251,7 @@ async function supprimerCompteCorps(employeId: string) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: string) {
   const admin = await requirePermission("personnel.manage");
-  const db = ecole(admin);
-
-  const employe = await db.employe.findUnique({
-    where: { id: employeId },
-    include: { user: true },
-  });
-  if (!employe || employe.etablissementId !== admin.etablissementId) {
-    throw new Error("Acces refuse");
-  }
-  if (!employe.user) throw new Error("Aucun compte pour cet employe");
-  if (!nouveauMotDePasse || nouveauMotDePasse.length < 6) {
-    throw new Error("Mot de passe : 6 caracteres minimum");
-  }
-
-  const passwordHash = await bcrypt.hash(nouveauMotDePasse, 10);
-  await db.user.update({
-    where: { id: employe.user.id },
-    data: { passwordHash },
-  });
+  await reinitialiserMotDePasse(admin.etablissementId, employeId, nouveauMotDePasse);
 
   await enregistrerAudit({
     userId: admin.id,

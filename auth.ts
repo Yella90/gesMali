@@ -1,7 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/db";
+import { chargerCompte } from "@/lib/auth/comptes";
+import { estAdministrateurPlateforme } from "@/lib/plateforme/etat";
 import { adresseIp, connexionBloquee, effacerEchecs, noterEchec } from "@/lib/auth/limite";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -18,11 +19,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const ip = adresseIp(request.headers);
         if (await connexionBloquee(email, ip)) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email },
-          include: { employe: true },
-        });
-        if (!user || !user.actif || !user.employe.actif) {
+        // Compte actif, avec au moins un acces actif (une ecole suspendue est expliquee
+        // apres la connexion, sur la page de choix d'ecole), ou administrateur de la plateforme
+        const user = await chargerCompte({ email });
+        const accesActif = user?.acces.find((a) => a.actif && a.employe.actif);
+        if (!user || !user.actif || !(accesActif || estAdministrateurPlateforme(user.email))) {
           await noterEchec(email, ip);
           return null;
         }
@@ -37,7 +38,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: user.id,
           email: user.email,
-          name: user.employe.prenom + " " + user.employe.nom,
+          name: accesActif ? accesActif.employe.prenom + " " + accesActif.employe.nom : user.email,
         };
       },
     }),

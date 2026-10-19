@@ -36,6 +36,9 @@ export async function creerEcole(nom: string) {
   const user = await prisma.user.create({
     data: { email: "directeur@" + s + ".test", passwordHash: "x", roles: ["DIRECTEUR"], employeId: employe.id, etablissementId },
   });
+  const acces = await prisma.acces.create({
+    data: { userId: user.id, etablissementId, employeId: employe.id, roles: ["DIRECTEUR"] },
+  });
 
   const annee = await prisma.anneeScolaire.create({
     data: { etablissementId, libelle: "2026-2027", dateDebut: new Date("2026-10-01"), dateFin: new Date("2027-06-30"), active: true },
@@ -97,7 +100,7 @@ export async function creerEcole(nom: string) {
   const depense = await prisma.depenseRecurrente.create({
     data: { etablissementId, libelle: "Loyer", categorie: "Loyer", montant: 100000, jourEcheance: 5, caisse: "BANQUE" },
   });
-  const audit = await prisma.auditLog.create({ data: { userId: user.id, action: "TEST", entite: "Test", entiteId: s } });
+  const audit = await prisma.auditLog.create({ data: { userId: user.id, etablissementId, action: "TEST", entite: "Test", entiteId: s } });
 
   // Un identifiant par table : la base des tests d'isolation
   return {
@@ -108,6 +111,7 @@ export async function creerEcole(nom: string) {
       ParametresEtablissement: parametres.id,
       Employe: employe.id,
       User: user.id,
+      Acces: acces.id,
       AnneeScolaire: annee.id,
       Trimestre: trimestre.id,
       Matiere: matiere.id,

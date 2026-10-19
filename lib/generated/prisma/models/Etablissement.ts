@@ -33,6 +33,8 @@ export type EtablissementMinAggregateOutputType = {
   email: string | null
   logo: string | null
   actif: boolean | null
+  statut: $Enums.StatutEtablissement | null
+  finEssai: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +48,8 @@ export type EtablissementMaxAggregateOutputType = {
   email: string | null
   logo: string | null
   actif: boolean | null
+  statut: $Enums.StatutEtablissement | null
+  finEssai: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +63,8 @@ export type EtablissementCountAggregateOutputType = {
   email: number
   logo: number
   actif: number
+  statut: number
+  finEssai: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +80,8 @@ export type EtablissementMinAggregateInputType = {
   email?: true
   logo?: true
   actif?: true
+  statut?: true
+  finEssai?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +95,8 @@ export type EtablissementMaxAggregateInputType = {
   email?: true
   logo?: true
   actif?: true
+  statut?: true
+  finEssai?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +110,8 @@ export type EtablissementCountAggregateInputType = {
   email?: true
   logo?: true
   actif?: true
+  statut?: true
+  finEssai?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +198,8 @@ export type EtablissementGroupByOutputType = {
   email: string | null
   logo: string | null
   actif: boolean
+  statut: $Enums.StatutEtablissement
+  finEssai: Date | null
   createdAt: Date
   updatedAt: Date
   _count: EtablissementCountAggregateOutputType | null
@@ -220,9 +234,13 @@ export type EtablissementWhereInput = {
   email?: Prisma.StringNullableFilter<"Etablissement"> | string | null
   logo?: Prisma.StringNullableFilter<"Etablissement"> | string | null
   actif?: Prisma.BoolFilter<"Etablissement"> | boolean
+  statut?: Prisma.EnumStatutEtablissementFilter<"Etablissement"> | $Enums.StatutEtablissement
+  finEssai?: Prisma.DateTimeNullableFilter<"Etablissement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Etablissement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Etablissement"> | Date | string
   users?: Prisma.UserListRelationFilter
+  acces?: Prisma.AccesListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
   employes?: Prisma.EmployeListRelationFilter
   anneesScolaires?: Prisma.AnneeScolaireListRelationFilter
   matieres?: Prisma.MatiereListRelationFilter
@@ -244,9 +262,13 @@ export type EtablissementOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   actif?: Prisma.SortOrder
+  statut?: Prisma.SortOrder
+  finEssai?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   users?: Prisma.UserOrderByRelationAggregateInput
+  acces?: Prisma.AccesOrderByRelationAggregateInput
+  auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   employes?: Prisma.EmployeOrderByRelationAggregateInput
   anneesScolaires?: Prisma.AnneeScolaireOrderByRelationAggregateInput
   matieres?: Prisma.MatiereOrderByRelationAggregateInput
@@ -271,9 +293,13 @@ export type EtablissementWhereUniqueInput = Prisma.AtLeast<{
   email?: Prisma.StringNullableFilter<"Etablissement"> | string | null
   logo?: Prisma.StringNullableFilter<"Etablissement"> | string | null
   actif?: Prisma.BoolFilter<"Etablissement"> | boolean
+  statut?: Prisma.EnumStatutEtablissementFilter<"Etablissement"> | $Enums.StatutEtablissement
+  finEssai?: Prisma.DateTimeNullableFilter<"Etablissement"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Etablissement"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Etablissement"> | Date | string
   users?: Prisma.UserListRelationFilter
+  acces?: Prisma.AccesListRelationFilter
+  auditLogs?: Prisma.AuditLogListRelationFilter
   employes?: Prisma.EmployeListRelationFilter
   anneesScolaires?: Prisma.AnneeScolaireListRelationFilter
   matieres?: Prisma.MatiereListRelationFilter
@@ -295,6 +321,8 @@ export type EtablissementOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   actif?: Prisma.SortOrder
+  statut?: Prisma.SortOrder
+  finEssai?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.EtablissementCountOrderByAggregateInput
@@ -314,6 +342,8 @@ export type EtablissementScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"Etablissement"> | string | null
   logo?: Prisma.StringNullableWithAggregatesFilter<"Etablissement"> | string | null
   actif?: Prisma.BoolWithAggregatesFilter<"Etablissement"> | boolean
+  statut?: Prisma.EnumStatutEtablissementWithAggregatesFilter<"Etablissement"> | $Enums.StatutEtablissement
+  finEssai?: Prisma.DateTimeNullableWithAggregatesFilter<"Etablissement"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Etablissement"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Etablissement"> | Date | string
 }
@@ -327,9 +357,13 @@ export type EtablissementCreateInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -351,9 +385,13 @@ export type EtablissementUncheckedCreateInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -375,9 +413,13 @@ export type EtablissementUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -399,9 +441,13 @@ export type EtablissementUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -423,6 +469,8 @@ export type EtablissementCreateManyInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -436,6 +484,8 @@ export type EtablissementUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -449,6 +499,8 @@ export type EtablissementUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -467,6 +519,8 @@ export type EtablissementCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   actif?: Prisma.SortOrder
+  statut?: Prisma.SortOrder
+  finEssai?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -480,6 +534,8 @@ export type EtablissementMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   actif?: Prisma.SortOrder
+  statut?: Prisma.SortOrder
+  finEssai?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -493,8 +549,15 @@ export type EtablissementMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   logo?: Prisma.SortOrder
   actif?: Prisma.SortOrder
+  statut?: Prisma.SortOrder
+  finEssai?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type EtablissementNullableScalarRelationFilter = {
+  is?: Prisma.EtablissementWhereInput | null
+  isNot?: Prisma.EtablissementWhereInput | null
 }
 
 export type EtablissementCreateNestedOneWithoutEmployesInput = {
@@ -525,8 +588,26 @@ export type EtablissementUpdateOneRequiredWithoutUsersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutUsersInput, Prisma.EtablissementUpdateWithoutUsersInput>, Prisma.EtablissementUncheckedUpdateWithoutUsersInput>
 }
 
+export type EtablissementCreateNestedOneWithoutAccesInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutAccesInput, Prisma.EtablissementUncheckedCreateWithoutAccesInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutAccesInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneRequiredWithoutAccesNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutAccesInput, Prisma.EtablissementUncheckedCreateWithoutAccesInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutAccesInput
+  upsert?: Prisma.EtablissementUpsertWithoutAccesInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutAccesInput, Prisma.EtablissementUpdateWithoutAccesInput>, Prisma.EtablissementUncheckedUpdateWithoutAccesInput>
+}
+
 export type EnumTypeEtablissementFieldUpdateOperationsInput = {
   set?: $Enums.TypeEtablissement
+}
+
+export type EnumStatutEtablissementFieldUpdateOperationsInput = {
+  set?: $Enums.StatutEtablissement
 }
 
 export type EtablissementCreateNestedOneWithoutParametresInput = {
@@ -627,6 +708,22 @@ export type EtablissementUpdateOneRequiredWithoutFraisScolariteNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutFraisScolariteInput, Prisma.EtablissementUpdateWithoutFraisScolariteInput>, Prisma.EtablissementUncheckedUpdateWithoutFraisScolariteInput>
 }
 
+export type EtablissementCreateNestedOneWithoutAuditLogsInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutAuditLogsInput, Prisma.EtablissementUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutAuditLogsInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneWithoutAuditLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutAuditLogsInput, Prisma.EtablissementUncheckedCreateWithoutAuditLogsInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutAuditLogsInput
+  upsert?: Prisma.EtablissementUpsertWithoutAuditLogsInput
+  disconnect?: Prisma.EtablissementWhereInput | boolean
+  delete?: Prisma.EtablissementWhereInput | boolean
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutAuditLogsInput, Prisma.EtablissementUpdateWithoutAuditLogsInput>, Prisma.EtablissementUncheckedUpdateWithoutAuditLogsInput>
+}
+
 export type EtablissementCreateNestedOneWithoutMouvementsInput = {
   create?: Prisma.XOR<Prisma.EtablissementCreateWithoutMouvementsInput, Prisma.EtablissementUncheckedCreateWithoutMouvementsInput>
   connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutMouvementsInput
@@ -664,9 +761,13 @@ export type EtablissementCreateWithoutEmployesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -687,9 +788,13 @@ export type EtablissementUncheckedCreateWithoutEmployesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -726,9 +831,13 @@ export type EtablissementUpdateWithoutEmployesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -749,9 +858,13 @@ export type EtablissementUncheckedUpdateWithoutEmployesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -772,8 +885,12 @@ export type EtablissementCreateWithoutUsersInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -795,8 +912,12 @@ export type EtablissementUncheckedCreateWithoutUsersInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -834,8 +955,12 @@ export type EtablissementUpdateWithoutUsersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -857,8 +982,136 @@ export type EtablissementUncheckedUpdateWithoutUsersInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutAccesInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutAccesInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutAccesInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutAccesInput, Prisma.EtablissementUncheckedCreateWithoutAccesInput>
+}
+
+export type EtablissementUpsertWithoutAccesInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutAccesInput, Prisma.EtablissementUncheckedUpdateWithoutAccesInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutAccesInput, Prisma.EtablissementUncheckedCreateWithoutAccesInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutAccesInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutAccesInput, Prisma.EtablissementUncheckedUpdateWithoutAccesInput>
+}
+
+export type EtablissementUpdateWithoutAccesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutAccesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -880,9 +1133,13 @@ export type EtablissementCreateWithoutParametresInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -903,9 +1160,13 @@ export type EtablissementUncheckedCreateWithoutParametresInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -942,9 +1203,13 @@ export type EtablissementUpdateWithoutParametresInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -965,9 +1230,13 @@ export type EtablissementUncheckedUpdateWithoutParametresInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -988,9 +1257,13 @@ export type EtablissementCreateWithoutAnneesScolairesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -1011,9 +1284,13 @@ export type EtablissementUncheckedCreateWithoutAnneesScolairesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1050,9 +1327,13 @@ export type EtablissementUpdateWithoutAnneesScolairesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -1073,9 +1354,13 @@ export type EtablissementUncheckedUpdateWithoutAnneesScolairesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1096,9 +1381,13 @@ export type EtablissementCreateWithoutMatieresInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -1119,9 +1408,13 @@ export type EtablissementUncheckedCreateWithoutMatieresInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1158,9 +1451,13 @@ export type EtablissementUpdateWithoutMatieresInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -1181,9 +1478,13 @@ export type EtablissementUncheckedUpdateWithoutMatieresInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1204,9 +1505,13 @@ export type EtablissementCreateWithoutClassesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1227,9 +1532,13 @@ export type EtablissementUncheckedCreateWithoutClassesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1266,9 +1575,13 @@ export type EtablissementUpdateWithoutClassesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1289,9 +1602,13 @@ export type EtablissementUncheckedUpdateWithoutClassesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1312,9 +1629,13 @@ export type EtablissementCreateWithoutElevesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1335,9 +1656,13 @@ export type EtablissementUncheckedCreateWithoutElevesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1374,9 +1699,13 @@ export type EtablissementUpdateWithoutElevesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1397,9 +1726,13 @@ export type EtablissementUncheckedUpdateWithoutElevesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1420,9 +1753,13 @@ export type EtablissementCreateWithoutPaiementsInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1443,9 +1780,13 @@ export type EtablissementUncheckedCreateWithoutPaiementsInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1482,9 +1823,13 @@ export type EtablissementUpdateWithoutPaiementsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1505,9 +1850,13 @@ export type EtablissementUncheckedUpdateWithoutPaiementsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1528,9 +1877,13 @@ export type EtablissementCreateWithoutFraisScolariteInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1551,9 +1904,13 @@ export type EtablissementUncheckedCreateWithoutFraisScolariteInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1590,9 +1947,13 @@ export type EtablissementUpdateWithoutFraisScolariteInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1613,15 +1974,143 @@ export type EtablissementUncheckedUpdateWithoutFraisScolariteInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutAuditLogsInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutAuditLogsInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutAuditLogsInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutAuditLogsInput, Prisma.EtablissementUncheckedCreateWithoutAuditLogsInput>
+}
+
+export type EtablissementUpsertWithoutAuditLogsInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutAuditLogsInput, Prisma.EtablissementUncheckedUpdateWithoutAuditLogsInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutAuditLogsInput, Prisma.EtablissementUncheckedCreateWithoutAuditLogsInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutAuditLogsInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutAuditLogsInput, Prisma.EtablissementUncheckedUpdateWithoutAuditLogsInput>
+}
+
+export type EtablissementUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutAuditLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
   mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
   depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
@@ -1636,9 +2125,13 @@ export type EtablissementCreateWithoutMouvementsInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1659,9 +2152,13 @@ export type EtablissementUncheckedCreateWithoutMouvementsInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1698,9 +2195,13 @@ export type EtablissementUpdateWithoutMouvementsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1721,9 +2222,13 @@ export type EtablissementUncheckedUpdateWithoutMouvementsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1744,9 +2249,13 @@ export type EtablissementCreateWithoutDepensesRecurrentesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1767,9 +2276,13 @@ export type EtablissementUncheckedCreateWithoutDepensesRecurrentesInput = {
   email?: string | null
   logo?: string | null
   actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1806,9 +2319,13 @@ export type EtablissementUpdateWithoutDepensesRecurrentesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1829,9 +2346,13 @@ export type EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1850,6 +2371,8 @@ export type EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput = {
 
 export type EtablissementCountOutputType = {
   users: number
+  acces: number
+  auditLogs: number
   employes: number
   anneesScolaires: number
   matieres: number
@@ -1863,6 +2386,8 @@ export type EtablissementCountOutputType = {
 
 export type EtablissementCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | EtablissementCountOutputTypeCountUsersArgs
+  acces?: boolean | EtablissementCountOutputTypeCountAccesArgs
+  auditLogs?: boolean | EtablissementCountOutputTypeCountAuditLogsArgs
   employes?: boolean | EtablissementCountOutputTypeCountEmployesArgs
   anneesScolaires?: boolean | EtablissementCountOutputTypeCountAnneesScolairesArgs
   matieres?: boolean | EtablissementCountOutputTypeCountMatieresArgs
@@ -1889,6 +2414,20 @@ export type EtablissementCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
  */
 export type EtablissementCountOutputTypeCountUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountAccesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccesWhereInput
+}
+
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
 }
 
 /**
@@ -1964,9 +2503,13 @@ export type EtablissementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   email?: boolean
   logo?: boolean
   actif?: boolean
+  statut?: boolean
+  finEssai?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   users?: boolean | Prisma.Etablissement$usersArgs<ExtArgs>
+  acces?: boolean | Prisma.Etablissement$accesArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Etablissement$auditLogsArgs<ExtArgs>
   employes?: boolean | Prisma.Etablissement$employesArgs<ExtArgs>
   anneesScolaires?: boolean | Prisma.Etablissement$anneesScolairesArgs<ExtArgs>
   matieres?: boolean | Prisma.Etablissement$matieresArgs<ExtArgs>
@@ -1989,6 +2532,8 @@ export type EtablissementSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   email?: boolean
   logo?: boolean
   actif?: boolean
+  statut?: boolean
+  finEssai?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["etablissement"]>
@@ -2002,6 +2547,8 @@ export type EtablissementSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   email?: boolean
   logo?: boolean
   actif?: boolean
+  statut?: boolean
+  finEssai?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["etablissement"]>
@@ -2015,13 +2562,17 @@ export type EtablissementSelectScalar = {
   email?: boolean
   logo?: boolean
   actif?: boolean
+  statut?: boolean
+  finEssai?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EtablissementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "type" | "adresse" | "telephone" | "email" | "logo" | "actif" | "createdAt" | "updatedAt", ExtArgs["result"]["etablissement"]>
+export type EtablissementOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nom" | "type" | "adresse" | "telephone" | "email" | "logo" | "actif" | "statut" | "finEssai" | "createdAt" | "updatedAt", ExtArgs["result"]["etablissement"]>
 export type EtablissementInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   users?: boolean | Prisma.Etablissement$usersArgs<ExtArgs>
+  acces?: boolean | Prisma.Etablissement$accesArgs<ExtArgs>
+  auditLogs?: boolean | Prisma.Etablissement$auditLogsArgs<ExtArgs>
   employes?: boolean | Prisma.Etablissement$employesArgs<ExtArgs>
   anneesScolaires?: boolean | Prisma.Etablissement$anneesScolairesArgs<ExtArgs>
   matieres?: boolean | Prisma.Etablissement$matieresArgs<ExtArgs>
@@ -2041,6 +2592,8 @@ export type $EtablissementPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "Etablissement"
   objects: {
     users: Prisma.$UserPayload<ExtArgs>[]
+    acces: Prisma.$AccesPayload<ExtArgs>[]
+    auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     employes: Prisma.$EmployePayload<ExtArgs>[]
     anneesScolaires: Prisma.$AnneeScolairePayload<ExtArgs>[]
     matieres: Prisma.$MatierePayload<ExtArgs>[]
@@ -2061,6 +2614,8 @@ export type $EtablissementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     email: string | null
     logo: string | null
     actif: boolean
+    statut: $Enums.StatutEtablissement
+    finEssai: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["etablissement"]>
@@ -2458,6 +3013,8 @@ readonly fields: EtablissementFieldRefs;
 export interface Prisma__EtablissementClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   users<T extends Prisma.Etablissement$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  acces<T extends Prisma.Etablissement$accesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$accesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogs<T extends Prisma.Etablissement$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employes<T extends Prisma.Etablissement$employesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$employesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   anneesScolaires<T extends Prisma.Etablissement$anneesScolairesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$anneesScolairesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnneeScolairePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matieres<T extends Prisma.Etablissement$matieresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$matieresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatierePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2505,6 +3062,8 @@ export interface EtablissementFieldRefs {
   readonly email: Prisma.FieldRef<"Etablissement", 'String'>
   readonly logo: Prisma.FieldRef<"Etablissement", 'String'>
   readonly actif: Prisma.FieldRef<"Etablissement", 'Boolean'>
+  readonly statut: Prisma.FieldRef<"Etablissement", 'StatutEtablissement'>
+  readonly finEssai: Prisma.FieldRef<"Etablissement", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Etablissement", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Etablissement", 'DateTime'>
 }
@@ -2921,6 +3480,54 @@ export type Etablissement$usersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.acces
+ */
+export type Etablissement$accesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Acces
+   */
+  select?: Prisma.AccesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Acces
+   */
+  omit?: Prisma.AccesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccesInclude<ExtArgs> | null
+  where?: Prisma.AccesWhereInput
+  orderBy?: Prisma.AccesOrderByWithRelationInput | Prisma.AccesOrderByWithRelationInput[]
+  cursor?: Prisma.AccesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccesScalarFieldEnum | Prisma.AccesScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.auditLogs
+ */
+export type Etablissement$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
 }
 
 /**

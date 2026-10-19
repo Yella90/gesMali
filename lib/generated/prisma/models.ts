@@ -10,6 +10,7 @@
  */
 export type * from './models/Employe'
 export type * from './models/User'
+export type * from './models/Acces'
 export type * from './models/Etablissement'
 export type * from './models/ParametresEtablissement'
 export type * from './models/AnneeScolaire'

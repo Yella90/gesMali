@@ -1,56 +1,84 @@
 import { cache } from "react";
+import { cookies } from "next/headers";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/db";
 import type { Role, Permission } from "./permissions";
 import { peut } from "./permissions";
+import { estAdministrateurPlateforme, etatEcole } from "@/lib/plateforme/etat";
+import { accesUtilisable, chargerCompte, choisirAcces, type CompteAvecAcces } from "./comptes";
 
-// UtilisateurCourant aplatit User + Employe pour ne pas casser le code existant
+export { emailDejaUtilise } from "./comptes";
+
+// Ecole choisie par un compte qui a acces a plusieurs ecoles. Le cookie ne fait que
+// designer une ecole : l'acces est toujours verifie cote serveur.
+export const COOKIE_ECOLE = "gesmali-ecole";
+
+// UtilisateurCourant aplatit compte + acces a l'ecole courante + fiche employe de cette ecole
 export type UtilisateurCourant = {
   id: string;
+  email: string;
   roles: Role[];
   etablissementId: string;
-  // Identite (vient de Employe)
+  // Identite (vient de la fiche Employe de l'ecole courante)
   nom: string;
   prenom: string;
   telephone: string | null;
   poste: string;
   posteLibre: string | null;
-  // Lien vers la fiche employe
+  // Lien vers la fiche employe de l'ecole courante
   employeId: string;
   salaireReference: number | null;
   typeRemuneration: string | null;
+  // Plateforme
+  nbEcoles: number;
+  joursEssai: number | null;
+  administrateurPlateforme: boolean;
 };
 
-// cache() : une seule lecture par requete, meme si layout et page l'appellent tous les deux
-export const getUtilisateurCourant = cache(async (): Promise<UtilisateurCourant | null> => {
+// Compte connecte (session valide, compte actif), avec ses acces. cache() : une lecture par requete
+export const compteConnecte = cache(async (): Promise<(CompteAvecAcces & { administrateurPlateforme: boolean }) | null> => {
   let session = null;
   try {
     session = await auth();
   } catch {
     return null;
   }
-
   if (!session?.user?.id) return null;
+  const user = await chargerCompte({ id: session.user.id });
+  if (!user || !user.actif) return null;
+  return { ...user, administrateurPlateforme: estAdministrateurPlateforme(user.email) };
+});
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    include: { employe: true },
-  });
+export async function ecoleChoisie(): Promise<string | undefined> {
+  try {
+    return (await cookies()).get(COOKIE_ECOLE)?.value;
+  } catch {
+    return undefined;
+  }
+}
 
-  if (!user || !user.actif || !user.employe.actif) return null;
+// Utilisateur dans son ecole courante, ou null (non connecte, ou ecole a choisir / fermee)
+export const getUtilisateurCourant = cache(async (): Promise<UtilisateurCourant | null> => {
+  const compte = await compteConnecte();
+  if (!compte) return null;
+  const a = choisirAcces(compte.acces, await ecoleChoisie());
+  if (!a) return null;
 
   return {
-    id: user.id,
-    roles: user.roles as Role[],
-    etablissementId: user.etablissementId,
-    nom: user.employe.nom,
-    prenom: user.employe.prenom,
-    telephone: user.employe.telephone,
-    poste: user.employe.poste,
-    posteLibre: user.employe.posteLibre,
-    employeId: user.employe.id,
-    salaireReference: user.employe.salaireReference,
-    typeRemuneration: user.employe.typeRemuneration,
+    id: compte.id,
+    email: compte.email,
+    roles: a.roles as Role[],
+    etablissementId: a.etablissementId,
+    nom: a.employe.nom,
+    prenom: a.employe.prenom,
+    telephone: a.employe.telephone,
+    poste: a.employe.poste,
+    posteLibre: a.employe.posteLibre,
+    employeId: a.employe.id,
+    salaireReference: a.employe.salaireReference,
+    typeRemuneration: a.employe.typeRemuneration,
+    nbEcoles: compte.acces.filter((x) => accesUtilisable(x)).length,
+    joursEssai: etatEcole(a.etablissement).joursEssai,
+    administrateurPlateforme: compte.administrateurPlateforme,
   };
 });
 
@@ -64,9 +92,4 @@ export async function requirePermission(permission: Permission): Promise<Utilisa
   const user = await requireUtilisateur();
   if (!peut(user.roles, permission)) throw new Error("Permission refusee");
   return user;
-}
-
-// Un e-mail de connexion est unique sur toute la plateforme, toutes ecoles confondues
-export async function emailDejaUtilise(email: string): Promise<boolean> {
-  return (await prisma.user.count({ where: { email } })) > 0;
 }

@@ -399,6 +399,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Employe: 'Employe',
   User: 'User',
+  Acces: 'Acces',
   Etablissement: 'Etablissement',
   ParametresEtablissement: 'ParametresEtablissement',
   AnneeScolaire: 'AnneeScolaire',
@@ -436,7 +437,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "employe" | "user" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion"
+    modelProps: "employe" | "user" | "acces" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -585,6 +586,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    Acces: {
+      payload: Prisma.$AccesPayload<ExtArgs>
+      fields: Prisma.AccesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        findFirst: {
+          args: Prisma.AccesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        findMany: {
+          args: Prisma.AccesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>[]
+        }
+        create: {
+          args: Prisma.AccesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        createMany: {
+          args: Prisma.AccesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AccesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>[]
+        }
+        delete: {
+          args: Prisma.AccesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        update: {
+          args: Prisma.AccesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AccesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>[]
+        }
+        upsert: {
+          args: Prisma.AccesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccesPayload>
+        }
+        aggregate: {
+          args: Prisma.AccesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAcces>
+        }
+        groupBy: {
+          args: Prisma.AccesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccesCountAggregateOutputType> | number
         }
       }
     }
@@ -2290,6 +2365,19 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const AccesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  etablissementId: 'etablissementId',
+  employeId: 'employeId',
+  roles: 'roles',
+  actif: 'actif',
+  createdAt: 'createdAt'
+} as const
+
+export type AccesScalarFieldEnum = (typeof AccesScalarFieldEnum)[keyof typeof AccesScalarFieldEnum]
+
+
 export const EtablissementScalarFieldEnum = {
   id: 'id',
   nom: 'nom',
@@ -2299,6 +2387,8 @@ export const EtablissementScalarFieldEnum = {
   email: 'email',
   logo: 'logo',
   actif: 'actif',
+  statut: 'statut',
+  finEssai: 'finEssai',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2571,6 +2661,7 @@ export type RappelScalarFieldEnum = (typeof RappelScalarFieldEnum)[keyof typeof 
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  etablissementId: 'etablissementId',
   action: 'action',
   entite: 'entite',
   entiteId: 'entiteId',
@@ -2779,6 +2870,20 @@ export type EnumTypeEtablissementFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'TypeEtablissement[]'
  */
 export type ListEnumTypeEtablissementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeEtablissement[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StatutEtablissement'
+ */
+export type EnumStatutEtablissementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutEtablissement'>
+    
+
+
+/**
+ * Reference to a field of type 'StatutEtablissement[]'
+ */
+export type ListEnumStatutEtablissementFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutEtablissement[]'>
     
 
 
@@ -3172,6 +3277,7 @@ export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaC
 export type GlobalOmitConfig = {
   employe?: Prisma.EmployeOmit
   user?: Prisma.UserOmit
+  acces?: Prisma.AccesOmit
   etablissement?: Prisma.EtablissementOmit
   parametresEtablissement?: Prisma.ParametresEtablissementOmit
   anneeScolaire?: Prisma.AnneeScolaireOmit

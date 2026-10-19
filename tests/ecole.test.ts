@@ -208,13 +208,15 @@ describe("transactions", () => {
     const userId = await db.$transaction(async (tx) => {
       const employe = await tx.employe.create({ data: { nom: "Traore", prenom: "Awa", poste: "Enseignant" } as never });
       const user = await tx.user.create({
-        data: { email: "awa@ecolea.test", passwordHash: "x", roles: ["ENSEIGNANT"], employeId: employe.id } as never,
+        data: { email: "awa@ecolea.test", passwordHash: "x", roles: ["ENSEIGNANT"], employeId: employe.id, etablissementId: a.etablissementId },
       });
+      await tx.acces.create({ data: { userId: user.id, employeId: employe.id, roles: ["ENSEIGNANT"] } as never });
       return user.id;
     });
-    const cree = await prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { employe: true } });
+    const cree = await prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { employe: true, acces: true } });
     assert.equal(cree.etablissementId, a.etablissementId);
     assert.equal(cree.employe.etablissementId, a.etablissementId);
+    assert.equal(cree.acces[0].etablissementId, a.etablissementId);
     await prisma.user.delete({ where: { id: userId } });
     await prisma.employe.delete({ where: { id: cree.employeId } });
   });

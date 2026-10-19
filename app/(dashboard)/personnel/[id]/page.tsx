@@ -44,7 +44,7 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
   const employe = await db.employe.findUnique({
     where: { id },
     include: {
-      user: { select: { email: true, roles: true, actif: true } },
+      acces: { select: { roles: true, actif: true, user: { select: { email: true } } } },
       affectations: {
         include: {
           classe: { select: { nom: true, niveau: true, section: true } },
@@ -55,6 +55,10 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
     },
   });
   if (!employe || employe.etablissementId !== user.etablissementId) notFound();
+  // Compte de l'employe dans cette ecole (un compte peut servir dans plusieurs ecoles)
+  const compte = employe.acces
+    ? { email: employe.acces.user.email, roles: employe.acces.roles, actif: employe.acces.actif }
+    : null;
 
   const [classes, matieres, totalAnnee] = await Promise.all([
     peutGerer
@@ -148,11 +152,11 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
               />
               <Info
                 label="Compte de connexion"
-                value={employe.user ? employe.user.email : "Aucun compte"}
-                discret={!employe.user}
+                value={compte ? compte.email : "Aucun compte"}
+                discret={!compte}
               />
-              {employe.user && (
-                <Info label="Rôle" value={employe.user.roles.map((r) => ROLES[r] ?? r).join(", ")} />
+              {compte && (
+                <Info label="Rôle" value={compte.roles.map((r) => ROLES[r] ?? r).join(", ")} />
               )}
             </dl>
           </section>
@@ -263,7 +267,7 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
                 actif: employe.actif,
               }}
             />
-            <GererCompte employeId={employe.id} user={employe.user} estMoiMeme={estMoiMeme} />
+            <GererCompte employeId={employe.id} user={compte} estMoiMeme={estMoiMeme} />
           </aside>
         )}
       </div>

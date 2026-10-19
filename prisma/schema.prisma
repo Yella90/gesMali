@@ -30,7 +30,8 @@ model Employe {
   salaireReference Float?
   typeRemuneration String? // "MENSUEL", "HORAIRE", null
 
-  user              User?
+  user              User?           // compte dont c'est la fiche d'origine
+  acces             Acces?          // acces a l'application dans CETTE ecole
   affectations      Affectation[]
   paiements         Paiement[]
   classesTitulaire  Classe[]        @relation("TitulaireClasse")
@@ -44,7 +45,9 @@ model Employe {
   @@index([nom, prenom])
 }
 
-// User = compte de connexion uniquement, toujours lie a un Employe
+// User = compte de connexion (identite : e-mail et mot de passe). Un compte peut servir
+// dans plusieurs ecoles : ses roles et sa fiche employe par ecole sont dans Acces.
+// employeId, etablissementId et roles : fiche, ecole et roles d'origine (premiere ecole).
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -68,10 +71,31 @@ model User {
   auditLogs        AuditLog[]
   mouvementsSaisis MouvementTresorerie[] @relation("MouvementsSaisis")
   presencesSaisies Presence[]
+  acces            Acces[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([etablissementId])
+}
+
+// Acces d'un compte a une ecole : roles, fiche employe et activation propres a l'ecole
+model Acces {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  employeId String  @unique
+  employe   Employe @relation(fields: [employeId], references: [id])
+
+  roles     Role[]
+  actif     Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, etablissementId])
   @@index([etablissementId])
 }
 
@@ -94,9 +118,15 @@ model Etablissement {
   telephone String?
   email     String?
   logo      String?
-  actif     Boolean  @default(true)
+  actif     Boolean  @default(true) // remplace par statut
+
+  // Plateforme : essai a l'inscription, puis active ; suspendue = plus d'acces du personnel
+  statut   StatutEtablissement @default(ACTIF)
+  finEssai DateTime?
 
   users           User[]
+  acces           Acces[]
+  auditLogs       AuditLog[]
   employes        Employe[]
   anneesScolaires AnneeScolaire[]
   matieres        Matiere[]
@@ -110,6 +140,12 @@ model Etablissement {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum StatutEtablissement {
+  ESSAI
+  ACTIF
+  SUSPENDU
 }
 
 enum TypeEtablissement {
@@ -618,6 +654,11 @@ model AuditLog {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
+  // Ecole concernee (un compte peut agir dans plusieurs ecoles). Facultatif en base pour
+  // que l'ancienne version reste compatible pendant un deploiement ; toujours renseigne ensuite.
+  etablissementId String?
+  etablissement   Etablissement? @relation(fields: [etablissementId], references: [id])
+
   action    String
   entite    String
   entiteId  String
@@ -625,6 +666,7 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([userId])
+  @@index([etablissementId, createdAt])
   @@index([entite, entiteId])
   @@index([createdAt])
 }

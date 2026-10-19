@@ -9,8 +9,9 @@ import { deconnexion } from "@/app/(dashboard)/_actions/deconnexion";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 import { libRole } from "@/lib/libelles";
 import {
-  ArrowRightLeft, Banknote, BookOpen, BriefcaseBusiness, CalendarClock, CalendarRange, FileText,
-  ClipboardCheck, GraduationCap, Landmark, LayoutDashboard, LogOut, Upload, PencilLine, School, ScrollText, Settings, Wallet,
+  ArrowLeftRight, ArrowRightLeft, Banknote, BookOpen, BriefcaseBusiness, CalendarClock, CalendarRange, FileText,
+  ClipboardCheck, GraduationCap, Landmark, LayoutDashboard, LogOut, Upload, PencilLine, School, ScrollText, Settings,
+  ShieldCheck, UserRound, Wallet,
   type LucideIcon,
 } from "lucide-react";
 
@@ -42,16 +43,27 @@ const MENU: Item[] = [
   { href: "/audit", label: "Journal", permission: "audit.read", icon: ScrollText },
 ];
 
+// Liens du compte : mon compte, changer d'ecole (plusieurs ecoles), administration de la plateforme
+function liensCompte(compte: { nbEcoles: number; administrateur: boolean }) {
+  return [
+    { href: "/compte", label: "Mon compte", icon: UserRound },
+    ...(compte.nbEcoles > 1 ? [{ href: "/ecoles", label: "Changer d'école", icon: ArrowLeftRight }] : []),
+    ...(compte.administrateur ? [{ href: "/plateforme", label: "Plateforme", icon: ShieldCheck }] : []),
+  ];
+}
+
 export function Sidebar({
   permissions,
   nom,
   roles,
   etablissement,
+  compte,
 }: {
   permissions: Permission[];
   nom: string;
   roles: Role[];
   etablissement: { nom: string; logo: string | null };
+  compte: { nbEcoles: number; administrateur: boolean };
 }) {
   const pathname = usePathname();
   const [loadingOut, setLoadingOut] = useState(false);
@@ -122,7 +134,20 @@ export function Sidebar({
                   </li>
                 );
               })}
-              <li className="pt-2 mt-2 border-t border-[var(--color-border)]">
+              <li className="pt-2 mt-2 border-t border-[var(--color-border)]" />
+              {liensCompte(compte).map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-[var(--color-ink)] hover:bg-neutral-50"
+                  >
+                    <l.icon aria-hidden className="h-[18px] w-[18px] shrink-0" strokeWidth={1.8} />
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
                 <button
                   onClick={handleDeconnexion}
                   disabled={loadingOut}
@@ -180,6 +205,16 @@ export function Sidebar({
         </nav>
 
         <div className="p-3 border-t border-[var(--color-border)]">
+          {liensCompte(compte).map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--color-ink)] hover:bg-neutral-50"
+            >
+              <l.icon aria-hidden className="h-[18px] w-[18px] shrink-0 opacity-80" strokeWidth={1.8} />
+              {l.label}
+            </Link>
+          ))}
           <button
             onClick={handleDeconnexion}
             disabled={loadingOut}

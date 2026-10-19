@@ -55,7 +55,7 @@ async function chargerEnseignant(user: UtilisateurCourant, enseignantId: string,
   if (!enseignantId) throw new Error("Choisissez l'enseignant");
   const e = await db.employe.findUnique({
     where: { id: enseignantId },
-    select: { etablissementId: true, nom: true, prenom: true, actif: true, poste: true, user: { select: { roles: true } } },
+    select: { etablissementId: true, nom: true, prenom: true, actif: true, poste: true, acces: { select: { roles: true } } },
   });
   if (!e || e.etablissementId !== user.etablissementId) throw new Error("Enseignant introuvable");
   const nom = e.nom + " " + e.prenom;

@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Employe: 'Employe',
   User: 'User',
+  Acces: 'Acces',
   Etablissement: 'Etablissement',
   ParametresEtablissement: 'ParametresEtablissement',
   AnneeScolaire: 'AnneeScolaire',
@@ -128,6 +129,19 @@ export const UserScalarFieldEnum = {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+export const AccesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  etablissementId: 'etablissementId',
+  employeId: 'employeId',
+  roles: 'roles',
+  actif: 'actif',
+  createdAt: 'createdAt'
+} as const
+
+export type AccesScalarFieldEnum = (typeof AccesScalarFieldEnum)[keyof typeof AccesScalarFieldEnum]
+
+
 export const EtablissementScalarFieldEnum = {
   id: 'id',
   nom: 'nom',
@@ -137,6 +151,8 @@ export const EtablissementScalarFieldEnum = {
   email: 'email',
   logo: 'logo',
   actif: 'actif',
+  statut: 'statut',
+  finEssai: 'finEssai',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -409,6 +425,7 @@ export type RappelScalarFieldEnum = (typeof RappelScalarFieldEnum)[keyof typeof 
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
+  etablissementId: 'etablissementId',
   action: 'action',
   entite: 'entite',
   entiteId: 'entiteId',

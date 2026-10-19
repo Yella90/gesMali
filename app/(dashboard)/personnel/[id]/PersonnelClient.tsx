@@ -204,8 +204,9 @@ export function GererCompte({
     setErreur(null);
     const fd = new FormData(e.currentTarget);
     try {
-      await creerCompte(employeId, fd);
+      const res = await creerCompte(employeId, fd);
       setMode("view");
+      setMessage(res.compteExistant ? "Compte existant : la personne a maintenant accès à votre école, avec son mot de passe habituel." : null);
       router.refresh();
     } catch (e: any) {
       setErreur(e.message);
@@ -264,7 +265,8 @@ export function GererCompte({
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="motDePasse">Mot de passe</Label>
-          <Input id="motDePasse" name="motDePasse" type="text" required minLength={6} className="font-mono" />
+          <Input id="motDePasse" name="motDePasse" type="text" minLength={6} className="font-mono" />
+          <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum. Si cette adresse a déjà un compte GES Mali dans une autre école, laissez le mot de passe vide : la personne recevra l'accès à votre école avec son mot de passe habituel.</p>
         </div>
         {erreur && <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</div>}
         <div className="flex gap-2">

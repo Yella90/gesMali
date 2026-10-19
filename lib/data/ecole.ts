@@ -21,7 +21,9 @@ export const PORTEE: Record<string, Filtre> = {
   Etablissement: (e) => ({ id: e }),
   ParametresEtablissement: direct,
   Employe: direct,
-  User: direct,
+  Acces: direct,
+  // Un compte appartient aux ecoles ou il a un acces (il peut en avoir plusieurs)
+  User: (e) => ({ acces: { some: { etablissementId: e } } }),
   AnneeScolaire: direct,
   Matiere: direct,
   Classe: direct,
@@ -40,7 +42,7 @@ export const PORTEE: Record<string, Filtre> = {
   TrancheFrais: (e) => ({ frais: { etablissementId: e } }),
   PaiementFrais: parFrais,
   Rappel: parFrais,
-  AuditLog: (e) => ({ user: { etablissementId: e } }),
+  AuditLog: direct,
 };
 
 // Tables de la plateforme, communes a toutes les ecoles (jamais filtrees)
@@ -57,17 +59,20 @@ const E = (cle?: string): Relation => r("Etablissement", cle);
 export const RELATIONS: Record<string, Record<string, Relation>> = {
   Employe: {
     etablissement: E("etablissementId"), user: r("User"), affectations: r("Affectation"), paiements: r("Paiement"),
-    classesTitulaire: r("Classe"), classesPrincipal: r("Classe"), lignesBulletin: r("BulletinLigne"),
+    classesTitulaire: r("Classe"), classesPrincipal: r("Classe"), lignesBulletin: r("BulletinLigne"), acces: r("Acces"),
   },
   User: {
     employe: r("Employe", "employeId"), etablissement: E("etablissementId"), notesSaisies: r("Note"), notesModifiees: r("Note"),
     bulletinsGeneres: r("Bulletin"), paiementsSaisis: r("Paiement"), paiementsAnnules: r("Paiement"), fraisSaisis: r("PaiementFrais"),
     rappelsSaisis: r("Rappel"), auditLogs: r("AuditLog"), mouvementsSaisis: r("MouvementTresorerie"), presencesSaisies: r("Presence"),
+    acces: r("Acces"),
   },
+  Acces: { user: r("User", "userId"), etablissement: E("etablissementId"), employe: r("Employe", "employeId") },
   Etablissement: {
     users: r("User"), employes: r("Employe"), anneesScolaires: r("AnneeScolaire"), matieres: r("Matiere"), classes: r("Classe"),
     eleves: r("Eleve"), paiements: r("Paiement"), fraisScolarite: r("FraisScolarite"), mouvements: r("MouvementTresorerie"),
-    depensesRecurrentes: r("DepenseRecurrente"), parametres: r("ParametresEtablissement"),
+    depensesRecurrentes: r("DepenseRecurrente"), parametres: r("ParametresEtablissement"), acces: r("Acces"),
+    auditLogs: r("AuditLog"),
   },
   ParametresEtablissement: { etablissement: E("etablissementId") },
   AnneeScolaire: {
@@ -106,7 +111,7 @@ export const RELATIONS: Record<string, Record<string, Relation>> = {
   TrancheFrais: { frais: r("FraisScolarite", "fraisId"), paiements: r("PaiementFrais"), rappels: r("Rappel") },
   PaiementFrais: { tranche: r("TrancheFrais", "trancheId"), saisiePar: r("User", "saisieParId") },
   Rappel: { tranche: r("TrancheFrais", "trancheId"), saisiePar: r("User", "saisieParId") },
-  AuditLog: { user: r("User", "userId") },
+  AuditLog: { user: r("User", "userId"), etablissement: E("etablissementId") },
   InscriptionAnnuelle: { eleve: r("Eleve", "eleveId"), classe: r("Classe", "classeId"), anneeScolaire: r("AnneeScolaire", "anneeScolaireId") },
   MouvementTresorerie: { etablissement: E("etablissementId"), saisiePar: r("User", "saisieParId") },
   DepenseRecurrente: { etablissement: E("etablissementId") },

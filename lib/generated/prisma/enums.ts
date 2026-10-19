@@ -19,6 +19,15 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const StatutEtablissement = {
+  ESSAI: 'ESSAI',
+  ACTIF: 'ACTIF',
+  SUSPENDU: 'SUSPENDU'
+} as const
+
+export type StatutEtablissement = (typeof StatutEtablissement)[keyof typeof StatutEtablissement]
+
+
 export const TypeEtablissement = {
   PUBLIC: 'PUBLIC',
   PRIVE: 'PRIVE',

@@ -182,6 +182,13 @@ export type EnumTypeEtablissementFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel> | $Enums.TypeEtablissement
 }
 
+export type EnumStatutEtablissementFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutEtablissement | Prisma.EnumStatutEtablissementFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel> | $Enums.StatutEtablissement
+}
+
 export type EnumTypeEtablissementWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.TypeEtablissement | Prisma.EnumTypeEtablissementFieldRefInput<$PrismaModel>
   in?: $Enums.TypeEtablissement[] | Prisma.ListEnumTypeEtablissementFieldRefInput<$PrismaModel>
@@ -190,6 +197,16 @@ export type EnumTypeEtablissementWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel>
+}
+
+export type EnumStatutEtablissementWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutEtablissement | Prisma.EnumStatutEtablissementFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutEtablissementWithAggregatesFilter<$PrismaModel> | $Enums.StatutEtablissement
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel>
 }
 
 export type EnumModeSaisieNotesFilter<$PrismaModel = never> = {
@@ -760,6 +777,13 @@ export type NestedEnumTypeEtablissementFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel> | $Enums.TypeEtablissement
 }
 
+export type NestedEnumStatutEtablissementFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutEtablissement | Prisma.EnumStatutEtablissementFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel> | $Enums.StatutEtablissement
+}
+
 export type NestedEnumTypeEtablissementWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.TypeEtablissement | Prisma.EnumTypeEtablissementFieldRefInput<$PrismaModel>
   in?: $Enums.TypeEtablissement[] | Prisma.ListEnumTypeEtablissementFieldRefInput<$PrismaModel>
@@ -768,6 +792,16 @@ export type NestedEnumTypeEtablissementWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel>
   _max?: Prisma.NestedEnumTypeEtablissementFilter<$PrismaModel>
+}
+
+export type NestedEnumStatutEtablissementWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StatutEtablissement | Prisma.EnumStatutEtablissementFieldRefInput<$PrismaModel>
+  in?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StatutEtablissement[] | Prisma.ListEnumStatutEtablissementFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStatutEtablissementWithAggregatesFilter<$PrismaModel> | $Enums.StatutEtablissement
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStatutEtablissementFilter<$PrismaModel>
 }
 
 export type NestedEnumModeSaisieNotesFilter<$PrismaModel = never> = {

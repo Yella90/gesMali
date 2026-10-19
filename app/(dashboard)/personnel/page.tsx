@@ -10,8 +10,9 @@ export default async function PersonnelPage() {
   const employes = await db.employe.findMany({
     where: { etablissementId: user.etablissementId },
     include: {
-      user: {
-        select: { id: true, email: true, roles: true, actif: true },
+      // Compte : acces a l'application dans cette ecole
+      acces: {
+        select: { roles: true, actif: true, user: { select: { id: true, email: true } } },
       },
       _count: {
         select: {
@@ -24,7 +25,7 @@ export default async function PersonnelPage() {
   });
 
   const totalActif = employes.filter((e) => e.actif).length;
-  const avecCompte = employes.filter((e) => e.user).length;
+  const avecCompte = employes.filter((e) => e.acces).length;
   const sansCompte = employes.length - avecCompte;
   const nbEnseignants = employes.filter((e) => e.poste === "Enseignant").length;
 
@@ -65,12 +66,12 @@ export default async function PersonnelPage() {
           salaireReference: e.salaireReference,
           nbAffectations: e._count.affectations,
           nbPaiements: e._count.paiements,
-          user: e.user
+          user: e.acces
             ? {
-                id: e.user.id,
-                email: e.user.email,
-                roles: e.user.roles as string[],
-                actif: e.user.actif,
+                id: e.acces.user.id,
+                email: e.acces.user.email,
+                roles: e.acces.roles as string[],
+                actif: e.acces.actif,
               }
             : null,
         }))}

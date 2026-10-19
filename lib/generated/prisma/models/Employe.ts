@@ -290,6 +290,7 @@ export type EmployeWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Employe"> | Date | string
   etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  acces?: Prisma.XOR<Prisma.AccesNullableScalarRelationFilter, Prisma.AccesWhereInput> | null
   affectations?: Prisma.AffectationListRelationFilter
   paiements?: Prisma.PaiementListRelationFilter
   classesTitulaire?: Prisma.ClasseListRelationFilter
@@ -314,6 +315,7 @@ export type EmployeOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   etablissement?: Prisma.EtablissementOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
+  acces?: Prisma.AccesOrderByWithRelationInput
   affectations?: Prisma.AffectationOrderByRelationAggregateInput
   paiements?: Prisma.PaiementOrderByRelationAggregateInput
   classesTitulaire?: Prisma.ClasseOrderByRelationAggregateInput
@@ -341,6 +343,7 @@ export type EmployeWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Employe"> | Date | string
   etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  acces?: Prisma.XOR<Prisma.AccesNullableScalarRelationFilter, Prisma.AccesWhereInput> | null
   affectations?: Prisma.AffectationListRelationFilter
   paiements?: Prisma.PaiementListRelationFilter
   classesTitulaire?: Prisma.ClasseListRelationFilter
@@ -406,6 +409,7 @@ export type EmployeCreateInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
@@ -429,6 +433,7 @@ export type EmployeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
@@ -452,6 +457,7 @@ export type EmployeUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
@@ -475,6 +481,7 @@ export type EmployeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
@@ -653,6 +660,20 @@ export type EmployeUpdateOneRequiredWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeUpdateToOneWithWhereWithoutUserInput, Prisma.EmployeUpdateWithoutUserInput>, Prisma.EmployeUncheckedUpdateWithoutUserInput>
 }
 
+export type EmployeCreateNestedOneWithoutAccesInput = {
+  create?: Prisma.XOR<Prisma.EmployeCreateWithoutAccesInput, Prisma.EmployeUncheckedCreateWithoutAccesInput>
+  connectOrCreate?: Prisma.EmployeCreateOrConnectWithoutAccesInput
+  connect?: Prisma.EmployeWhereUniqueInput
+}
+
+export type EmployeUpdateOneRequiredWithoutAccesNestedInput = {
+  create?: Prisma.XOR<Prisma.EmployeCreateWithoutAccesInput, Prisma.EmployeUncheckedCreateWithoutAccesInput>
+  connectOrCreate?: Prisma.EmployeCreateOrConnectWithoutAccesInput
+  upsert?: Prisma.EmployeUpsertWithoutAccesInput
+  connect?: Prisma.EmployeWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeUpdateToOneWithWhereWithoutAccesInput, Prisma.EmployeUpdateWithoutAccesInput>, Prisma.EmployeUncheckedUpdateWithoutAccesInput>
+}
+
 export type EmployeCreateNestedManyWithoutEtablissementInput = {
   create?: Prisma.XOR<Prisma.EmployeCreateWithoutEtablissementInput, Prisma.EmployeUncheckedCreateWithoutEtablissementInput> | Prisma.EmployeCreateWithoutEtablissementInput[] | Prisma.EmployeUncheckedCreateWithoutEtablissementInput[]
   connectOrCreate?: Prisma.EmployeCreateOrConnectWithoutEtablissementInput | Prisma.EmployeCreateOrConnectWithoutEtablissementInput[]
@@ -786,6 +807,7 @@ export type EmployeCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
@@ -808,6 +830,7 @@ export type EmployeUncheckedCreateWithoutUserInput = {
   typeRemuneration?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
@@ -846,6 +869,7 @@ export type EmployeUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
@@ -868,6 +892,115 @@ export type EmployeUncheckedUpdateWithoutUserInput = {
   typeRemuneration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
+  affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
+  classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
+  classesPrincipal?: Prisma.ClasseUncheckedUpdateManyWithoutProfesseurPrincipalNestedInput
+  lignesBulletin?: Prisma.BulletinLigneUncheckedUpdateManyWithoutProfesseurNestedInput
+}
+
+export type EmployeCreateWithoutAccesInput = {
+  id?: string
+  nom: string
+  prenom: string
+  telephone?: string | null
+  poste: string
+  posteLibre?: string | null
+  dateEmbauche?: Date | string
+  dateSortie?: Date | string | null
+  actif?: boolean
+  salaireReference?: number | null
+  typeRemuneration?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
+  user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
+  classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
+  classesPrincipal?: Prisma.ClasseCreateNestedManyWithoutProfesseurPrincipalInput
+  lignesBulletin?: Prisma.BulletinLigneCreateNestedManyWithoutProfesseurInput
+}
+
+export type EmployeUncheckedCreateWithoutAccesInput = {
+  id?: string
+  etablissementId: string
+  nom: string
+  prenom: string
+  telephone?: string | null
+  poste: string
+  posteLibre?: string | null
+  dateEmbauche?: Date | string
+  dateSortie?: Date | string | null
+  actif?: boolean
+  salaireReference?: number | null
+  typeRemuneration?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
+  classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
+  classesPrincipal?: Prisma.ClasseUncheckedCreateNestedManyWithoutProfesseurPrincipalInput
+  lignesBulletin?: Prisma.BulletinLigneUncheckedCreateNestedManyWithoutProfesseurInput
+}
+
+export type EmployeCreateOrConnectWithoutAccesInput = {
+  where: Prisma.EmployeWhereUniqueInput
+  create: Prisma.XOR<Prisma.EmployeCreateWithoutAccesInput, Prisma.EmployeUncheckedCreateWithoutAccesInput>
+}
+
+export type EmployeUpsertWithoutAccesInput = {
+  update: Prisma.XOR<Prisma.EmployeUpdateWithoutAccesInput, Prisma.EmployeUncheckedUpdateWithoutAccesInput>
+  create: Prisma.XOR<Prisma.EmployeCreateWithoutAccesInput, Prisma.EmployeUncheckedCreateWithoutAccesInput>
+  where?: Prisma.EmployeWhereInput
+}
+
+export type EmployeUpdateToOneWithWhereWithoutAccesInput = {
+  where?: Prisma.EmployeWhereInput
+  data: Prisma.XOR<Prisma.EmployeUpdateWithoutAccesInput, Prisma.EmployeUncheckedUpdateWithoutAccesInput>
+}
+
+export type EmployeUpdateWithoutAccesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  prenom?: Prisma.StringFieldUpdateOperationsInput | string
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  poste?: Prisma.StringFieldUpdateOperationsInput | string
+  posteLibre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateEmbauche?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dateSortie?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  salaireReference?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  typeRemuneration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
+  user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
+  classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
+  classesPrincipal?: Prisma.ClasseUpdateManyWithoutProfesseurPrincipalNestedInput
+  lignesBulletin?: Prisma.BulletinLigneUpdateManyWithoutProfesseurNestedInput
+}
+
+export type EmployeUncheckedUpdateWithoutAccesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  prenom?: Prisma.StringFieldUpdateOperationsInput | string
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  poste?: Prisma.StringFieldUpdateOperationsInput | string
+  posteLibre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateEmbauche?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  dateSortie?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  salaireReference?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  typeRemuneration?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
@@ -890,6 +1023,7 @@ export type EmployeCreateWithoutEtablissementInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
@@ -912,6 +1046,7 @@ export type EmployeUncheckedCreateWithoutEtablissementInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
@@ -981,6 +1116,7 @@ export type EmployeCreateWithoutClassesTitulaireInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesPrincipal?: Prisma.ClasseCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1003,6 +1139,7 @@ export type EmployeUncheckedCreateWithoutClassesTitulaireInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesPrincipal?: Prisma.ClasseUncheckedCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1030,6 +1167,7 @@ export type EmployeCreateWithoutClassesPrincipalInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
@@ -1052,6 +1190,7 @@ export type EmployeUncheckedCreateWithoutClassesPrincipalInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
@@ -1090,6 +1229,7 @@ export type EmployeUpdateWithoutClassesTitulaireInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesPrincipal?: Prisma.ClasseUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1112,6 +1252,7 @@ export type EmployeUncheckedUpdateWithoutClassesTitulaireInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesPrincipal?: Prisma.ClasseUncheckedUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1145,6 +1286,7 @@ export type EmployeUpdateWithoutClassesPrincipalInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
@@ -1167,6 +1309,7 @@ export type EmployeUncheckedUpdateWithoutClassesPrincipalInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
@@ -1189,6 +1332,7 @@ export type EmployeCreateWithoutAffectationsInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
   classesPrincipal?: Prisma.ClasseCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1211,6 +1355,7 @@ export type EmployeUncheckedCreateWithoutAffectationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
   classesPrincipal?: Prisma.ClasseUncheckedCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1249,6 +1394,7 @@ export type EmployeUpdateWithoutAffectationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
   classesPrincipal?: Prisma.ClasseUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1271,6 +1417,7 @@ export type EmployeUncheckedUpdateWithoutAffectationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
   classesPrincipal?: Prisma.ClasseUncheckedUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1293,6 +1440,7 @@ export type EmployeCreateWithoutLignesBulletinInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
@@ -1315,6 +1463,7 @@ export type EmployeUncheckedCreateWithoutLignesBulletinInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEmployeInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
@@ -1353,6 +1502,7 @@ export type EmployeUpdateWithoutLignesBulletinInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
@@ -1375,6 +1525,7 @@ export type EmployeUncheckedUpdateWithoutLignesBulletinInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
@@ -1397,6 +1548,7 @@ export type EmployeCreateWithoutPaiementsInput = {
   updatedAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutEmployesInput
   user?: Prisma.UserCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationCreateNestedManyWithoutEnseignantInput
   classesTitulaire?: Prisma.ClasseCreateNestedManyWithoutTitulaireInput
   classesPrincipal?: Prisma.ClasseCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1419,6 +1571,7 @@ export type EmployeUncheckedCreateWithoutPaiementsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user?: Prisma.UserUncheckedCreateNestedOneWithoutEmployeInput
+  acces?: Prisma.AccesUncheckedCreateNestedOneWithoutEmployeInput
   affectations?: Prisma.AffectationUncheckedCreateNestedManyWithoutEnseignantInput
   classesTitulaire?: Prisma.ClasseUncheckedCreateNestedManyWithoutTitulaireInput
   classesPrincipal?: Prisma.ClasseUncheckedCreateNestedManyWithoutProfesseurPrincipalInput
@@ -1457,6 +1610,7 @@ export type EmployeUpdateWithoutPaiementsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutEmployesNestedInput
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
   classesPrincipal?: Prisma.ClasseUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1479,6 +1633,7 @@ export type EmployeUncheckedUpdateWithoutPaiementsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
   classesPrincipal?: Prisma.ClasseUncheckedUpdateManyWithoutProfesseurPrincipalNestedInput
@@ -1516,6 +1671,7 @@ export type EmployeUpdateWithoutEtablissementInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUpdateManyWithoutTitulaireNestedInput
@@ -1538,6 +1694,7 @@ export type EmployeUncheckedUpdateWithoutEtablissementInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUncheckedUpdateOneWithoutEmployeNestedInput
+  acces?: Prisma.AccesUncheckedUpdateOneWithoutEmployeNestedInput
   affectations?: Prisma.AffectationUncheckedUpdateManyWithoutEnseignantNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEmployeNestedInput
   classesTitulaire?: Prisma.ClasseUncheckedUpdateManyWithoutTitulaireNestedInput
@@ -1645,6 +1802,7 @@ export type EmployeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updatedAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Employe$userArgs<ExtArgs>
+  acces?: boolean | Prisma.Employe$accesArgs<ExtArgs>
   affectations?: boolean | Prisma.Employe$affectationsArgs<ExtArgs>
   paiements?: boolean | Prisma.Employe$paiementsArgs<ExtArgs>
   classesTitulaire?: boolean | Prisma.Employe$classesTitulaireArgs<ExtArgs>
@@ -1710,6 +1868,7 @@ export type EmployeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type EmployeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   user?: boolean | Prisma.Employe$userArgs<ExtArgs>
+  acces?: boolean | Prisma.Employe$accesArgs<ExtArgs>
   affectations?: boolean | Prisma.Employe$affectationsArgs<ExtArgs>
   paiements?: boolean | Prisma.Employe$paiementsArgs<ExtArgs>
   classesTitulaire?: boolean | Prisma.Employe$classesTitulaireArgs<ExtArgs>
@@ -1729,6 +1888,7 @@ export type $EmployePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     etablissement: Prisma.$EtablissementPayload<ExtArgs>
     user: Prisma.$UserPayload<ExtArgs> | null
+    acces: Prisma.$AccesPayload<ExtArgs> | null
     affectations: Prisma.$AffectationPayload<ExtArgs>[]
     paiements: Prisma.$PaiementPayload<ExtArgs>[]
     classesTitulaire: Prisma.$ClassePayload<ExtArgs>[]
@@ -2146,6 +2306,7 @@ export interface Prisma__EmployeClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   etablissement<T extends Prisma.EtablissementDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EtablissementDefaultArgs<ExtArgs>>): Prisma.Prisma__EtablissementClient<runtime.Types.Result.GetResult<Prisma.$EtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   user<T extends Prisma.Employe$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employe$userArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  acces<T extends Prisma.Employe$accesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employe$accesArgs<ExtArgs>>): Prisma.Prisma__AccesClient<runtime.Types.Result.GetResult<Prisma.$AccesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   affectations<T extends Prisma.Employe$affectationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employe$affectationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AffectationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paiements<T extends Prisma.Employe$paiementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employe$paiementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaiementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   classesTitulaire<T extends Prisma.Employe$classesTitulaireArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Employe$classesTitulaireArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ClassePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2611,6 +2772,25 @@ export type Employe$userArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Employe.acces
+ */
+export type Employe$accesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Acces
+   */
+  select?: Prisma.AccesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Acces
+   */
+  omit?: Prisma.AccesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccesInclude<ExtArgs> | null
+  where?: Prisma.AccesWhereInput
 }
 
 /**

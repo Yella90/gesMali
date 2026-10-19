@@ -6,14 +6,21 @@ export default async function AuditPage() {
   const user = await requirePermission("audit.read");
   const db = ecole(user);
 
-  // Charger les 500 derniers evenements
+  // Charger les 500 derniers evenements de l'ecole (filtre d'ecole sur le journal).
+  // Nom et roles de l'auteur : sa fiche et son acces dans cette ecole, sinon sa fiche d'origine.
   const logs = await db.auditLog.findMany({
-    where: {
-      user: { etablissementId: user.etablissementId },
-    },
     include: {
       user: {
-        select: { id: true, email: true, roles: true, employe: { select: { nom: true, prenom: true } } },
+        select: {
+          id: true,
+          email: true,
+          roles: true,
+          employe: { select: { nom: true, prenom: true } },
+          acces: {
+            where: { etablissementId: user.etablissementId },
+            select: { roles: true, employe: { select: { nom: true, prenom: true } } },
+          },
+        },
       },
     },
     orderBy: { createdAt: "desc" },
@@ -69,10 +76,10 @@ export default async function AuditPage() {
             createdAt: l.createdAt.toISOString(),
             user: {
               id: l.user.id,
-              nom: l.user.employe?.nom ?? l.user.email,
-              prenom: l.user.employe?.prenom ?? "",
+              nom: l.user.acces[0]?.employe.nom ?? l.user.employe?.nom ?? l.user.email,
+              prenom: l.user.acces[0]?.employe.prenom ?? l.user.employe?.prenom ?? "",
               email: l.user.email,
-              roles: l.user.roles as string[],
+              roles: (l.user.acces[0]?.roles ?? l.user.roles) as string[],
             },
           }))}
         />
