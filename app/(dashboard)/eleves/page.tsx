@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeEleves } from "./ListeEleves";
 import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
+import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 
 export default async function ElevesPage() {
   const user = await requirePermission("eleve.read");
@@ -22,7 +23,8 @@ export default async function ElevesPage() {
     }),
     prisma.classe.findMany({
       where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
-      orderBy: [{ niveau: "asc" }, { section: "asc" }],
+      include: { anneeScolaire: { select: { libelle: true, active: true } } },
+      orderBy: ORDRE_CLASSES,
     }),
   ]);
 
@@ -57,7 +59,7 @@ export default async function ElevesPage() {
         }))}
         classes={classes.map((c) => ({
           id: c.id,
-          label: c.nom || (c.niveau + (c.section ? " " + c.section : "")),
+          label: libelleClasse(c),
         }))}
       />
     </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
+import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
 import { elevesAvecFrais } from "@/lib/frais/requetes";
 import { ListeFrais } from "./ListeFrais";
@@ -16,8 +17,8 @@ export default async function FraisPage() {
     elevesAvecFrais(user.etablissementId),
     prisma.classe.findMany({
       where: { etablissementId: user.etablissementId },
-      select: { id: true, nom: true, niveau: true, section: true },
-      orderBy: [{ niveau: "asc" }, { section: "asc" }],
+      select: { id: true, nom: true, niveau: true, section: true, anneeScolaire: { select: { libelle: true, active: true } } },
+      orderBy: ORDRE_CLASSES,
     }),
   ]);
 
@@ -151,7 +152,7 @@ export default async function FraisPage() {
         eleves={enrichis}
         classes={classes.map((c) => ({
           id: c.id,
-          label: c.nom || (c.niveau + (c.section ? " " + c.section : "")),
+          label: libelleClasse(c),
         }))}
       />
     </div>

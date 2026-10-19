@@ -2,24 +2,33 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { libCycle } from "@/lib/libelles";
-import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
+import { filtreClasses } from "@/lib/data/guard";
+import { anneeAffichee } from "@/lib/classes/annees";
+import { ChoixAnnee } from "@/components/annees/ChoixAnnee";
 
-export default async function BulletinsPage() {
+export default async function BulletinsPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("bulletin.read");
+  const { annee: anneeId } = await searchParams;
+  const { annees, annee } = await anneeAffichee(user.etablissementId, anneeId);
 
-  const classes = await prisma.classe.findMany({
-    where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
-    orderBy: [{ niveau: "asc" }, { section: "asc" }],
-  });
-
-  const trimestres = await prisma.trimestre.findMany({
-    where: { anneeScolaire: { etablissementId: user.etablissementId } },
-    include: { anneeScolaire: { select: { libelle: true } } },
-    orderBy: [{ anneeScolaire: { libelle: "desc" } }, { ordre: "asc" }],
-  });
+  // Une classe n'appartient qu'a une annee : seuls les trimestres de cette annee
+  const [classes, trimestres] = annee
+    ? await Promise.all([
+        prisma.classe.findMany({
+          where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) },
+          orderBy: [{ niveau: "asc" }, { section: "asc" }],
+        }),
+        prisma.trimestre.findMany({
+          where: { anneeScolaireId: annee.id },
+          include: { anneeScolaire: { select: { libelle: true } } },
+          orderBy: { ordre: "asc" },
+        }),
+      ])
+    : [[], []];
 
   const bulletinsExistants = await prisma.bulletin.groupBy({
     by: ["classeId", "trimestreId"],
+    where: { classeId: { in: classes.map((c) => c.id) } },
     _count: { _all: true },
   });
   const mapExistants = new Map<string, number>();
@@ -44,10 +53,12 @@ export default async function BulletinsPage() {
         </Link>
       </div>
 
+      <ChoixAnnee annees={annees} annee={annee} base="/bulletins" />
+
       {trimestres.length === 0 || classes.length === 0 ? (
         <div className="bg-white rounded-xl border border-dashed border-[var(--color-border-strong)] py-16 text-center">
           <p className="text-sm text-[var(--color-ink-muted)]">
-            Créez d'abord des classes et des trimestres.
+            {annee ? "Aucune classe ou aucun trimestre pour l'année " + annee.libelle + "." : "Créez d'abord une année scolaire, ses classes et ses trimestres."}
           </p>
         </div>
       ) : (

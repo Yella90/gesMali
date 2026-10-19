@@ -3,18 +3,15 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { filtreClasses } from "@/lib/data/guard";
+import { anneeAffichee } from "@/lib/classes/annees";
+import { ChoixAnnee } from "@/components/annees/ChoixAnnee";
 
 export default async function ClassesPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("classe.read");
   const { annee: anneeId } = await searchParams;
 
   // Une annee a la fois : l'annee active par defaut, les annees archivees sur demande
-  const annees = await prisma.anneeScolaire.findMany({
-    where: { etablissementId: user.etablissementId },
-    select: { id: true, libelle: true, active: true },
-    orderBy: { libelle: "desc" },
-  });
-  const annee = annees.find((a) => a.id === anneeId) ?? annees.find((a) => a.active) ?? annees[0];
+  const { annees, annee } = await anneeAffichee(user.etablissementId, anneeId);
 
   const classes = annee
     ? await prisma.classe.findMany({
@@ -72,35 +69,7 @@ export default async function ClassesPage({ searchParams }: { searchParams: Prom
         )}
       </div>
 
-      {/* Choix de l'annee scolaire */}
-      {annees.length > 1 && (
-        <nav aria-label="Année scolaire" className="flex flex-wrap gap-2">
-          {annees.map((a) => (
-            <Link
-              key={a.id}
-              href={"/classes?annee=" + a.id}
-              aria-current={a.id === annee?.id ? "page" : undefined}
-              className={
-                "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-sm " +
-                (a.id === annee?.id
-                  ? "border-[var(--color-brand)] bg-[var(--color-brand)] text-white"
-                  : "border-[var(--color-border-strong)] bg-white hover:bg-neutral-50")
-              }
-            >
-              {a.libelle}
-              <span className={"text-[11px] " + (a.id === annee?.id ? "text-white/70" : "text-[var(--color-ink-muted)]")}>
-                {a.active ? "active" : "archivée"}
-              </span>
-            </Link>
-          ))}
-        </nav>
-      )}
-
-      {annee && !annee.active && (
-        <p className="rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-ink-muted)]">
-          Année archivée : ses classes sont conservées pour l&apos;historique (notes, bulletins, scolarité).
-        </p>
-      )}
+      <ChoixAnnee annees={annees} annee={annee} base="/classes" />
 
       {classesSansFrais.length > 0 && (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">

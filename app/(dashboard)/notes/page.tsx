@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { SaisieNotes } from "./SaisieNotes";
 import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
+import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 
 export default async function NotesPage() {
   const user = await requirePermission("note.read");
@@ -9,7 +10,8 @@ export default async function NotesPage() {
   const [classes, matieres, trimestres, paramsEtab] = await Promise.all([
     prisma.classe.findMany({
       where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
-      orderBy: [{ niveau: "asc" }, { section: "asc" }],
+      include: { anneeScolaire: { select: { libelle: true, active: true } } },
+      orderBy: ORDRE_CLASSES,
     }),
     prisma.matiere.findMany({
       where: { etablissementId: user.etablissementId },
@@ -37,7 +39,7 @@ export default async function NotesPage() {
       <SaisieNotes
         classes={classes.map((c) => ({
           id: c.id,
-          label: c.nom || (c.niveau + (c.section ? " " + c.section : "")),
+          label: libelleClasse(c),
           cycle: c.cycle,
         }))}
         matieres={matieres.map((m) => ({
