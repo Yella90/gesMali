@@ -97,7 +97,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     prisma.eleve.count({
       where: { etablissementId: user.etablissementId, statut: "INSCRIT", sexe: "M" },
     }),
-    prisma.classe.count({ where: { etablissementId: user.etablissementId } }),
+    prisma.classe.count({ where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } } }),
     prisma.employe.count({
       where: { etablissementId: user.etablissementId, actif: true },
     }),

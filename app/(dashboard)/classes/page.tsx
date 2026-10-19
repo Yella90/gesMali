@@ -1,26 +1,39 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
-import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
+import { peut } from "@/lib/auth/permissions";
+import { filtreClasses } from "@/lib/data/guard";
 
-export default async function ClassesPage() {
+export default async function ClassesPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("classe.read");
+  const { annee: anneeId } = await searchParams;
 
-  const classes = await prisma.classe.findMany({
-    where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
-    include: {
-      anneeScolaire: true,
-      eleves: {
-        where: { statut: "INSCRIT" },
-        select: { sexe: true },
-      },
-    },
-    orderBy: [
-      { anneeScolaire: { libelle: "desc" } },
-      { niveau: "asc" },
-      { section: "asc" },
-    ],
+  // Une annee a la fois : l'annee active par defaut, les annees archivees sur demande
+  const annees = await prisma.anneeScolaire.findMany({
+    where: { etablissementId: user.etablissementId },
+    select: { id: true, libelle: true, active: true },
+    orderBy: { libelle: "desc" },
   });
+  const annee = annees.find((a) => a.id === anneeId) ?? annees.find((a) => a.active) ?? annees[0];
+
+  const classes = annee
+    ? await prisma.classe.findMany({
+        where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) },
+        include: {
+          anneeScolaire: true,
+          eleves: {
+            where: { statut: "INSCRIT" },
+            select: { sexe: true },
+          },
+        },
+        orderBy: [{ niveau: "asc" }, { section: "asc" }],
+      })
+    : [];
+  const peutGerer = peut(user.roles, "classe.manage");
+  // Classe sans aucun frais : ses eleves n'ont pas d'echeancier
+  const sansFrais = (c: { fraisInscription: number; fraisScolariteMensuel: number }) =>
+    c.fraisInscription === 0 && c.fraisScolariteMensuel === 0;
+  const classesSansFrais = annee?.active ? classes.filter((c) => sansFrais(c) && c.eleves.length > 0) : [];
 
   function lib(c: any) {
     return c.nom || (c.niveau + (c.section ? " " + c.section : ""));
@@ -46,15 +59,61 @@ export default async function ClassesPage() {
           <h1 className="text-2xl font-semibold">Classes</h1>
           <p className="text-sm text-[var(--color-ink-muted)]">
             {classes.length} classe(s) · {totalEleves} élève(s) inscrit(s)
+            {annee ? " · année " + annee.libelle : ""}
           </p>
         </div>
-        <Link
-          href="/classes/nouveau"
-          className="inline-flex items-center h-10 px-4 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)]"
-        >
-          + Nouvelle classe
-        </Link>
+        {peutGerer && (
+          <Link
+            href="/classes/nouveau"
+            className="inline-flex items-center h-10 px-4 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)]"
+          >
+            + Nouvelle classe
+          </Link>
+        )}
       </div>
+
+      {/* Choix de l'annee scolaire */}
+      {annees.length > 1 && (
+        <nav aria-label="Année scolaire" className="flex flex-wrap gap-2">
+          {annees.map((a) => (
+            <Link
+              key={a.id}
+              href={"/classes?annee=" + a.id}
+              aria-current={a.id === annee?.id ? "page" : undefined}
+              className={
+                "inline-flex h-8 items-center gap-1.5 rounded-lg border px-3 text-sm " +
+                (a.id === annee?.id
+                  ? "border-[var(--color-brand)] bg-[var(--color-brand)] text-white"
+                  : "border-[var(--color-border-strong)] bg-white hover:bg-neutral-50")
+              }
+            >
+              {a.libelle}
+              <span className={"text-[11px] " + (a.id === annee?.id ? "text-white/70" : "text-[var(--color-ink-muted)]")}>
+                {a.active ? "active" : "archivée"}
+              </span>
+            </Link>
+          ))}
+        </nav>
+      )}
+
+      {annee && !annee.active && (
+        <p className="rounded-lg border border-[var(--color-border)] bg-white px-4 py-3 text-sm text-[var(--color-ink-muted)]">
+          Année archivée : ses classes sont conservées pour l&apos;historique (notes, bulletins, scolarité).
+        </p>
+      )}
+
+      {classesSansFrais.length > 0 && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="font-medium">
+            {classesSansFrais.length === 1 ? "1 classe n'a" : classesSansFrais.length + " classes n'ont"} aucun frais défini :{" "}
+            {classesSansFrais.map((c) => "« " + lib(c) + " »").join(", ")}.
+          </p>
+          <p className="mt-0.5 text-xs">
+            Ses élèves n&apos;ont aucune échéance de scolarité. Si ce niveau est payant, indiquez la mensualité dans la fiche de la
+            classe (Ouvrir, puis Modifier la classe) : l&apos;échéancier de chaque élève sera créé automatiquement.
+          </p>
+        </div>
+      )}
 
       {/* Stats globales */}
       <div className="grid grid-cols-3 gap-3 md:gap-4">
@@ -84,7 +143,6 @@ export default async function ClassesPage() {
             <tr>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Classe</th>
               <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Cycle</th>
-              <th className="text-left p-3 font-medium text-[var(--color-ink-muted)]">Année</th>
               <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Inscription</th>
               <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Mensuel</th>
               <th className="text-right p-3 font-medium text-[var(--color-ink-muted)]">Effectif</th>
@@ -100,9 +158,13 @@ export default async function ClassesPage() {
 
               return (
                 <tr key={c.id} className="border-t border-[var(--color-border)] hover:bg-neutral-50/60">
-                  <td className="p-3 font-medium">{lib(c)}</td>
+                  <td className="p-3 font-medium">
+                    {lib(c)}
+                    {annee?.active && sansFrais(c) && (
+                      <span className="ml-2 rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-normal text-amber-800">sans frais</span>
+                    )}
+                  </td>
                   <td className="p-3 text-[var(--color-ink-muted)]">{cycleCourt(c.cycle)}</td>
-                  <td className="p-3 text-[var(--color-ink-muted)] text-xs">{c.anneeScolaire.libelle}</td>
                   <td className="p-3 text-right tnum">{c.fraisInscription.toLocaleString("fr-FR")} F</td>
                   <td className="p-3 text-right tnum">{c.fraisScolariteMensuel.toLocaleString("fr-FR")} F</td>
                   <td className="p-3">
@@ -143,7 +205,7 @@ export default async function ClassesPage() {
             })}
             {classes.length === 0 && (
               <tr>
-                <td colSpan={7} className="p-8 text-center text-[var(--color-ink-muted)]">
+                <td colSpan={6} className="p-8 text-center text-[var(--color-ink-muted)]">
                   Aucune classe. Créez-en une pour commencer.
                 </td>
               </tr>
@@ -170,7 +232,8 @@ export default async function ClassesPage() {
                 <div>
                   <p className="font-semibold">{lib(c)}</p>
                   <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
-                    {cycleCourt(c.cycle)} · {c.anneeScolaire.libelle}
+                    {cycleCourt(c.cycle)}
+                    {annee?.active && sansFrais(c) && <span className="ml-1.5 rounded bg-amber-50 px-1.5 py-0.5 text-amber-800">sans frais</span>}
                   </p>
                 </div>
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs bg-[var(--color-brand-soft)] text-[var(--color-brand)] tnum">

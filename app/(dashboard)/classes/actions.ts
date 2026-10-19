@@ -6,6 +6,7 @@ import { enregistrerAudit } from "@/lib/audit";
 import { classeSchema } from "@/lib/validators/classe";
 import { revalidatePath } from "next/cache";
 import { capter } from "@/lib/actions/serveur";
+import { genererFraisPourEleve } from "@/lib/eleves/inscription";
 
 async function creerClasseCorps(formData: FormData) {
   const user = await requirePermission("classe.manage");
@@ -78,15 +79,32 @@ async function modifierClasseCorps(classeId: string, formData: FormData) {
     },
   });
 
+  // Eleves deja inscrits sans echeancier (classe creee sans frais) : les mensualites
+  // sont creees des que la classe en a. Pas de frais d'inscription : ils sont deja inscrits.
+  let fraisGeneres = 0;
+  const annee = await prisma.anneeScolaire.findUnique({ where: { id: classe.anneeScolaireId } });
+  if (annee?.active && data.fraisScolariteMensuel > 0) {
+    const sansEcheancier = await prisma.eleve.findMany({
+      where: { classeId, statut: "INSCRIT", fraisScolarite: { none: { anneeScolaireId: annee.id } } },
+      select: { id: true },
+    });
+    for (const e of sansEcheancier) {
+      await genererFraisPourEleve(e.id, annee.id, 0, data.fraisScolariteMensuel, annee.dateDebut, annee.dateFin, user.etablissementId);
+      fraisGeneres++;
+    }
+  }
+
   await enregistrerAudit({
     userId: user.id,
     action: "UPDATE_CLASSE",
     entite: "Classe",
     entiteId: classeId,
+    details: { fraisGeneres },
   });
   revalidatePath("/classes");
   revalidatePath("/classes/" + classeId);
-  return { success: true };
+  if (fraisGeneres > 0) revalidatePath("/frais");
+  return { success: true, fraisGeneres };
 }
 
 export async function supprimerClasse(id: string) {

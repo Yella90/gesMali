@@ -32,6 +32,7 @@ export function EditerClasse({
   const [ouvert, setOuvert] = useState(false);
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,7 +40,8 @@ export function EditerClasse({
     setErreur(null);
     try {
       const fd = new FormData(e.currentTarget);
-      await modifierClasse(classe.id, fd);
+      const r = await modifierClasse(classe.id, fd);
+      setInfo(r.fraisGeneres > 0 ? "Échéancier des mensualités créé pour " + r.fraisGeneres + " élève(s) qui n'en avaient pas." : null);
       setOuvert(false);
       router.refresh();
     } catch (e: any) {
@@ -51,9 +53,12 @@ export function EditerClasse({
 
   if (!ouvert) {
     return (
-      <Button variant="outline" onClick={() => setOuvert(true)}>
-        Modifier la classe
-      </Button>
+      <div className="flex flex-col items-end gap-1.5">
+        <Button variant="outline" onClick={() => { setInfo(null); setOuvert(true); }}>
+          Modifier la classe
+        </Button>
+        {info && <p role="status" className="max-w-xs text-right text-xs text-[var(--color-accent)]">{info}</p>}
+      </div>
     );
   }
 
