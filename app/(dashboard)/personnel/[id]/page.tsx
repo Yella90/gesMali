@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { EditerEmploye, GererAffectations, GererCompte, SupprimerAffectation } from "./PersonnelClient";
@@ -36,11 +36,12 @@ function libClasse(c: { nom: string | null; niveau: number; section: string | nu
 export default async function PersonnelDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePermission("personnel.read");
+  const db = ecole(user);
   const peutGerer = peut(user.roles, "personnel.manage");
   // Salaires et versements : direction et comptabilite seulement
   const voitPaiements = peut(user.roles, "paiement.read");
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id },
     include: {
       user: { select: { email: true, roles: true, actif: true } },
@@ -57,20 +58,20 @@ export default async function PersonnelDetailPage({ params }: { params: Promise<
 
   const [classes, matieres, totalAnnee] = await Promise.all([
     peutGerer
-      ? prisma.classe.findMany({
+      ? db.classe.findMany({
           where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } },
           select: { id: true, nom: true, niveau: true, section: true, cycle: true },
           orderBy: [{ niveau: "asc" }, { section: "asc" }],
         })
       : Promise.resolve([]),
     peutGerer
-      ? prisma.matiere.findMany({
+      ? db.matiere.findMany({
           where: { etablissementId: user.etablissementId },
           select: { id: true, nom: true, cycle: true },
           orderBy: { nom: "asc" },
         })
       : Promise.resolve([]),
-    prisma.paiement.aggregate({
+    db.paiement.aggregate({
       where: {
         employeId: employe.id,
         statut: { not: "ANNULE" },

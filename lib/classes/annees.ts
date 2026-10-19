@@ -1,7 +1,7 @@
 // Classes et annees scolaires : une annee a la fois dans les listes, l'annee active
 // en premier dans les menus deroulants, les classes archivees reperees par leur annee.
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import type { Prisma } from "@/lib/generated/prisma/client";
 
 export const ORDRE_CLASSES: Prisma.ClasseOrderByWithRelationInput[] = [
@@ -21,7 +21,8 @@ export function libelleClasse(c: ClasseLib): string {
 
 // Annees de l'etablissement et annee affichee (?annee=, sinon l'annee active)
 export async function anneeAffichee(etablissementId: string, anneeId?: string) {
-  const annees = await prisma.anneeScolaire.findMany({
+  const db = ecole(etablissementId);
+  const annees = await db.anneeScolaire.findMany({
     where: { etablissementId },
     select: { id: true, libelle: true, active: true },
     orderBy: { libelle: "desc" },

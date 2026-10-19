@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { prisma } from "@/lib/db";
 import { ecole, HORS_ECOLE, PORTEE, RELATIONS } from "@/lib/data/ecole";
-import { statsImpayes, elevesAvecFrais, listeRappels, periodesEcoulees } from "@/lib/frais/requetes";
+import { statsImpayes, elevesAvecFrais, listeRappels, periodesEcoulees, prochainNumeroRecu } from "@/lib/frais/requetes";
 import { soldesCaisses, journal, previsionMois } from "@/lib/tresorerie/tresorerie";
 import { rapportFinancier } from "@/lib/tresorerie/rapport";
 import { financesMensuelles, salairesPrevus } from "@/lib/tableau-de-bord/finances";
@@ -222,6 +222,15 @@ describe("transactions", () => {
   test("transaction interactive : le client de transaction reste filtre", async () => {
     const ids = await ecole(a.user).$transaction(async (tx) => (await tx.classe.findMany({ select: { id: true } })).map((c) => c.id));
     assert.deepEqual(ids, [a.ids.Classe]);
+  });
+});
+
+describe("valeurs uniques sur toute la plateforme", () => {
+  test("le numero de recu compte les paiements de toutes les ecoles", async () => {
+    const total = await prisma.paiementFrais.count();
+    const attendu = "REC-" + new Date().getFullYear() + "-" + String(total + 1).padStart(5, "0");
+    assert.equal(await prochainNumeroRecu(), attendu);
+    assert.ok(total >= 2, "un paiement par ecole au moins");
   });
 });
 

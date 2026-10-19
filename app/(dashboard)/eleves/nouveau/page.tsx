@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { EleveForm } from "./EleveForm";
 
 export default async function NouvelElevePage() {
   const user = await requirePermission("eleve.create");
+  const db = ecole(user);
 
-  const classes = await prisma.classe.findMany({
+  const classes = await db.classe.findMany({
     // Uniquement l'annee scolaire en cours : on n'inscrit pas dans une annee archivee
     where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } },
     include: { _count: { select: { eleves: { where: { statut: "INSCRIT" } } } } },

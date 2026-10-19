@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { PaiementForm } from "./PaiementForm";
 
 export default async function NouveauPaiementPage() {
   const user = await requirePermission("paiement.create");
+  const db = ecole(user);
 
-  const employes = await prisma.employe.findMany({
+  const employes = await db.employe.findMany({
     where: {
       etablissementId: user.etablissementId,
       actif: true,

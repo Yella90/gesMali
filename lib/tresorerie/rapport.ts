@@ -2,7 +2,9 @@
 // Les apports et retraits du promoteur sont presentes a part : ce ne sont ni des
 // recettes ni des depenses de l'ecole.
 
+// SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { soldesCaisses, type SoldeCaisse } from "@/lib/tresorerie/tresorerie";
 
@@ -50,17 +52,17 @@ export async function rapportFinancier(etablissementId: string, debut: Date, fin
       WHERE f."etablissementId" = ${etablissementId} AND NOT p.annule
         AND p."datePaiement" >= ${debut} AND p."datePaiement" < ${fin}
       GROUP BY 1`,
-    prisma.paiement.groupBy({
+    ecole(etablissementId).paiement.groupBy({
       by: ["type"],
       where: { etablissementId, statut: { not: "ANNULE" }, datePaiement: { gte: debut, lt: fin } },
       _sum: { montant: true },
     }),
-    prisma.mouvementTresorerie.groupBy({
+    ecole(etablissementId).mouvementTresorerie.groupBy({
       by: ["categorie"],
       where: { etablissementId, type: "DEPENSE", annule: false, date: { gte: debut, lt: fin } },
       _sum: { montant: true },
     }),
-    prisma.mouvementTresorerie.groupBy({
+    ecole(etablissementId).mouvementTresorerie.groupBy({
       by: ["type"],
       where: { etablissementId, type: { in: ["APPORT_CAPITAL", "RETRAIT_PROMOTEUR"] }, annule: false, date: { gte: debut, lt: fin } },
       _sum: { montant: true },

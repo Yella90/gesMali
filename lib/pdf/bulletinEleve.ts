@@ -1,11 +1,12 @@
 import { renderToBuffer } from "@react-pdf/renderer";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
 
 // Bulletin PDF d'un eleve pour un trimestre (null si non genere).
 // Le controle d'acces est fait par l'appelant (etablissementId renvoye).
-export async function rendreBulletinEleve(eleveId: string, trimestreId: string) {
-  const bulletin = await prisma.bulletin.findUnique({
+export async function rendreBulletinEleve(etablissementId: string, eleveId: string, trimestreId: string) {
+  const db = ecole(etablissementId);
+  const bulletin = await db.bulletin.findUnique({
     where: { eleveId_trimestreId: { eleveId, trimestreId } },
     include: {
       eleve: true,

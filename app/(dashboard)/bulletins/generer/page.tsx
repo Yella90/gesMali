@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { GenererForm } from "./GenererForm";
 
 export default async function GenererBulletinsPage() {
   const user = await requirePermission("bulletin.generate");
+  const db = ecole(user);
 
   const [classes, trimestres] = await Promise.all([
-    prisma.classe.findMany({
+    db.classe.findMany({
       where: { etablissementId: user.etablissementId },
       include: {
         anneeScolaire: { select: { libelle: true } },
@@ -15,7 +16,7 @@ export default async function GenererBulletinsPage() {
       },
       orderBy: [{ anneeScolaire: { libelle: "desc" } }, { niveau: "asc" }, { section: "asc" }],
     }),
-    prisma.trimestre.findMany({
+    db.trimestre.findMany({
       where: {
         anneeScolaire: { etablissementId: user.etablissementId },
         dateDebut: { lte: new Date() },
@@ -25,7 +26,7 @@ export default async function GenererBulletinsPage() {
     }),
   ]);
 
-  const existants = await prisma.bulletin.groupBy({
+  const existants = await db.bulletin.groupBy({
     by: ["classeId", "trimestreId"],
     _count: { _all: true },
   });

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
@@ -9,6 +9,7 @@ import { capter } from "@/lib/actions/serveur";
 
 async function creerPaiementCorps(formData: FormData) {
   const user = await requirePermission("paiement.create");
+  const db = ecole(user);
 
   const employeId = formData.get("employeId") as string;
   const periode = formData.get("periode") as string;
@@ -26,7 +27,7 @@ async function creerPaiementCorps(formData: FormData) {
   if (!montant || montant <= 0) throw new Error("Montant invalide");
   if (!datePaiement) throw new Error("Date obligatoire");
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id: employeId },
     select: { etablissementId: true, actif: true, typeRemuneration: true },
   });
@@ -47,7 +48,7 @@ async function creerPaiementCorps(formData: FormData) {
     throw new Error("Indiquez le nombre d'heures et le taux horaire");
   }
   if (type === "MENSUEL") {
-    const dejaPaye = await prisma.paiement.findFirst({
+    const dejaPaye = await db.paiement.findFirst({
       where: { employeId, periode, type: "MENSUEL", statut: { not: "ANNULE" } },
       select: { id: true },
     });
@@ -67,7 +68,7 @@ async function creerPaiementCorps(formData: FormData) {
     derogation = motif;
   }
 
-  const paiement = await prisma.paiement.create({
+  const paiement = await db.paiement.create({
     data: {
       etablissementId: user.etablissementId,
       employeId,
@@ -100,15 +101,16 @@ async function creerPaiementCorps(formData: FormData) {
 
 async function annulerPaiementCorps(id: string, motif: string) {
   const user = await requirePermission("paiement.annuler");
+  const db = ecole(user);
   if (!motif || motif.trim().length < 3) throw new Error("Motif obligatoire (3 caracteres min)");
 
-  const paiement = await prisma.paiement.findUnique({ where: { id } });
+  const paiement = await db.paiement.findUnique({ where: { id } });
   if (!paiement || paiement.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
   if (paiement.statut === "ANNULE") throw new Error("Deja annule");
 
-  await prisma.paiement.update({
+  await db.paiement.update({
     where: { id },
     data: {
       statut: "ANNULE",

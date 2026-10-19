@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { Reprise } from "./Reprise";
 
@@ -7,12 +7,13 @@ export const maxDuration = 60;
 
 export default async function ReprisePage() {
   const user = await requirePermission("reprise.manage");
-  const annee = await prisma.anneeScolaire.findFirst({ where: { etablissementId: user.etablissementId, active: true } });
+  const db = ecole(user);
+  const annee = await db.anneeScolaire.findFirst({ where: { etablissementId: user.etablissementId, active: true } });
   const [classes, eleves, notes] = annee
     ? await Promise.all([
-        prisma.classe.count({ where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id } }),
-        prisma.eleve.count({ where: { etablissementId: user.etablissementId, statut: "INSCRIT" } }),
-        prisma.note.count({ where: { trimestre: { anneeScolaireId: annee.id }, eleve: { etablissementId: user.etablissementId } } }),
+        db.classe.count({ where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id } }),
+        db.eleve.count({ where: { etablissementId: user.etablissementId, statut: "INSCRIT" } }),
+        db.note.count({ where: { trimestre: { anneeScolaireId: annee.id }, eleve: { etablissementId: user.etablissementId } } }),
       ])
     : [0, 0, 0];
 

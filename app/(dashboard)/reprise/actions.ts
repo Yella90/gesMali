@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { capter } from "@/lib/actions/serveur";
@@ -19,11 +19,12 @@ const MAX_LIGNES: Record<TypeImport, number> = { classes: 200, eleves: 1500, not
 export async function importerDonnees(type: TypeImport, lignes: Ligne[], ecrire: boolean) {
   return capter(async (): Promise<BilanImport> => {
     const user = await requirePermission("reprise.manage");
+    const db = ecole(user);
     if (!MAX_LIGNES[type]) throw new Error("Type d'import inconnu");
     if (lignes.length === 0) throw new Error("Aucune ligne à importer");
     if (lignes.length > MAX_LIGNES[type]) throw new Error("Import limité à " + MAX_LIGNES[type] + " lignes à la fois : découpez le fichier");
 
-    const annee = await prisma.anneeScolaire.findFirst({ where: { etablissementId: user.etablissementId, active: true } });
+    const annee = await db.anneeScolaire.findFirst({ where: { etablissementId: user.etablissementId, active: true } });
     if (!annee) throw new Error("Aucune année scolaire active : créez-la dans Paramètres avant la reprise");
 
     const ctx = { etablissementId: user.etablissementId, userId: user.id, annee };
@@ -78,7 +79,8 @@ function cycleDe(v: string, niveau: number): "PRESCOLAIRE" | "PREMIER_CYCLE" | "
 }
 
 async function preparerClasses(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
-  const existantes = await prisma.classe.findMany({
+  const db = ecole(ctx.etablissementId);
+  const existantes = await db.classe.findMany({
     where: { etablissementId: ctx.etablissementId, anneeScolaireId: ctx.annee.id },
     select: { niveau: true, section: true },
   });
@@ -116,7 +118,7 @@ async function preparerClasses(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> 
   return {
     resultats,
     ecrire: async () => {
-      await prisma.classe.createMany({
+      await db.classe.createMany({
         data: aCreer.map((c) => ({ ...c, etablissementId: ctx.etablissementId, anneeScolaireId: ctx.annee.id })),
       });
     },
@@ -146,15 +148,16 @@ function sexeDe(v: string): "M" | "F" | null {
 }
 
 async function preparerEleves(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
+  const db = ecole(ctx.etablissementId);
   const [classes, existants] = await Promise.all([
-    prisma.classe.findMany({
+    db.classe.findMany({
       where: { etablissementId: ctx.etablissementId, anneeScolaireId: ctx.annee.id },
       select: {
         id: true, nom: true, niveau: true, section: true, capaciteMax: true, fraisInscription: true, fraisScolariteMensuel: true,
         _count: { select: { eleves: { where: { statut: "INSCRIT" } } } },
       },
     }),
-    prisma.eleve.findMany({
+    db.eleve.findMany({
       where: { etablissementId: ctx.etablissementId },
       select: { nom: true, prenom: true, dateNaissance: true, matricule: true },
     }),
@@ -223,7 +226,7 @@ async function preparerEleves(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
     resultats,
     ecrire: async () => {
       let numero = await prochainNumeroMatricule(ctx.etablissementId);
-      const crees = await prisma.eleve.createManyAndReturn({
+      const crees = await db.eleve.createManyAndReturn({
         data: aCreer.map((e) => {
           let matricule = e.matricule;
           while (!matricule || matricules.has(matricule)) {
@@ -252,7 +255,7 @@ async function preparerEleves(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
         .map((e, i) => ({ e, id: crees[i].id, fi: e.exonere ? 0 : (e.classe?.fraisInscription ?? 0), fm: e.classe?.fraisScolariteMensuel ?? 0 }))
         .filter((x) => x.e.classe && (x.fi > 0 || x.fm > 0));
       if (avecFrais.length === 0) return;
-      const frais = await prisma.fraisScolarite.createManyAndReturn({
+      const frais = await db.fraisScolarite.createManyAndReturn({
         data: avecFrais.map((x) => ({
           etablissementId: ctx.etablissementId,
           eleveId: x.id,
@@ -265,7 +268,7 @@ async function preparerEleves(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
         select: { id: true, eleveId: true },
       });
       const fraisDe = new Map(frais.map((f) => [f.eleveId, f.id]));
-      await prisma.trancheFrais.createMany({
+      await db.trancheFrais.createMany({
         data: avecFrais.flatMap((x) =>
           tranchesAnnee(x.fi, x.fm, ctx.annee.dateDebut, ctx.annee.dateFin).map((t) => ({ ...t, fraisId: fraisDe.get(x.id)! }))
         ),
@@ -276,14 +279,15 @@ async function preparerEleves(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
 
 // ── Notes ────────────────────────────────────────────────────────────────
 async function preparerNotes(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
+  const db = ecole(ctx.etablissementId);
   const matriculesFichier = [...new Set(lignes.map((l) => texte(l.matricule).toUpperCase()).filter(Boolean))];
   const [eleves, matieres, trimestres] = await Promise.all([
-    prisma.eleve.findMany({
+    db.eleve.findMany({
       where: { etablissementId: ctx.etablissementId, matricule: { in: matriculesFichier, mode: "insensitive" } },
       select: { id: true, matricule: true, nom: true, prenom: true, classeId: true, classe: { select: { cycle: true, anneeScolaireId: true } } },
     }),
-    prisma.matiere.findMany({ where: { etablissementId: ctx.etablissementId }, select: { id: true, nom: true, code: true, cycle: true } }),
-    prisma.trimestre.findMany({ where: { anneeScolaireId: ctx.annee.id }, select: { id: true, nom: true, ordre: true, cloture: true } }),
+    db.matiere.findMany({ where: { etablissementId: ctx.etablissementId }, select: { id: true, nom: true, code: true, cycle: true } }),
+    db.trimestre.findMany({ where: { anneeScolaireId: ctx.annee.id }, select: { id: true, nom: true, ordre: true, cloture: true } }),
   ]);
   const eleveDe = new Map(eleves.map((e) => [e.matricule.toUpperCase(), e]));
   const matiereDe = new Map<string, (typeof matieres)[number]>();
@@ -298,7 +302,7 @@ async function preparerNotes(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
     trimestreDe.set("t" + t.ordre, t);
     trimestreDe.set("trimestre" + t.ordre, t);
   }
-  const existantes = await prisma.note.findMany({
+  const existantes = await db.note.findMany({
     where: { eleveId: { in: eleves.map((e) => e.id) }, trimestreId: { in: trimestres.map((t) => t.id) } },
     select: { id: true, eleveId: true, matiereId: true, trimestreId: true, type: true, numero: true, statut: true },
   });
@@ -350,11 +354,11 @@ async function preparerNotes(ctx: Ctx, lignes: Ligne[]): Promise<Preparation> {
     resultats,
     ecrire: async () => {
       if (nouvelles.length > 0) {
-        await prisma.note.createMany({ data: nouvelles.map((n) => ({ ...n, sur: 20, statut: "BROUILLON" as const, saisieParId: ctx.userId })) });
+        await db.note.createMany({ data: nouvelles.map((n) => ({ ...n, sur: 20, statut: "BROUILLON" as const, saisieParId: ctx.userId })) });
       }
       for (let i = 0; i < majs.length; i += 200) {
-        await prisma.$transaction(
-          majs.slice(i, i + 200).map((m) => prisma.note.update({ where: { id: m.id }, data: { valeur: m.valeur, modifieeParId: ctx.userId, modifieeLe: new Date() } }))
+        await db.$transaction(
+          majs.slice(i, i + 200).map((m) => db.note.update({ where: { id: m.id }, data: { valeur: m.valeur, modifieeParId: ctx.userId, modifieeLe: new Date() } }))
         );
       }
     },

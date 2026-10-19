@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 
 export default async function TableauDeBordPaiementsPage() {
   const user = await requirePermission("paiement.read");
+  const db = ecole(user);
 
-  const paiements = await prisma.paiement.findMany({
+  const paiements = await db.paiement.findMany({
     where: { etablissementId: user.etablissementId, statut: "PAYE" },
     include: { employe: { select: { id: true, nom: true, prenom: true, poste: true } } },
     orderBy: { datePaiement: "desc" },

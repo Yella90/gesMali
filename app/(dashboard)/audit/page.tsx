@@ -1,12 +1,13 @@
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeAudit } from "./ListeAudit";
 
 export default async function AuditPage() {
   const user = await requirePermission("audit.read");
+  const db = ecole(user);
 
   // Charger les 500 derniers evenements
-  const logs = await prisma.auditLog.findMany({
+  const logs = await db.auditLog.findMany({
     where: {
       user: { etablissementId: user.etablissementId },
     },

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
@@ -8,6 +8,7 @@ import { capter } from "@/lib/actions/serveur";
 
 async function modifierEtablissementCorps(formData: FormData) {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
   const nom = (formData.get("nom") as string)?.trim();
   const type = formData.get("type") as "PUBLIC" | "PRIVE" | "COMMUNAUTAIRE" | "MEDERSA";
@@ -17,7 +18,7 @@ async function modifierEtablissementCorps(formData: FormData) {
 
   if (!nom || nom.length < 2) throw new Error("Nom trop court");
 
-  await prisma.etablissement.update({
+  await db.etablissement.update({
     where: { id: user.etablissementId },
     data: { nom, type, adresse, telephone, email },
   });
@@ -36,6 +37,7 @@ async function modifierEtablissementCorps(formData: FormData) {
 
 async function modifierParametresNotesCorps(formData: FormData) {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
   const modeSaisieNotes = formData.get("modeSaisieNotes") as "DECENTRALISEE" | "CENTRALISEE" | "MIXTE";
   const validationObligatoire = formData.get("validationObligatoire") === "on";
@@ -50,7 +52,7 @@ async function modifierParametresNotesCorps(formData: FormData) {
   const somme = ponderationDevoirs + ponderationCompo;
   if (Math.abs(somme - 1) > 0.01) throw new Error("La somme des ponderations doit etre egale a 1 (actuel : " + somme.toFixed(2) + ")");
 
-  await prisma.parametresEtablissement.update({
+  await db.parametresEtablissement.update({
     where: { etablissementId: user.etablissementId },
     data: {
       modeSaisieNotes,
@@ -75,20 +77,21 @@ async function modifierParametresNotesCorps(formData: FormData) {
 
 export async function basculerAnnee(id: string) {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const annee = await prisma.anneeScolaire.findUnique({ where: { id } });
+  const annee = await db.anneeScolaire.findUnique({ where: { id } });
   if (!annee || annee.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
 
   // Desactiver toutes les autres annees
-  await prisma.anneeScolaire.updateMany({
+  await db.anneeScolaire.updateMany({
     where: { etablissementId: user.etablissementId },
     data: { active: false },
   });
 
   // Activer celle-ci
-  await prisma.anneeScolaire.update({
+  await db.anneeScolaire.update({
     where: { id },
     data: { active: true },
   });
@@ -113,11 +116,12 @@ const TAILLE_MAX_LOGO = 400_000;
 export async function modifierLogo(logo: string | null) {
   return capter(async () => {
     const user = await requirePermission("parametres.manage");
+    const db = ecole(user);
     if (logo !== null) {
       if (!/^data:image\/(png|jpeg);base64,[A-Za-z0-9+/]+=*$/.test(logo)) throw new Error("Format non pris en charge : utilisez une image PNG ou JPEG");
       if (logo.length > TAILLE_MAX_LOGO) throw new Error("Image trop lourde (300 Ko maximum après réduction)");
     }
-    await prisma.etablissement.update({ where: { id: user.etablissementId }, data: { logo } });
+    await db.etablissement.update({ where: { id: user.etablissementId }, data: { logo } });
     await enregistrerAudit({
       userId: user.id,
       action: logo ? "UPDATE_LOGO" : "DELETE_LOGO",

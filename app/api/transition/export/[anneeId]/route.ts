@@ -1,26 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
+import { getUtilisateurCourant } from "@/lib/auth/session";
 import { exporterNotesCSV } from "@/lib/transition/actions";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ anneeId: string }> }) {
   const { anneeId } = await params;
 
-  let session = null;
-  try { session = await auth(); } catch { return NextResponse.json({ error: "Non authentifie" }, { status: 401 }); }
-  if (!session?.user?.id) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
-
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { etablissementId: true, roles: true },
-  });
-  if (!user || !user.roles.includes("DIRECTEUR" as any)) {
+  const user = await getUtilisateurCourant();
+  if (!user || !user.roles.includes("DIRECTEUR")) {
     return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
   }
+  const db = ecole(user);
 
   try {
     const csv = await exporterNotesCSV(anneeId);
-    const annee = await prisma.anneeScolaire.findUnique({ where: { id: anneeId } });
+    const annee = await db.anneeScolaire.findUnique({ where: { id: anneeId } });
 
     return new NextResponse(csv, {
       headers: {

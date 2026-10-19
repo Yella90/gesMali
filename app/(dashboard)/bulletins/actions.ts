@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { calculerMoyennesEleve } from "@/lib/notes/calculs";
@@ -9,8 +9,9 @@ import { capter } from "@/lib/actions/serveur";
 
 async function genererBulletinsClasseCorps(classeId: string, trimestreId: string) {
   const user = await requirePermission("bulletin.generate");
+  const db = ecole(user);
 
-  const trimestre = await prisma.trimestre.findUnique({
+  const trimestre = await db.trimestre.findUnique({
     where: { id: trimestreId },
     include: { anneeScolaire: true },
   });
@@ -19,20 +20,20 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     throw new Error("Acces refuse");
   }
 
-  const classe = await prisma.classe.findUnique({ where: { id: classeId } });
+  const classe = await db.classe.findUnique({ where: { id: classeId } });
   if (!classe || classe.etablissementId !== user.etablissementId) {
     throw new Error("Classe introuvable");
   }
 
   // Lire les parametres de l'etablissement
-  const params = await prisma.parametresEtablissement.findUnique({
+  const params = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
   const pondDevoirs = params?.ponderationDevoirs ?? 0.333;
   const pondCompo = params?.ponderationCompo ?? 0.667;
   const validationObligatoire = params?.validationObligatoire ?? false;
 
-  const eleves = await prisma.eleve.findMany({
+  const eleves = await db.eleve.findMany({
     where: { classeId, statut: "INSCRIT" },
     include: {
       notes: {
@@ -61,7 +62,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     }
   }
 
-  const matieres = await prisma.matiere.findMany({
+  const matieres = await db.matiere.findMany({
     where: { etablissementId: user.etablissementId, cycle: classe.cycle },
     select: { id: true, nom: true, coefficient: true },
   });
@@ -114,7 +115,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     rangsParMatiere.set(m.id, map);
   }
 
-  await prisma.bulletin.deleteMany({ where: { classeId, trimestreId } });
+  await db.bulletin.deleteMany({ where: { classeId, trimestreId } });
 
   const bulletinsData = classement.map((r, i) => ({
     eleveId: r.eleve.id,
@@ -142,7 +143,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     })),
   }));
 
-  await prisma.$transaction(
+  await db.$transaction(
     async (tx) => {
       for (const data of bulletinsData) {
         await tx.bulletin.create({
@@ -179,14 +180,15 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
 
 export async function supprimerBulletins(classeId: string, trimestreId: string) {
   const user = await requirePermission("bulletin.generate");
-  const trimestre = await prisma.trimestre.findUnique({
+  const db = ecole(user);
+  const trimestre = await db.trimestre.findUnique({
     where: { id: trimestreId },
     include: { anneeScolaire: true },
   });
   if (!trimestre || trimestre.anneeScolaire.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
-  await prisma.bulletin.deleteMany({ where: { classeId, trimestreId } });
+  await db.bulletin.deleteMany({ where: { classeId, trimestreId } });
   await enregistrerAudit({
     userId: user.id,
     action: "SUPPRIMER_BULLETINS",

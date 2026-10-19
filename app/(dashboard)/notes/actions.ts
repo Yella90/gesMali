@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requireUtilisateur } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { verifierClasse, verifierMatiere, verifierTrimestre } from "@/lib/data/guard";
@@ -19,16 +19,17 @@ async function chargerElevesEtNotesCorps(params: {
   numero: number;
 }) {
   const user = await requireUtilisateur();
+  const db = ecole(user);
   await verifierClasse(user, params.classeId);
   await verifierMatiere(user, params.matiereId);
   await verifierTrimestre(user, params.trimestreId);
 
-  const eleves = await prisma.eleve.findMany({
+  const eleves = await db.eleve.findMany({
     where: { classeId: params.classeId, statut: "INSCRIT" },
     orderBy: [{ nom: "asc" }, { prenom: "asc" }],
   });
 
-  const notes = await prisma.note.findMany({
+  const notes = await db.note.findMany({
     where: {
       classeId: params.classeId,
       matiereId: params.matiereId,
@@ -68,6 +69,7 @@ async function enregistrerNotesCorps(data: {
   notes: { eleveId: string; valeur: number }[];
 }) {
   const user = await requireUtilisateur();
+  const db = ecole(user);
 
   await verifierClasse(user, data.classeId);
   await verifierMatiere(user, data.matiereId);
@@ -75,7 +77,7 @@ async function enregistrerNotesCorps(data: {
 
   if (trimestre.cloture) throw new Error("Trimestre cloture");
 
-  const paramsEtab = await prisma.parametresEtablissement.findUnique({
+  const paramsEtab = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
   if (!paramsEtab) throw new Error("Parametres etablissement manquants");
@@ -92,7 +94,7 @@ async function enregistrerNotesCorps(data: {
   let ignores = 0;
 
   for (const n of data.notes) {
-    const existante = await prisma.note.findUnique({
+    const existante = await db.note.findUnique({
       where: {
         eleveId_matiereId_trimestreId_type_numero: {
           eleveId: n.eleveId,
@@ -106,7 +108,7 @@ async function enregistrerNotesCorps(data: {
 
     if (existante) {
       if (estDirecteur) {
-        await prisma.note.update({
+        await db.note.update({
           where: { id: existante.id },
           data: { valeur: n.valeur, modifieeParId: user.id, modifieeLe: new Date() },
         });
@@ -115,7 +117,7 @@ async function enregistrerNotesCorps(data: {
       }
 
       if (estSecretaire && ["BROUILLON", "SOUMISE"].includes(existante.statut)) {
-        await prisma.note.update({
+        await db.note.update({
           where: { id: existante.id },
           data: { valeur: n.valeur, modifieeParId: user.id, modifieeLe: new Date() },
         });
@@ -128,7 +130,7 @@ async function enregistrerNotesCorps(data: {
         existante.saisieParId === user.id &&
         existante.statut === "BROUILLON"
       ) {
-        await prisma.note.update({
+        await db.note.update({
           where: { id: existante.id },
           data: { valeur: n.valeur, modifieeParId: user.id, modifieeLe: new Date() },
         });
@@ -140,7 +142,7 @@ async function enregistrerNotesCorps(data: {
       continue;
     }
 
-    await prisma.note.create({
+    await db.note.create({
       data: {
         eleveId: n.eleveId,
         matiereId: data.matiereId,
@@ -176,10 +178,11 @@ export async function soumettreNotes(params: {
   numero: number;
 }) {
   const user = await requireUtilisateur();
+  const db = ecole(user);
   await verifierClasse(user, params.classeId);
   await verifierTrimestre(user, params.trimestreId);
 
-  const resultat = await prisma.note.updateMany({
+  const resultat = await db.note.updateMany({
     where: {
       classeId: params.classeId,
       matiereId: params.matiereId,
@@ -211,11 +214,12 @@ export async function validerNotes(params: {
   numero: number;
 }) {
   const user = await requireUtilisateur();
+  const db = ecole(user);
   if (!peut(user.roles, "note.validate")) throw new Error("Permission refusee");
   await verifierClasse(user, params.classeId);
   await verifierTrimestre(user, params.trimestreId);
 
-  const resultat = await prisma.note.updateMany({
+  const resultat = await db.note.updateMany({
     where: {
       classeId: params.classeId,
       matiereId: params.matiereId,

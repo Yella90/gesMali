@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { FileDown } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { filtreClasses } from "@/lib/data/guard";
@@ -9,11 +9,12 @@ import { ChoixAnnee } from "@/components/annees/ChoixAnnee";
 
 export default async function EmploiDuTempsPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("classe.read");
+  const db = ecole(user);
   const { annee: anneeId } = await searchParams;
   const { annees, annee } = await anneeAffichee(user.etablissementId, anneeId);
 
   const classes = annee
-    ? await prisma.classe.findMany({
+    ? await db.classe.findMany({
         where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) },
         include: { _count: { select: { affectations: true } } },
         orderBy: [{ niveau: "asc" }, { section: "asc" }],
@@ -21,7 +22,7 @@ export default async function EmploiDuTempsPage({ searchParams }: { searchParams
     : [];
 
   // Compter les creneaux horaires par classe
-  const creneauxParClasse = await prisma.affectation.groupBy({
+  const creneauxParClasse = await db.affectation.groupBy({
     by: ["classeId"],
     where: { classeId: { in: classes.map((c) => c.id) }, jour: { not: null } },
     _count: { _all: true },

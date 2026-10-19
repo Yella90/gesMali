@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { classeVisible } from "@/lib/data/guard";
@@ -10,8 +10,9 @@ import { GrilleEmploiDuTemps, type Occupation } from "./GrilleEmploiDuTemps";
 export default async function EmploiDuTempsClassePage({ params }: { params: Promise<{ classeId: string }> }) {
   const { classeId } = await params;
   const user = await requirePermission("classe.read");
+  const db = ecole(user);
 
-  const classe = await prisma.classe.findUnique({
+  const classe = await db.classe.findUnique({
     where: { id: classeId },
     include: {
       anneeScolaire: { select: { id: true, libelle: true, active: true } },
@@ -31,18 +32,18 @@ export default async function EmploiDuTempsClassePage({ params }: { params: Prom
 
   const [matieres, enseignants, occupations] = modifiable
     ? await Promise.all([
-        prisma.matiere.findMany({
+        db.matiere.findMany({
           where: { etablissementId: user.etablissementId, cycle: classe.cycle },
           select: { id: true, nom: true },
           orderBy: { nom: "asc" },
         }),
-        prisma.employe.findMany({
+        db.employe.findMany({
           where: { etablissementId: user.etablissementId, ...FILTRE_ENSEIGNANTS },
           select: { id: true, nom: true, prenom: true },
           orderBy: [{ nom: "asc" }, { prenom: "asc" }],
         }),
         // Cours des enseignants dans les autres classes de l'annee, pour signaler les conflits
-        prisma.affectation.findMany({
+        db.affectation.findMany({
           where: {
             classeId: { not: classe.id },
             classe: { anneeScolaireId: classe.anneeScolaireId },

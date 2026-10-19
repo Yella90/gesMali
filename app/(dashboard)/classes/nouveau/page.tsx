@@ -1,18 +1,19 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ClasseForm } from "./ClasseForm";
 
 export default async function NouvelleClassePage() {
   const user = await requirePermission("classe.manage");
+  const db = ecole(user);
 
   const [annees, enseignants] = await Promise.all([
-    prisma.anneeScolaire.findMany({
+    db.anneeScolaire.findMany({
       where: { etablissementId: user.etablissementId },
       orderBy: { libelle: "desc" },
     }),
     // Enseignants = Employes avec poste "Enseignant" et actifs
-    prisma.employe.findMany({
+    db.employe.findMany({
       where: {
         etablissementId: user.etablissementId,
         poste: "Enseignant",

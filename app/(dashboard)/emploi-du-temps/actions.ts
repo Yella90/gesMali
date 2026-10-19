@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission, type UtilisateurCourant } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { capter } from "@/lib/actions/serveur";
@@ -12,7 +12,8 @@ import { conflitCreneau } from "@/lib/emploi-du-temps/conflits";
 // avec jour et heures. Seules les classes de l'annee active sont modifiables.
 
 async function classeModifiable(user: UtilisateurCourant, classeId: string) {
-  const classe = await prisma.classe.findUnique({
+  const db = ecole(user);
+  const classe = await db.classe.findUnique({
     where: { id: classeId },
     select: { id: true, etablissementId: true, cycle: true, anneeScolaireId: true, anneeScolaire: { select: { active: true } } },
   });
@@ -41,16 +42,18 @@ function lireCreneau(d: DonneesCreneau) {
 }
 
 async function verifierMatiere(user: UtilisateurCourant, classe: { cycle: string }, matiereId: string) {
+  const db = ecole(user);
   if (!matiereId) throw new Error("Choisissez la matière");
-  const m = await prisma.matiere.findUnique({ where: { id: matiereId }, select: { etablissementId: true, cycle: true } });
+  const m = await db.matiere.findUnique({ where: { id: matiereId }, select: { etablissementId: true, cycle: true } });
   if (!m || m.etablissementId !== user.etablissementId) throw new Error("Matière introuvable");
   if (m.cycle !== classe.cycle) throw new Error("Cette matière n'est pas au programme du cycle de la classe");
 }
 
 // nouveau : l'enseignant est choisi pour ce cours, il doit etre un enseignant actif
 async function chargerEnseignant(user: UtilisateurCourant, enseignantId: string, nouveau: boolean) {
+  const db = ecole(user);
   if (!enseignantId) throw new Error("Choisissez l'enseignant");
-  const e = await prisma.employe.findUnique({
+  const e = await db.employe.findUnique({
     where: { id: enseignantId },
     select: { etablissementId: true, nom: true, prenom: true, actif: true, poste: true, user: { select: { roles: true } } },
   });
@@ -70,6 +73,7 @@ function revalider(classeId: string, enseignantIds: string[]) {
 
 async function creerCreneauCorps(classeId: string, donnees: DonneesCreneau) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
   const classe = await classeModifiable(admin, classeId);
   const c = lireCreneau(donnees);
   await verifierMatiere(admin, classe, c.matiereId);
@@ -79,7 +83,7 @@ async function creerCreneauCorps(classeId: string, donnees: DonneesCreneau) {
   if (conflit) throw new Error(conflit);
 
   // L'affectation sans horaire de cet enseignant pour cette matiere recoit le creneau
-  const sansHoraire = await prisma.affectation.findFirst({
+  const sansHoraire = await db.affectation.findFirst({
     where: {
       classeId,
       enseignantId: c.enseignantId,
@@ -91,8 +95,8 @@ async function creerCreneauCorps(classeId: string, donnees: DonneesCreneau) {
   });
   const horaire = { jour: c.jour, heureDebut: c.heureDebut, heureFin: c.heureFin };
   const aff = sansHoraire
-    ? await prisma.affectation.update({ where: { id: sansHoraire.id }, data: horaire })
-    : await prisma.affectation.create({
+    ? await db.affectation.update({ where: { id: sansHoraire.id }, data: horaire })
+    : await db.affectation.create({
         data: { classeId, enseignantId: c.enseignantId, matiereId: c.matiereId, type: "PROFESSEUR_MATIERE", ...horaire },
       });
 
@@ -110,7 +114,8 @@ async function creerCreneauCorps(classeId: string, donnees: DonneesCreneau) {
 
 async function modifierCreneauCorps(affectationId: string, donnees: DonneesCreneau) {
   const admin = await requirePermission("personnel.manage");
-  const aff = await prisma.affectation.findUnique({
+  const db = ecole(admin);
+  const aff = await db.affectation.findUnique({
     where: { id: affectationId },
     select: { id: true, classeId: true, enseignantId: true, matiereId: true, type: true, jour: true, heureDebut: true, heureFin: true },
   });
@@ -131,7 +136,7 @@ async function modifierCreneauCorps(affectationId: string, donnees: DonneesCrene
   const conflit = await conflitCreneau(classe, c, nom, aff.id);
   if (conflit) throw new Error(conflit);
 
-  await prisma.affectation.update({
+  await db.affectation.update({
     where: { id: aff.id },
     data: {
       jour: c.jour,
@@ -159,14 +164,15 @@ async function modifierCreneauCorps(affectationId: string, donnees: DonneesCrene
 
 async function supprimerCreneauCorps(affectationId: string) {
   const admin = await requirePermission("personnel.manage");
-  const aff = await prisma.affectation.findUnique({
+  const db = ecole(admin);
+  const aff = await db.affectation.findUnique({
     where: { id: affectationId },
     select: { id: true, classeId: true, enseignantId: true, matiereId: true, type: true, jour: true, heureDebut: true, heureFin: true },
   });
   if (!aff) throw new Error("Créneau introuvable");
   await classeModifiable(admin, aff.classeId);
 
-  await prisma.affectation.delete({ where: { id: aff.id } });
+  await db.affectation.delete({ where: { id: aff.id } });
 
   await enregistrerAudit({
     userId: admin.id,

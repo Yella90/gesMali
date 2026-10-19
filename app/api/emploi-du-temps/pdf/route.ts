@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   if (!annee) return NextResponse.json({ error: "Aucune année scolaire" }, { status: 404 });
 
   const classes = (
-    await classesPourPdf({ etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) })
+    await classesPourPdf(user.etablissementId, { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) })
   ).filter((c) => c.cours.length > 0);
   if (classes.length === 0) {
     return NextResponse.json({ error: "Aucun emploi du temps planifié pour l'année " + annee.libelle }, { status: 404 });

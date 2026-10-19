@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 
 export default async function TransitionPage() {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const annees = await prisma.anneeScolaire.findMany({
+  const annees = await db.anneeScolaire.findMany({
     where: { etablissementId: user.etablissementId },
     include: {
       trimestres: { orderBy: { ordre: "asc" } },
@@ -35,7 +36,7 @@ export default async function TransitionPage() {
           nonClotures.map((t) => t.nom).join(", ")
       );
     }
-    const nbBulletins = await prisma.bulletin.count({
+    const nbBulletins = await db.bulletin.count({
       where: { trimestre: { anneeScolaireId: anneeActive.id } },
     });
     if (nbBulletins === 0) {

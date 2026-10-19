@@ -1,19 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { ecole } from "@/lib/data/ecole";
+import { getUtilisateurCourant } from "@/lib/auth/session";
 import { RappelsPDF } from "@/lib/pdf/RappelsPDF";
 
 export async function GET(req: NextRequest) {
-  let session = null;
-  try { session = await auth(); } catch { return NextResponse.json({ error: "Non authentifie" }, { status: 401 }); }
-  if (!session?.user?.id) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
-
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { etablissementId: true },
-  });
-  if (!user) return NextResponse.json({ error: "Utilisateur inconnu" }, { status: 401 });
+  const user = await getUtilisateurCourant();
+  if (!user) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const db = ecole(user);
 
   const { searchParams } = new URL(req.url);
   const statut = searchParams.get("statut");
@@ -23,8 +17,8 @@ export async function GET(req: NextRequest) {
   if (statut === "envoye") where.envoye = true;
 
   const [etablissement, rappels] = await Promise.all([
-    prisma.etablissement.findUnique({ where: { id: user.etablissementId } }),
-    prisma.rappel.findMany({
+    db.etablissement.findUnique({ where: { id: user.etablissementId } }),
+    db.rappel.findMany({
       where,
       include: {
         tranche: {

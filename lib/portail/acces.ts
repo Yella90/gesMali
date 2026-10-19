@@ -6,7 +6,7 @@
 import { randomBytes } from "crypto";
 import { headers } from "next/headers";
 import QRCode from "qrcode";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 
 // 18 octets = 144 bits d'entropie, 24 caracteres base64url
 export function genererCodeParent(): string {
@@ -20,19 +20,20 @@ export function codeParentValide(code: string): boolean {
 
 // Retourne le code de l'eleve, en le creant s'il n'existe pas encore
 // (eleves inscrits avant la mise en place du portail).
-export async function assurerCodeParent(eleveId: string): Promise<string> {
-  const eleve = await prisma.eleve.findUniqueOrThrow({
+export async function assurerCodeParent(etablissementId: string, eleveId: string): Promise<string> {
+  const db = ecole(etablissementId);
+  const eleve = await db.eleve.findUniqueOrThrow({
     where: { id: eleveId },
     select: { codeParent: true },
   });
   if (eleve.codeParent) return eleve.codeParent;
 
   // updateMany conditionnel : si deux requetes arrivent en meme temps, une seule ecrit
-  await prisma.eleve.updateMany({
+  await db.eleve.updateMany({
     where: { id: eleveId, codeParent: null },
     data: { codeParent: genererCodeParent() },
   });
-  const apres = await prisma.eleve.findUniqueOrThrow({
+  const apres = await db.eleve.findUniqueOrThrow({
     where: { id: eleveId },
     select: { codeParent: true },
   });

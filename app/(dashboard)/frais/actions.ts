@@ -1,6 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
+import { prochainNumeroRecu } from "@/lib/frais/requetes";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
@@ -32,13 +33,14 @@ export async function configurerFrais(data: {
   jourEcheance: number;
 }) {
   const user = await requirePermission("frais.manage");
+  const db = ecole(user);
 
-  const eleve = await prisma.eleve.findUnique({ where: { id: data.eleveId } });
+  const eleve = await db.eleve.findUnique({ where: { id: data.eleveId } });
   if (!eleve || eleve.etablissementId !== user.etablissementId) {
     throw new Error("Eleve introuvable");
   }
 
-  const annee = await prisma.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
+  const annee = await db.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
   if (!annee || annee.etablissementId !== user.etablissementId) {
     throw new Error("Annee introuvable");
   }
@@ -83,7 +85,7 @@ export async function configurerFrais(data: {
   const reliquat = Math.round((scolariteNette - totalMensualites) * 100) / 100;
   if (reliquat !== 0) tranches[tranches.length - 1].montant += reliquat;
 
-  const existing = await prisma.fraisScolarite.findUnique({
+  const existing = await db.fraisScolarite.findUnique({
     where: { eleveId_anneeScolaireId: { eleveId: data.eleveId, anneeScolaireId: data.anneeScolaireId } },
     include: { tranches: { include: { paiements: true } } },
   });
@@ -91,10 +93,10 @@ export async function configurerFrais(data: {
   if (existing) {
     const aDesPaiements = existing.tranches.some((t) => t.paiements.some((p) => !p.annule));
     if (aDesPaiements) throw new Error("Des paiements existent deja. Annulez-les avant de reconfigurer.");
-    await prisma.fraisScolarite.delete({ where: { id: existing.id } });
+    await db.fraisScolarite.delete({ where: { id: existing.id } });
   }
 
-  await prisma.fraisScolarite.create({
+  await db.fraisScolarite.create({
     data: {
       etablissementId: user.etablissementId,
       eleveId: data.eleveId,
@@ -123,8 +125,9 @@ export async function configurerFrais(data: {
 // Genere les frais d'un eleve a partir de sa classe
 async function genererFraisEleveCorps(eleveId: string) {
   const user = await requirePermission("frais.manage");
+  const db = ecole(user);
 
-  const eleve = await prisma.eleve.findUnique({
+  const eleve = await db.eleve.findUnique({
     where: { id: eleveId },
     include: {
       classe: { include: { anneeScolaire: true } },
@@ -175,7 +178,7 @@ async function genererFraisEleveCorps(eleveId: string) {
     if (moisCur > 12) { moisCur = 1; anneeCur++; }
   }
 
-  await prisma.fraisScolarite.create({
+  await db.fraisScolarite.create({
     data: {
       etablissementId: user.etablissementId,
       eleveId,
@@ -210,8 +213,9 @@ async function encaisserPaiementCorps(data: {
   datePaiement?: string;
 }) {
   const user = await requirePermission("frais.encaisser");
+  const db = ecole(user);
 
-  const tranche = await prisma.trancheFrais.findUnique({
+  const tranche = await db.trancheFrais.findUnique({
     where: { id: data.trancheId },
     include: { frais: { include: { eleve: true } }, paiements: true },
   });
@@ -227,10 +231,9 @@ async function encaisserPaiementCorps(data: {
   const reste = tranche.montant - dejaPaye;
   if (data.montant > reste + 0.01) throw new Error("Montant superieur au reste a payer (" + reste.toFixed(2) + ")");
 
-  const nb = await prisma.paiementFrais.count();
-  const recuNumero = "REC-" + new Date().getFullYear() + "-" + String(nb + 1).padStart(5, "0");
+  const recuNumero = await prochainNumeroRecu();
 
-  const paiement = await prisma.paiementFrais.create({
+  const paiement = await db.paiementFrais.create({
     data: {
       trancheId: data.trancheId,
       montant: data.montant,
@@ -258,7 +261,8 @@ async function encaisserPaiementCorps(data: {
 // Annuler un paiement
 export async function annulerPaiement(id: string, motif: string) {
   const user = await requirePermission("frais.manage");
-  const p = await prisma.paiementFrais.findUnique({
+  const db = ecole(user);
+  const p = await db.paiementFrais.findUnique({
     where: { id },
     include: { tranche: { include: { frais: { include: { eleve: true } } } } },
   });
@@ -267,7 +271,7 @@ export async function annulerPaiement(id: string, motif: string) {
     throw new Error("Acces refuse");
   }
 
-  await prisma.paiementFrais.update({
+  await db.paiementFrais.update({
     where: { id },
     data: { annule: true, motifAnnulation: motif },
   });
@@ -287,11 +291,12 @@ export async function annulerPaiement(id: string, motif: string) {
 // Genere les rappels pour les echeances impayees
 async function genererRappelsCorps(periode?: string) {
   const user = await requirePermission("frais.manage");
+  const db = ecole(user);
 
   const where: any = { frais: { etablissementId: user.etablissementId } };
   if (periode) where.periode = periode;
 
-  const tranches = await prisma.trancheFrais.findMany({
+  const tranches = await db.trancheFrais.findMany({
     where,
     include: { paiements: true, rappels: true, frais: { include: { eleve: true } } },
     orderBy: { dateEcheance: "asc" },
@@ -309,7 +314,7 @@ async function genererRappelsCorps(periode?: string) {
     const rappelExistant = t.rappels.find((r) => !r.envoye);
     if (rappelExistant) { ignores++; continue; }
 
-    await prisma.rappel.create({
+    await db.rappel.create({
       data: {
         trancheId: t.id,
         contenu: "Rappel pour " + t.libelle + " - reste a payer : " + reste.toFixed(2) + " F CFA",
@@ -335,13 +340,14 @@ async function genererRappelsCorps(periode?: string) {
 // Marquer un rappel comme envoye
 async function marquerRappelEnvoyeCorps(id: string) {
   const user = await requirePermission("frais.manage");
+  const db = ecole(user);
   // Le rappel doit appartenir a l'ecole : rappel -> echeance -> frais -> etablissement
-  const rappel = await prisma.rappel.findUnique({
+  const rappel = await db.rappel.findUnique({
     where: { id },
     select: { tranche: { select: { frais: { select: { etablissementId: true } } } } },
   });
   if (!rappel || rappel.tranche.frais.etablissementId !== user.etablissementId) throw new Error("Rappel introuvable");
-  await prisma.rappel.update({ where: { id }, data: { envoye: true } });
+  await db.rappel.update({ where: { id }, data: { envoye: true } });
   await enregistrerAudit({
     userId: user.id,
     action: "MARQUER_RAPPEL_ENVOYE",

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { filtreClasses } from "@/lib/data/guard";
@@ -8,10 +8,11 @@ import { FeuillePresence } from "./FeuillePresence";
 
 export default async function PresencesPage({ searchParams }: { searchParams: Promise<{ classe?: string; date?: string }> }) {
   const user = await requirePermission("presence.read");
+  const db = ecole(user);
   const q = await searchParams;
   const jour = jourValide(q.date);
 
-  const classes = await prisma.classe.findMany({
+  const classes = await db.classe.findMany({
     where: { etablissementId: user.etablissementId, anneeScolaire: { active: true }, ...(await filtreClasses(user)) },
     select: { id: true, nom: true, niveau: true, section: true },
     orderBy: [{ niveau: "asc" }, { section: "asc" }],
@@ -32,13 +33,13 @@ export default async function PresencesPage({ searchParams }: { searchParams: Pr
 
   const { mois, debut, fin } = moisDuJour(jour);
   const [eleves, saisies, synthese] = await Promise.all([
-    prisma.eleve.findMany({
+    db.eleve.findMany({
       where: { classeId: classe.id, statut: "INSCRIT" },
       select: { id: true, nom: true, prenom: true, matricule: true, sexe: true },
       orderBy: [{ nom: "asc" }, { prenom: "asc" }],
     }),
-    prisma.presence.findMany({ where: { classeId: classe.id, date: jourUtc(jour) } }),
-    syntheseClasse(classe.id, debut, fin),
+    db.presence.findMany({ where: { classeId: classe.id, date: jourUtc(jour) } }),
+    syntheseClasse(user.etablissementId, classe.id, debut, fin),
   ]);
   const initial = Object.fromEntries(
     saisies.map((p) => [p.eleveId, { statut: p.statut, justifie: p.justifie, motif: p.motif ?? "", dureeMinutes: p.dureeMinutes }])

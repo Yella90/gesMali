@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/db";
-import { requirePermission } from "@/lib/auth/session";
+import { ecole } from "@/lib/data/ecole";
+import { emailDejaUtilise, requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
@@ -23,6 +23,7 @@ const POSTES_VALIDES = [
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function creerEmployeCorps(formData: FormData) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
   const nom = (formData.get("nom") as string)?.trim();
   const prenom = (formData.get("prenom") as string)?.trim();
@@ -53,13 +54,12 @@ async function creerEmployeCorps(formData: FormData) {
     }
     if (!ROLES_VALIDES.includes(role)) throw new Error("Role invalide");
 
-    const existant = await prisma.user.findUnique({ where: { email } });
-    if (existant) throw new Error("Cet email est deja utilise");
+    if (await emailDejaUtilise(email)) throw new Error("Cet email est deja utilise");
   }
 
   const salaireReference = salaireRefRaw ? Number(salaireRefRaw) : null;
 
-  const resultat = await prisma.$transaction(async (tx) => {
+  const resultat = await db.$transaction(async (tx) => {
     const employe = await tx.employe.create({
       data: {
         etablissementId: admin.etablissementId,
@@ -114,8 +114,9 @@ async function creerEmployeCorps(formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function modifierEmployeCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const cible = await prisma.employe.findUnique({
+  const cible = await db.employe.findUnique({
     where: { id: employeId },
     include: { user: true },
   });
@@ -143,7 +144,7 @@ async function modifierEmployeCorps(employeId: string, formData: FormData) {
 
   const salaireReference = salaireRefRaw ? Number(salaireRefRaw) : null;
 
-  await prisma.$transaction(async (tx) => {
+  await db.$transaction(async (tx) => {
     await tx.employe.update({
       where: { id: employeId },
       data: {
@@ -191,8 +192,9 @@ async function modifierEmployeCorps(employeId: string, formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 export async function desactiverEmploye(employeId: string) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const cible = await prisma.employe.findUnique({
+  const cible = await db.employe.findUnique({
     where: { id: employeId },
     include: { user: true },
   });
@@ -203,7 +205,7 @@ export async function desactiverEmploye(employeId: string) {
     throw new Error("Vous ne pouvez pas vous desactiver vous-meme");
   }
 
-  await prisma.$transaction(async (tx) => {
+  await db.$transaction(async (tx) => {
     await tx.employe.update({
       where: { id: employeId },
       data: { actif: false, dateSortie: new Date() },
@@ -233,8 +235,9 @@ export async function desactiverEmploye(employeId: string) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function creerCompteCorps(employeId: string, formData: FormData) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id: employeId },
     include: { user: true },
   });
@@ -255,12 +258,11 @@ async function creerCompteCorps(employeId: string, formData: FormData) {
   }
   if (!ROLES_VALIDES.includes(role)) throw new Error("Role invalide");
 
-  const existant = await prisma.user.findUnique({ where: { email } });
-  if (existant) throw new Error("Cet email est deja utilise");
+  if (await emailDejaUtilise(email)) throw new Error("Cet email est deja utilise");
 
   const passwordHash = await bcrypt.hash(motDePasse, 10);
 
-  await prisma.user.create({
+  await db.user.create({
     data: {
       email,
       passwordHash,
@@ -289,8 +291,9 @@ async function creerCompteCorps(employeId: string, formData: FormData) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function supprimerCompteCorps(employeId: string) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id: employeId },
     include: { user: true },
   });
@@ -304,9 +307,9 @@ async function supprimerCompteCorps(employeId: string) {
 
   // Compter les references pour eviter les erreurs
   const [notes, bulletins, paiements, frais, rappels, audits] = await Promise.all([
-    prisma.note.count({ where: { saisieParId: employe.user.id } }),
-    prisma.bulletin.count({ where: { genereParId: employe.user.id } }),
-    prisma.paiement.count({
+    db.note.count({ where: { saisieParId: employe.user.id } }),
+    db.bulletin.count({ where: { genereParId: employe.user.id } }),
+    db.paiement.count({
       where: {
         OR: [
           { saisieParId: employe.user.id },
@@ -314,9 +317,9 @@ async function supprimerCompteCorps(employeId: string) {
         ],
       },
     }),
-    prisma.paiementFrais.count({ where: { saisieParId: employe.user.id } }),
-    prisma.rappel.count({ where: { saisieParId: employe.user.id } }),
-    prisma.auditLog.count({ where: { userId: employe.user.id } }),
+    db.paiementFrais.count({ where: { saisieParId: employe.user.id } }),
+    db.rappel.count({ where: { saisieParId: employe.user.id } }),
+    db.auditLog.count({ where: { userId: employe.user.id } }),
   ]);
 
   const total = notes + bulletins + paiements + frais + rappels + audits;
@@ -327,7 +330,7 @@ async function supprimerCompteCorps(employeId: string) {
     );
   }
 
-  await prisma.user.delete({ where: { id: employe.user.id } });
+  await db.user.delete({ where: { id: employe.user.id } });
 
   await enregistrerAudit({
     userId: admin.id,
@@ -347,8 +350,9 @@ async function supprimerCompteCorps(employeId: string) {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: string) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id: employeId },
     include: { user: true },
   });
@@ -361,7 +365,7 @@ async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: stri
   }
 
   const passwordHash = await bcrypt.hash(nouveauMotDePasse, 10);
-  await prisma.user.update({
+  await db.user.update({
     where: { id: employe.user.id },
     data: { passwordHash },
   });
@@ -381,6 +385,7 @@ async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: stri
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function creerAffectationCorps(formData: FormData) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
   const enseignantId = formData.get("enseignantId") as string;
   const classeId = formData.get("classeId") as string;
@@ -404,8 +409,8 @@ async function creerAffectationCorps(formData: FormData) {
   }
 
   const [employe, classe] = await Promise.all([
-    prisma.employe.findUnique({ where: { id: enseignantId } }),
-    prisma.classe.findUnique({ where: { id: classeId } }),
+    db.employe.findUnique({ where: { id: enseignantId } }),
+    db.classe.findUnique({ where: { id: classeId } }),
   ]);
 
   if (!employe || employe.etablissementId !== admin.etablissementId) {
@@ -417,7 +422,7 @@ async function creerAffectationCorps(formData: FormData) {
 
   // Verifier les doublons (meme prof + classe + matiere + jour + heure)
   if (jour && heureDebut && heureFin) {
-    const existante = await prisma.affectation.findFirst({
+    const existante = await db.affectation.findFirst({
       where: {
         enseignantId,
         classeId,
@@ -432,7 +437,7 @@ async function creerAffectationCorps(formData: FormData) {
 
   // Verifier les conflits horaires pour cet enseignant
   if (jour && heureDebut && heureFin) {
-    const conflit = await prisma.affectation.findFirst({
+    const conflit = await db.affectation.findFirst({
       where: {
         enseignantId,
         jour,
@@ -450,7 +455,7 @@ async function creerAffectationCorps(formData: FormData) {
     }
   }
 
-  await prisma.affectation.create({
+  await db.affectation.create({
     data: {
       enseignantId,
       classeId,
@@ -477,8 +482,9 @@ async function creerAffectationCorps(formData: FormData) {
 
 async function supprimerAffectationCorps(id: string) {
   const admin = await requirePermission("personnel.manage");
+  const db = ecole(admin);
 
-  const aff = await prisma.affectation.findUnique({
+  const aff = await db.affectation.findUnique({
     where: { id },
     include: { enseignant: true },
   });
@@ -486,7 +492,7 @@ async function supprimerAffectationCorps(id: string) {
     throw new Error("Acces refuse");
   }
 
-  await prisma.affectation.delete({ where: { id } });
+  await db.affectation.delete({ where: { id } });
 
   await enregistrerAudit({
     userId: admin.id,

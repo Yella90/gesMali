@@ -3,7 +3,9 @@
 // frais (PaiementFrais), des paiements du personnel (Paiement) et des mouvements
 // manuels (MouvementTresorerie : apports, depenses, retraits du promoteur).
 
+// SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { Prisma } from "@/lib/generated/prisma/client";
 
 export const CAISSES = ["ESPECES", "BANQUE", "MOBILE_MONEY"] as const;
@@ -99,16 +101,16 @@ export async function previsionMois(etablissementId: string, maintenant = new Da
   const periode = maintenant.getFullYear() + "-" + String(maintenant.getMonth() + 1).padStart(2, "0");
   const [soldes, employes, dejaPayes, recurrentes, attendus] = await Promise.all([
     soldesCaisses(etablissementId),
-    prisma.employe.findMany({
+    ecole(etablissementId).employe.findMany({
       where: { etablissementId, actif: true, salaireReference: { gt: 0 } },
       select: { id: true, salaireReference: true, typeRemuneration: true },
     }),
-    prisma.paiement.groupBy({
+    ecole(etablissementId).paiement.groupBy({
       by: ["employeId"],
       where: { etablissementId, periode, type: "MENSUEL", statut: { not: "ANNULE" } },
       _sum: { montant: true },
     }),
-    prisma.depenseRecurrente.findMany({
+    ecole(etablissementId).depenseRecurrente.findMany({
       where: { etablissementId, actif: true, jourEcheance: { gte: maintenant.getDate() } },
       select: { montant: true },
     }),
@@ -188,11 +190,11 @@ export async function journal(etablissementId: string, debut: Date, fin: Date): 
       WHERE f."etablissementId" = ${etablissementId} AND NOT p.annule
         AND p."datePaiement" >= ${debut} AND p."datePaiement" < ${fin}
       GROUP BY 1, 2`,
-    prisma.paiement.findMany({
+    ecole(etablissementId).paiement.findMany({
       where: { etablissementId, statut: { not: "ANNULE" }, datePaiement: { gte: debut, lt: fin } },
       select: { id: true, datePaiement: true, montant: true, type: true, modePaiement: true, periode: true, employe: { select: { nom: true, prenom: true } } },
     }),
-    prisma.mouvementTresorerie.findMany({
+    ecole(etablissementId).mouvementTresorerie.findMany({
       where: { etablissementId, date: { gte: debut, lt: fin } },
     }),
   ]);

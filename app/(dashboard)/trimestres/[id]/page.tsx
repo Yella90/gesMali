@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ActionsTrimestre } from "./ActionsTrimestre";
 import { ModifierTrimestre } from "./ModifierTrimestre";
@@ -8,8 +8,9 @@ import { ModifierTrimestre } from "./ModifierTrimestre";
 export default async function TrimestreDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePermission("trimestre.read");
+  const db = ecole(user);
 
-  const trimestre = await prisma.trimestre.findUnique({
+  const trimestre = await db.trimestre.findUnique({
     where: { id },
     include: {
       anneeScolaire: true,

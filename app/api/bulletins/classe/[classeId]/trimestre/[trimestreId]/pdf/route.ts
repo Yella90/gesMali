@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { ecole } from "@/lib/data/ecole";
 import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { classeVisible } from "@/lib/data/guard";
@@ -12,17 +11,11 @@ export async function GET(
 ) {
   const { classeId, trimestreId } = await params;
 
-  let session = null;
-  try { session = await auth(); } catch { return NextResponse.json({ error: "Non authentifie" }, { status: 401 }); }
-  if (!session?.user?.id) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const user = await getUtilisateurCourant();
+  if (!user) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const db = ecole(user);
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { etablissementId: true },
-  });
-  if (!user) return NextResponse.json({ error: "Utilisateur inconnu" }, { status: 401 });
-
-  const classe = await prisma.classe.findUnique({
+  const classe = await db.classe.findUnique({
     where: { id: classeId },
     include: {
       etablissement: true,
@@ -31,7 +24,7 @@ export async function GET(
       titulaire: { select: { nom: true, prenom: true } },
     },
   });
-  const trimestre = await prisma.trimestre.findUnique({ where: { id: trimestreId } });
+  const trimestre = await db.trimestre.findUnique({ where: { id: trimestreId } });
 
   if (!classe || !trimestre) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
   if (classe.etablissementId === user.etablissementId) {
@@ -45,7 +38,7 @@ export async function GET(
     return NextResponse.json({ error: "Acces refuse" }, { status: 403 });
   }
 
-  const bulletins = await prisma.bulletin.findMany({
+  const bulletins = await db.bulletin.findMany({
     where: { classeId, trimestreId },
     include: {
       eleve: true,

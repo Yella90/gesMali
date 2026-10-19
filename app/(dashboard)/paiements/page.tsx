@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { estPeriodeEcoulee, fmtPeriode } from "@/lib/frais/periode";
 
@@ -10,6 +10,7 @@ export default async function PaiementsPage({
 }) {
   const { periode, type, employeId, statut } = await searchParams;
   const user = await requirePermission("paiement.read");
+  const db = ecole(user);
 
   const where: any = { etablissementId: user.etablissementId };
   if (periode) where.periode = periode;
@@ -18,7 +19,7 @@ export default async function PaiementsPage({
   if (statut) where.statut = statut;
 
   const [paiements, toutesPeriodes, employes] = await Promise.all([
-    prisma.paiement.findMany({
+    db.paiement.findMany({
       where,
       include: {
         employe: { select: { nom: true, prenom: true, poste: true } },
@@ -27,7 +28,7 @@ export default async function PaiementsPage({
       orderBy: [{ datePaiement: "desc" }, { createdAt: "desc" }],
       take: 300,
     }),
-    prisma.paiement.findMany({
+    db.paiement.findMany({
       where: { etablissementId: user.etablissementId },
       distinct: ["periode"],
       select: { periode: true },
@@ -35,7 +36,7 @@ export default async function PaiementsPage({
       take: 24,
     }),
     // Tous les employes actifs (enseignants, secretaires, comptables, gardiens...)
-    prisma.employe.findMany({
+    db.employe.findMany({
       where: {
         etablissementId: user.etablissementId,
         actif: true,

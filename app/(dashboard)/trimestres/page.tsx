@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 
 export default async function TrimestresPage() {
   const user = await requirePermission("trimestre.read");
+  const db = ecole(user);
 
-  const annees = await prisma.anneeScolaire.findMany({
+  const annees = await db.anneeScolaire.findMany({
     where: { etablissementId: user.etablissementId },
     include: {
       trimestres: {

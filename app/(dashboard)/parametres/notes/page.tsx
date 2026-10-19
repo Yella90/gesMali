@@ -1,13 +1,14 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { NotesForm } from "./NotesForm";
 import { libModeSaisie } from "@/lib/libelles";
 
 export default async function ParametresNotesPage() {
   const user = await requirePermission("parametres.read");
+  const db = ecole(user);
 
-  const parametres = await prisma.parametresEtablissement.findUnique({
+  const parametres = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
 

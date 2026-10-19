@@ -1,23 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
-import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
+import { ecole } from "@/lib/data/ecole";
+import { getUtilisateurCourant } from "@/lib/auth/session";
 import { RecuPDF } from "@/lib/pdf/RecuPDF";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ paiementId: string }> }) {
   const { paiementId } = await params;
 
-  let session = null;
-  try { session = await auth(); } catch { return NextResponse.json({ error: "Non authentifie" }, { status: 401 }); }
-  if (!session?.user?.id) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const user = await getUtilisateurCourant();
+  if (!user) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const db = ecole(user);
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { etablissementId: true },
-  });
-  if (!user) return NextResponse.json({ error: "Utilisateur inconnu" }, { status: 401 });
-
-  const paiement = await prisma.paiementFrais.findUnique({
+  const paiement = await db.paiementFrais.findUnique({
     where: { id: paiementId },
     include: {
       tranche: {

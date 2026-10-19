@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ListePersonnel } from "./ListePersonnel";
 
 export default async function PersonnelPage() {
   const user = await requirePermission("personnel.read");
+  const db = ecole(user);
 
-  const employes = await prisma.employe.findMany({
+  const employes = await db.employe.findMany({
     where: { etablissementId: user.etablissementId },
     include: {
       user: {

@@ -1,7 +1,7 @@
 // Conflits d'un creneau : la classe a deja cours a cette heure, ou l'enseignant
 // est deja dans une autre classe de la meme annee scolaire.
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { libelleClasse } from "@/lib/classes/annees";
 import { libJour } from "./creneaux";
 
@@ -9,11 +9,12 @@ type Creneau = { jour: string; heureDebut: string; heureFin: string; enseignantI
 
 // Message du premier conflit trouve, ou null. exclureId : le creneau en cours de modification.
 export async function conflitCreneau(
-  classe: { id: string; anneeScolaireId: string },
+  classe: { id: string; anneeScolaireId: string; etablissementId: string },
   c: Creneau,
   nomEnseignant: string,
   exclureId?: string
 ): Promise<string | null> {
+  const db = ecole(classe.etablissementId);
   const chevauchement = {
     jour: c.jour,
     heureDebut: { lt: c.heureFin },
@@ -22,7 +23,7 @@ export async function conflitCreneau(
   };
 
   const [coursClasse, coursEnseignant] = await Promise.all([
-    prisma.affectation.findFirst({
+    db.affectation.findFirst({
       where: { classeId: classe.id, ...chevauchement },
       include: {
         matiere: { select: { nom: true } },
@@ -30,7 +31,7 @@ export async function conflitCreneau(
       },
       orderBy: { heureDebut: "asc" },
     }),
-    prisma.affectation.findFirst({
+    db.affectation.findFirst({
       where: {
         enseignantId: c.enseignantId,
         classeId: { not: classe.id },

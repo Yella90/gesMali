@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { assurerCodeParent, qrCodeSvg, urlPortailParent } from "@/lib/portail/acces";
@@ -19,8 +19,9 @@ export default async function EleveDetailPage({
   const { id } = await params;
   const { inscrit } = await searchParams;
   const user = await requirePermission("eleve.read");
+  const db = ecole(user);
 
-  const eleve = await prisma.eleve.findUnique({
+  const eleve = await db.eleve.findUnique({
     where: { id },
     include: {
       classe: { include: { anneeScolaire: true } },
@@ -38,7 +39,7 @@ export default async function EleveDetailPage({
 
   const peutModifier = peut(user.roles, "eleve.update");
   const classesActives = peutModifier
-    ? await prisma.classe.findMany({
+    ? await db.classe.findMany({
         where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } },
         select: {
           id: true, nom: true, niveau: true, section: true, capaciteMax: true,
@@ -49,7 +50,7 @@ export default async function EleveDetailPage({
     : [];
   // Presences de l annee scolaire de la classe
   const presences = peut(user.roles, "presence.read") && eleve.classe
-    ? await prisma.presence.groupBy({
+    ? await db.presence.groupBy({
         by: ["statut", "justifie"],
         where: { eleveId: eleve.id, date: { gte: eleve.classe.anneeScolaire.dateDebut, lte: eleve.classe.anneeScolaire.dateFin } },
         _count: { _all: true },
@@ -58,7 +59,7 @@ export default async function EleveDetailPage({
     : null;
   const nbPresence = (statut: string, justifie?: boolean) =>
     (presences ?? []).filter((p) => p.statut === statut && (justifie === undefined || p.justifie === justifie)).reduce((s, p) => s + p._count._all, 0);
-  const urlParent = await urlPortailParent(await assurerCodeParent(eleve.id));
+  const urlParent = await urlPortailParent(await assurerCodeParent(user.etablissementId, eleve.id));
   const qrSvg = await qrCodeSvg(urlParent);
 
   // Frais visibles seulement avec le droit frais.read (pas pour un enseignant)

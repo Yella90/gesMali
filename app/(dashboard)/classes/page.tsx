@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { filtreClasses } from "@/lib/data/guard";
@@ -8,13 +8,14 @@ import { ChoixAnnee } from "@/components/annees/ChoixAnnee";
 
 export default async function ClassesPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("classe.read");
+  const db = ecole(user);
   const { annee: anneeId } = await searchParams;
 
   // Une annee a la fois : l'annee active par defaut, les annees archivees sur demande
   const { annees, annee } = await anneeAffichee(user.etablissementId, anneeId);
 
   const classes = annee
-    ? await prisma.classe.findMany({
+    ? await db.classe.findMany({
         where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) },
         include: {
           anneeScolaire: true,

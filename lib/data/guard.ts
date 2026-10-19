@@ -1,9 +1,10 @@
 import { cache } from "react";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import type { UtilisateurCourant } from "@/lib/auth/session";
 
 export async function verifierEleve(user: UtilisateurCourant, eleveId: string) {
-  const eleve = await prisma.eleve.findUnique({
+  const db = ecole(user);
+  const eleve = await db.eleve.findUnique({
     where: { id: eleveId },
     select: { id: true, classeId: true, etablissementId: true, statut: true },
   });
@@ -14,7 +15,8 @@ export async function verifierEleve(user: UtilisateurCourant, eleveId: string) {
 }
 
 export async function verifierClasse(user: UtilisateurCourant, classeId: string) {
-  const classe = await prisma.classe.findUnique({
+  const db = ecole(user);
+  const classe = await db.classe.findUnique({
     where: { id: classeId },
     select: { id: true, etablissementId: true, cycle: true, anneeScolaireId: true },
   });
@@ -32,10 +34,11 @@ export function estEnseignantSeul(user: UtilisateurCourant): boolean {
 }
 
 export const classesVisibles = cache(async (user: UtilisateurCourant): Promise<string[] | null> => {
+  const db = ecole(user);
   if (!estEnseignantSeul(user)) return null;
   const [affectations, classes] = await Promise.all([
-    prisma.affectation.findMany({ where: { enseignantId: user.employeId }, select: { classeId: true } }),
-    prisma.classe.findMany({
+    db.affectation.findMany({ where: { enseignantId: user.employeId }, select: { classeId: true } }),
+    db.classe.findMany({
       where: {
         etablissementId: user.etablissementId,
         OR: [{ titulaireId: user.employeId }, { professeurPrincipalId: user.employeId }],
@@ -57,7 +60,8 @@ export async function filtreClasseId(user: UtilisateurCourant) {
 }
 
 export async function verifierMatiere(user: UtilisateurCourant, matiereId: string) {
-  const m = await prisma.matiere.findUnique({
+  const db = ecole(user);
+  const m = await db.matiere.findUnique({
     where: { id: matiereId },
     select: { id: true, etablissementId: true, coefficient: true, nom: true, cycle: true },
   });
@@ -67,7 +71,8 @@ export async function verifierMatiere(user: UtilisateurCourant, matiereId: strin
 }
 
 export async function verifierTrimestre(user: UtilisateurCourant, trimestreId: string) {
-  const t = await prisma.trimestre.findUnique({
+  const db = ecole(user);
+  const t = await db.trimestre.findUnique({
     where: { id: trimestreId },
     include: { anneeScolaire: { select: { etablissementId: true } } },
   });
@@ -82,17 +87,18 @@ export async function verifierAffectation(
   classeId: string,
   matiereId: string | null
 ): Promise<void> {
+  const db = ecole(user);
   if (user.roles.includes("DIRECTEUR") || user.roles.includes("SECRETAIRE")) return;
 
   // Utiliser l'employeId (pas le user.id)
   if (matiereId) {
-    const aff = await prisma.affectation.findFirst({
+    const aff = await db.affectation.findFirst({
       where: { enseignantId: user.employeId, classeId, matiereId },
     });
     if (aff) return;
   }
 
-  const affTitulaire = await prisma.affectation.findFirst({
+  const affTitulaire = await db.affectation.findFirst({
     where: {
       enseignantId: user.employeId,
       classeId,

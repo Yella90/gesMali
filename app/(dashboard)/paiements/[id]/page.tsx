@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ActionsPaiement } from "./ActionsPaiement";
 
 export default async function PaiementDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePermission("paiement.read");
+  const db = ecole(user);
 
-  const p = await prisma.paiement.findUnique({
+  const p = await db.paiement.findUnique({
     where: { id },
     include: {
       employe: true,

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { libCycle } from "@/lib/libelles";
 import { filtreClasses } from "@/lib/data/guard";
@@ -8,17 +8,18 @@ import { ChoixAnnee } from "@/components/annees/ChoixAnnee";
 
 export default async function BulletinsPage({ searchParams }: { searchParams: Promise<{ annee?: string }> }) {
   const user = await requirePermission("bulletin.read");
+  const db = ecole(user);
   const { annee: anneeId } = await searchParams;
   const { annees, annee } = await anneeAffichee(user.etablissementId, anneeId);
 
   // Une classe n'appartient qu'a une annee : seuls les trimestres de cette annee
   const [classes, trimestres] = annee
     ? await Promise.all([
-        prisma.classe.findMany({
+        db.classe.findMany({
           where: { etablissementId: user.etablissementId, anneeScolaireId: annee.id, ...(await filtreClasses(user)) },
           orderBy: [{ niveau: "asc" }, { section: "asc" }],
         }),
-        prisma.trimestre.findMany({
+        db.trimestre.findMany({
           where: { anneeScolaireId: annee.id },
           include: { anneeScolaire: { select: { libelle: true } } },
           orderBy: { ordre: "asc" },
@@ -26,7 +27,7 @@ export default async function BulletinsPage({ searchParams }: { searchParams: Pr
       ])
     : [[], []];
 
-  const bulletinsExistants = await prisma.bulletin.groupBy({
+  const bulletinsExistants = await db.bulletin.groupBy({
     by: ["classeId", "trimestreId"],
     where: { classeId: { in: classes.map((c) => c.id) } },
     _count: { _all: true },

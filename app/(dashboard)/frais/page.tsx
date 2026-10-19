@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
@@ -8,14 +8,15 @@ import { ListeFrais } from "./ListeFrais";
 
 export default async function FraisPage() {
   const user = await requirePermission("frais.read");
+  const db = ecole(user);
 
   const [anneeActive, eleves, classes] = await Promise.all([
-    prisma.anneeScolaire.findFirst({
+    db.anneeScolaire.findFirst({
       where: { etablissementId: user.etablissementId, active: true },
       select: { libelle: true },
     }),
     elevesAvecFrais(user.etablissementId),
-    prisma.classe.findMany({
+    db.classe.findMany({
       where: { etablissementId: user.etablissementId },
       select: { id: true, nom: true, niveau: true, section: true, anneeScolaire: { select: { libelle: true, active: true } } },
       orderBy: ORDRE_CLASSES,

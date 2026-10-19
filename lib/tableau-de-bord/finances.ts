@@ -1,7 +1,9 @@
 // Donnees des graphiques financiers du tableau de bord, agregees en base
 // (une requete pour tous les mois, comme lib/frais/requetes.ts).
 
+// SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { Prisma } from "@/lib/generated/prisma/client";
 import { fmtPeriode, fmtPeriodeCourt, periodeActuelle } from "@/lib/frais/periode";
 
@@ -55,7 +57,7 @@ export async function financesMensuelles(etablissementId: string, moisFin: strin
 
 // Masse salariale prevue : salaires de reference du personnel actif
 export async function salairesPrevus(etablissementId: string): Promise<number> {
-  const r = await prisma.employe.aggregate({
+  const r = await ecole(etablissementId).employe.aggregate({
     where: { etablissementId, actif: true },
     _sum: { salaireReference: true },
   });

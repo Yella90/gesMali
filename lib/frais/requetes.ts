@@ -291,3 +291,11 @@ export async function listeRappels(etablissementId: string, envoye: boolean | un
     eleve: { id: r.eleveId, nom: r.nom, prenom: r.prenom, classe: classeOuNull(r) },
   }));
 }
+
+// Numero du prochain recu de frais. recuNumero est unique dans toute la base : la
+// numerotation reste commune a toutes les ecoles (une numerotation par ecole demandera
+// une colonne etablissementId sur les paiements de frais).
+export async function prochainNumeroRecu(): Promise<string> {
+  const nb = await prisma.paiementFrais.count();
+  return "REC-" + new Date().getFullYear() + "-" + String(nb + 1).padStart(5, "0");
+}

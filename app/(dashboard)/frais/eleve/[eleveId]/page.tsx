@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { EncaisserPaiement, GenererFrais } from "./FraisClient";
 import { calculerSituation, libelleStatut, libelleStatutInscription } from "@/lib/frais/calculs";
@@ -8,8 +8,9 @@ import { calculerSituation, libelleStatut, libelleStatutInscription } from "@/li
 export default async function FraisElevePage({ params }: { params: Promise<{ eleveId: string }> }) {
   const { eleveId } = await params;
   const user = await requirePermission("frais.read");
+  const db = ecole(user);
 
-  const eleve = await prisma.eleve.findUnique({
+  const eleve = await db.eleve.findUnique({
     where: { id: eleveId },
     include: {
       classe: true,

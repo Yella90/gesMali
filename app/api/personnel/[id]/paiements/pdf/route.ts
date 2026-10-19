@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { utilisateurApi } from "@/lib/auth/api";
 import { reponsePdf } from "@/lib/pdf/reponse";
 import { datePdf, montantPdf } from "@/lib/pdf/DocumentTableauPDF";
@@ -19,10 +19,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const { user, erreur } = await utilisateurApi("paiement.read");
   if (erreur) return erreur;
+  const db = ecole(user);
 
   const annee = Number(req.nextUrl.searchParams.get("annee")) || null;
 
-  const employe = await prisma.employe.findUnique({
+  const employe = await db.employe.findUnique({
     where: { id },
     include: {
       etablissement: true,

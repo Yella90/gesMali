@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { utilisateurApi } from "@/lib/auth/api";
 import { classeVisible } from "@/lib/data/guard";
 import { reponsePdf } from "@/lib/pdf/reponse";
@@ -10,16 +10,17 @@ import { aujourdhui, LIB_STATUT, moisDuJour, syntheseClasse } from "@/lib/presen
 export async function GET(req: NextRequest) {
   const { user, erreur } = await utilisateurApi("presence.read");
   if (erreur) return erreur;
+  const db = ecole(user);
   const classeId = req.nextUrl.searchParams.get("classe") ?? "";
   const m = req.nextUrl.searchParams.get("mois") ?? "";
   const mois = /^\d{4}-\d{2}$/.test(m) ? m : aujourdhui().slice(0, 7);
 
-  const classe = await prisma.classe.findUnique({ where: { id: classeId }, include: { etablissement: true, anneeScolaire: true } });
+  const classe = await db.classe.findUnique({ where: { id: classeId }, include: { etablissement: true, anneeScolaire: true } });
   if (!classe || classe.etablissementId !== user.etablissementId || !(await classeVisible(user, classe.id))) {
     return NextResponse.json({ error: "Classe introuvable" }, { status: 404 });
   }
   const { debut, fin } = moisDuJour(mois + "-01");
-  const s = await syntheseClasse(classe.id, debut, fin);
+  const s = await syntheseClasse(user.etablissementId, classe.id, debut, fin);
   const nomClasse = classe.nom || classe.niveau + (classe.section ? " " + classe.section : "");
   const absences = s.incidents.filter((i) => i.statut === "ABSENT").length;
   const retards = s.incidents.filter((i) => i.statut === "RETARD").length;

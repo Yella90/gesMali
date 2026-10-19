@@ -1,22 +1,23 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { libModeSaisie, libTypeEtablissement } from "@/lib/libelles";
 import { Building2, FileText, Users } from "lucide-react";
 
 export default async function ParametresPage() {
   const user = await requirePermission("parametres.read");
+  const db = ecole(user);
 
   const [etablissement, parametres, annees, nbUsers, nbEleves, nbClasses] = await Promise.all([
-    prisma.etablissement.findUnique({ where: { id: user.etablissementId } }),
-    prisma.parametresEtablissement.findUnique({ where: { etablissementId: user.etablissementId } }),
-    prisma.anneeScolaire.findMany({
+    db.etablissement.findUnique({ where: { id: user.etablissementId } }),
+    db.parametresEtablissement.findUnique({ where: { etablissementId: user.etablissementId } }),
+    db.anneeScolaire.findMany({
       where: { etablissementId: user.etablissementId },
       orderBy: { libelle: "desc" },
     }),
-    prisma.user.count({ where: { etablissementId: user.etablissementId } }),
-    prisma.eleve.count({ where: { etablissementId: user.etablissementId, statut: "INSCRIT" } }),
-    prisma.classe.count({ where: { etablissementId: user.etablissementId } }),
+    db.user.count({ where: { etablissementId: user.etablissementId } }),
+    db.eleve.count({ where: { etablissementId: user.etablissementId, statut: "INSCRIT" } }),
+    db.classe.count({ where: { etablissementId: user.etablissementId } }),
   ]);
 
   const anneeActive = annees.find((a) => a.active);

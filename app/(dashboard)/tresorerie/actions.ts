@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { CAISSES, LIB_CAISSE, soldeCaisse, type CaisseT } from "@/lib/tresorerie/tresorerie";
@@ -21,6 +21,7 @@ async function creerMouvementCorps(formData: FormData) {
   if (!TYPES.includes(type)) throw new Error("Type de mouvement invalide");
   // Depenses : direction et comptabilite. Apports et retraits : directeur seul.
   const user = await requirePermission(type === "DEPENSE" ? "tresorerie.depense" : "tresorerie.capital");
+  const db = ecole(user);
 
   const caisse = caisseValide(formData.get("caisse"));
   const montant = Number(formData.get("montant"));
@@ -51,7 +52,7 @@ async function creerMouvementCorps(formData: FormData) {
     }
   }
 
-  const m = await prisma.mouvementTresorerie.create({
+  const m = await db.mouvementTresorerie.create({
     data: {
       etablissementId: user.etablissementId,
       type,
@@ -80,11 +81,12 @@ async function creerMouvementCorps(formData: FormData) {
 
 async function annulerMouvementCorps(id: string, motif: string) {
   const user = await requirePermission("tresorerie.capital");
+  const db = ecole(user);
   if (!motif || motif.trim().length < 3) throw new Error("Motif obligatoire (3 caractères minimum)");
-  const m = await prisma.mouvementTresorerie.findUnique({ where: { id } });
+  const m = await db.mouvementTresorerie.findUnique({ where: { id } });
   if (!m || m.etablissementId !== user.etablissementId) throw new Error("Mouvement introuvable");
   if (m.annule) throw new Error("Déjà annulé");
-  await prisma.mouvementTresorerie.update({ where: { id }, data: { annule: true, motifAnnulation: motif.trim() } });
+  await db.mouvementTresorerie.update({ where: { id }, data: { annule: true, motifAnnulation: motif.trim() } });
   await enregistrerAudit({ userId: user.id, action: "TRESORERIE_ANNULATION", entite: "MouvementTresorerie", entiteId: id, details: { motif } });
   revalidatePath("/tresorerie");
   revalidatePath("/dashboard");
@@ -92,6 +94,7 @@ async function annulerMouvementCorps(id: string, motif: string) {
 
 async function creerDepenseRecurrenteCorps(formData: FormData) {
   const user = await requirePermission("tresorerie.depense");
+  const db = ecole(user);
   const libelle = String(formData.get("libelle") ?? "").trim();
   const categorie = String(formData.get("categorie") ?? "").trim() || "Autre";
   const montant = Number(formData.get("montant"));
@@ -100,7 +103,7 @@ async function creerDepenseRecurrenteCorps(formData: FormData) {
   if (libelle.length < 3) throw new Error("Indiquez un libellé");
   if (!Number.isFinite(montant) || montant <= 0) throw new Error("Montant invalide");
   if (!Number.isInteger(jourEcheance) || jourEcheance < 1 || jourEcheance > 28) throw new Error("Jour d'échéance entre 1 et 28");
-  const d = await prisma.depenseRecurrente.create({
+  const d = await db.depenseRecurrente.create({
     data: { etablissementId: user.etablissementId, libelle, categorie, montant, jourEcheance, caisse },
   });
   await enregistrerAudit({ userId: user.id, action: "DEPENSE_RECURRENTE_CREEE", entite: "DepenseRecurrente", entiteId: d.id });
@@ -109,9 +112,10 @@ async function creerDepenseRecurrenteCorps(formData: FormData) {
 
 async function basculerDepenseRecurrenteCorps(id: string) {
   const user = await requirePermission("tresorerie.depense");
-  const d = await prisma.depenseRecurrente.findUnique({ where: { id } });
+  const db = ecole(user);
+  const d = await db.depenseRecurrente.findUnique({ where: { id } });
   if (!d || d.etablissementId !== user.etablissementId) throw new Error("Dépense introuvable");
-  await prisma.depenseRecurrente.update({ where: { id }, data: { actif: !d.actif } });
+  await db.depenseRecurrente.update({ where: { id }, data: { actif: !d.actif } });
   revalidatePath("/tresorerie");
 }
 

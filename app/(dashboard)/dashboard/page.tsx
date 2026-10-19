@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { peut } from "@/lib/auth/permissions";
 import { CalendarClock, CalendarDays, PencilLine, Receipt, School, Users, Wallet, type LucideIcon } from "lucide-react";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { calculerSituationDepuisTotaux } from "@/lib/frais/calculs";
 import { elevesAvecFrais } from "@/lib/frais/requetes";
@@ -68,6 +68,7 @@ function labelAction(action: string): string {
 export default async function DashboardPage({ searchParams }: { searchParams: Promise<{ mois?: string }> }) {
   const user = await getUtilisateurCourant();
   if (!user) return null;
+  const db = ecole(user);
 
   const isDirecteur = user.roles.includes("DIRECTEUR");
   const isSecretaire = user.roles.includes("SECRETAIRE");
@@ -75,7 +76,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   const isEnseignant = user.roles.includes("ENSEIGNANT");
   const estAdmin = isDirecteur || isSecretaire;
 
-  const anneeActive = await prisma.anneeScolaire.findFirst({
+  const anneeActive = await db.anneeScolaire.findFirst({
     where: { etablissementId: user.etablissementId, active: true },
   });
 
@@ -89,17 +90,17 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   // STATS ELEVES (total + F/G)
   // ─────────────────────────────────────────────
   const [nbElevesTotal, nbFilles, nbGarcons, nbClasses, nbEmployes] = await Promise.all([
-    prisma.eleve.count({
+    db.eleve.count({
       where: { etablissementId: user.etablissementId, statut: "INSCRIT" },
     }),
-    prisma.eleve.count({
+    db.eleve.count({
       where: { etablissementId: user.etablissementId, statut: "INSCRIT", sexe: "F" },
     }),
-    prisma.eleve.count({
+    db.eleve.count({
       where: { etablissementId: user.etablissementId, statut: "INSCRIT", sexe: "M" },
     }),
-    prisma.classe.count({ where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } } }),
-    prisma.employe.count({
+    db.classe.count({ where: { etablissementId: user.etablissementId, anneeScolaire: { active: true } } }),
+    db.employe.count({
       where: { etablissementId: user.etablissementId, actif: true },
     }),
   ]);
@@ -151,7 +152,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   let dernieresActions: any[] = [];
 
   if (estAdmin) {
-    const paiementsMois = await prisma.paiementFrais.findMany({
+    const paiementsMois = await db.paiementFrais.findMany({
       where: {
         annule: false,
         datePaiement: { gte: debutMois },
@@ -161,7 +162,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     });
     const recettesMois = paiementsMois.reduce((s, p) => s + p.montant, 0);
 
-    const paiementsMoisPrec = await prisma.paiementFrais.findMany({
+    const paiementsMoisPrec = await db.paiementFrais.findMany({
       where: {
         annule: false,
         datePaiement: { gte: debutMoisPrec, lt: debutMois },
@@ -172,7 +173,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     const recettesMoisPrec = paiementsMoisPrec.reduce((s, p) => s + p.montant, 0);
 
     const trimestreActif = anneeActive
-      ? await prisma.trimestre.findFirst({
+      ? await db.trimestre.findFirst({
           where: {
             anneeScolaireId: anneeActive.id,
             dateDebut: { lte: new Date() },
@@ -183,11 +184,11 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       : null;
 
     const nbNotes = trimestreActif
-      ? await prisma.note.count({ where: { trimestreId: trimestreActif.id } })
+      ? await db.note.count({ where: { trimestreId: trimestreActif.id } })
       : 0;
 
     const nbNotesValidees = trimestreActif
-      ? await prisma.note.count({
+      ? await db.note.count({
           where: { trimestreId: trimestreActif.id, statut: { in: ["VALIDEE", "VERROUILLEE"] } },
         })
       : 0;
@@ -225,12 +226,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     }
 
     if (anneeActive) {
-      const classes = await prisma.classe.findMany({
+      const classes = await db.classe.findMany({
         where: { etablissementId: user.etablissementId, anneeScolaireId: anneeActive.id },
         include: { affectations: { where: { type: "PROFESSEUR_MATIERE" } } },
       });
 
-      const matieresParCycle = await prisma.matiere.findMany({
+      const matieresParCycle = await db.matiere.findMany({
         where: { etablissementId: user.etablissementId },
       });
 
@@ -254,7 +255,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
       }
     }
 
-    dernieresActions = await prisma.auditLog.findMany({
+    dernieresActions = await db.auditLog.findMany({
       where: { user: { etablissementId: user.etablissementId } },
       include: { user: { include: { employe: { select: { nom: true, prenom: true } } } } },
       orderBy: { createdAt: "desc" },
@@ -267,7 +268,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   // ─────────────────────────────────────────────
   let statsComptable: any = null;
   if (isComptable && !estAdmin) {
-    const paiementsMois = await prisma.paiementFrais.findMany({
+    const paiementsMois = await db.paiementFrais.findMany({
       where: {
         annule: false,
         datePaiement: { gte: debutMois },
@@ -292,7 +293,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
   if (isEnseignant) {
     const jour = jourActuel();
 
-    mesCreneauxSemaine = await prisma.affectation.findMany({
+    mesCreneauxSemaine = await db.affectation.findMany({
       where: { enseignantId: user.employeId, jour: { not: null } },
       include: {
         classe: { select: { id: true, nom: true, niveau: true, section: true } },
@@ -310,13 +311,13 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
     mesClasses = Array.from(classesSet.values());
 
     const trimestreActif = anneeActive
-      ? await prisma.trimestre.findFirst({
+      ? await db.trimestre.findFirst({
           where: { anneeScolaireId: anneeActive.id, dateDebut: { lte: new Date() }, cloture: false },
         })
       : null;
 
     if (trimestreActif) {
-      const nbNotesSaisies = await prisma.note.count({
+      const nbNotesSaisies = await db.note.count({
         where: { saisieParId: user.id, trimestreId: trimestreActif.id },
       });
       mesStatsNotes = { nbNotesSaisies, trimestre: trimestreActif };

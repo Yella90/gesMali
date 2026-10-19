@@ -12,7 +12,7 @@ export async function GET(
   const eleve = await eleveParCodeParent(code);
   if (!eleve) return NextResponse.json({ error: "Lien invalide" }, { status: 404 });
 
-  const pdf = await rendreBulletinEleve(eleve.id, trimestreId);
+  const pdf = await rendreBulletinEleve(eleve.etablissementId, eleve.id, trimestreId);
   if (!pdf) return NextResponse.json({ error: "Bulletin introuvable" }, { status: 404 });
 
   return new NextResponse(new Uint8Array(pdf.buffer), {

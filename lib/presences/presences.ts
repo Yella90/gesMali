@@ -1,7 +1,7 @@
 // Presences : un enregistrement par eleve et par jour (colonne date sans heure).
 // Les dates circulent en texte "AAAA-MM-JJ" et sont stockees a minuit UTC.
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 
 export const STATUTS = ["PRESENT", "ABSENT", "RETARD"] as const;
 export type StatutPresenceT = (typeof STATUTS)[number];
@@ -44,14 +44,15 @@ export type SyntheseEleve = {
 };
 
 // Bilan par eleve d'une classe sur une periode, et detail des absences et retards
-export async function syntheseClasse(classeId: string, debut: Date, fin: Date) {
+export async function syntheseClasse(etablissementId: string, classeId: string, debut: Date, fin: Date) {
+  const db = ecole(etablissementId);
   const [eleves, presences] = await Promise.all([
-    prisma.eleve.findMany({
+    db.eleve.findMany({
       where: { classeId, statut: "INSCRIT" },
       select: { id: true, nom: true, prenom: true, matricule: true },
       orderBy: [{ nom: "asc" }, { prenom: "asc" }],
     }),
-    prisma.presence.findMany({
+    db.presence.findMany({
       where: { classeId, date: { gte: debut, lt: fin } },
       select: { eleveId: true, date: true, statut: true, justifie: true, motif: true, dureeMinutes: true },
       orderBy: { date: "asc" },

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { eleveParCodeParent } from "@/lib/portail/eleve";
 import { calculerSituation, libelleStatut } from "@/lib/frais/calculs";
 import { LiensLegaux } from "@/components/legal/PageLegale";
@@ -31,11 +31,12 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
   const { code } = await params;
   const eleve = await eleveParCodeParent(code);
   if (!eleve) notFound();
+  const db = ecole(eleve.etablissementId);
 
   const anneeId = eleve.classe?.anneeScolaireId ?? null;
 
   const [bulletins, notes, frais] = await Promise.all([
-    prisma.bulletin.findMany({
+    db.bulletin.findMany({
       where: { eleveId: eleve.id },
       select: {
         trimestreId: true,
@@ -49,7 +50,7 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
       },
     }),
     anneeId
-      ? prisma.note.findMany({
+      ? db.note.findMany({
           where: {
             eleveId: eleve.id,
             statut: { in: [...STATUTS_NOTES_VISIBLES] },
@@ -67,7 +68,7 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
         })
       : Promise.resolve([]),
     anneeId
-      ? prisma.fraisScolarite.findUnique({
+      ? db.fraisScolarite.findUnique({
           where: { eleveId_anneeScolaireId: { eleveId: eleve.id, anneeScolaireId: anneeId } },
           include: { tranches: { include: { paiements: { select: { montant: true, annule: true } } } } },
         })

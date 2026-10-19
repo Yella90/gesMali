@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { reponsePdf } from "@/lib/pdf/reponse";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { assurerCodeParent, qrCodeDataUrl, urlPortailParent } from "@/lib/portail/acces";
@@ -11,8 +11,9 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ eleveI
   const user = await getUtilisateurCourant();
   if (!user) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
   if (!peut(user.roles, "eleve.read")) return NextResponse.json({ error: "Permission refusee" }, { status: 403 });
+  const db = ecole(user);
 
-  const eleve = await prisma.eleve.findUnique({
+  const eleve = await db.eleve.findUnique({
     where: { id: eleveId },
     include: {
       etablissement: true,
@@ -28,7 +29,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ eleveI
     return NextResponse.json({ error: "Eleve introuvable" }, { status: 404 });
   }
 
-  const code = await assurerCodeParent(eleve.id);
+  const code = await assurerCodeParent(eleve.etablissementId, eleve.id);
   const urlParent = await urlPortailParent(code);
 
   const f = eleve.fraisScolarite[0];

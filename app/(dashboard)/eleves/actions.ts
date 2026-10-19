@@ -1,6 +1,7 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
+import { prochainNumeroRecu } from "@/lib/frais/requetes";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { eleveSchema } from "@/lib/validators/eleve";
@@ -24,6 +25,7 @@ function formToRaw(formData: FormData) {
 
 async function creerEleveCorps(formData: FormData) {
   const user = await requirePermission("eleve.create");
+  const db = ecole(user);
   const data = eleveSchema.parse(formToRaw(formData));
 
   // Exoneration : l'eleve est inscrit sans frais d'inscription (pas de tranche "Inscription")
@@ -33,7 +35,7 @@ async function creerEleveCorps(formData: FormData) {
   const referenceInscription = (formData.get("referenceInscription") as string) || null;
 
   if (data.classeId) {
-    const classe = await prisma.classe.findUnique({
+    const classe = await db.classe.findUnique({
       where: { id: data.classeId },
       include: {
         anneeScolaire: { select: { active: true } },
@@ -53,7 +55,7 @@ async function creerEleveCorps(formData: FormData) {
 
   const matricule = await genererMatricule(user.etablissementId);
 
-  const eleve = await prisma.eleve.create({
+  const eleve = await db.eleve.create({
     data: { ...data, matricule, etablissementId: user.etablissementId, codeParent: genererCodeParent() },
   });
 
@@ -61,7 +63,7 @@ async function creerEleveCorps(formData: FormData) {
 
   // Generer les frais si la classe a des frais definis
   if (data.classeId) {
-    const classe = await prisma.classe.findUnique({
+    const classe = await db.classe.findUnique({
       where: { id: data.classeId },
       include: { anneeScolaire: true },
     });
@@ -81,10 +83,9 @@ async function creerEleveCorps(formData: FormData) {
 
       // Si l'inscription est marquee payee ET qu'une tranche inscription existe
       if (fraisInscriptionPaye && trancheInscriptionId) {
-        const nb = await prisma.paiementFrais.count();
-        const recuNumero = "REC-" + new Date().getFullYear() + "-" + String(nb + 1).padStart(5, "0");
+        const recuNumero = await prochainNumeroRecu();
 
-        paiementInscription = await prisma.paiementFrais.create({
+        paiementInscription = await db.paiementFrais.create({
           data: {
             trancheId: trancheInscriptionId,
             montant: classe.fraisInscription,
@@ -127,16 +128,17 @@ async function creerEleveCorps(formData: FormData) {
 
 async function modifierEleveCorps(id: string, formData: FormData) {
   const user = await requirePermission("eleve.update");
+  const db = ecole(user);
   const data = eleveSchema.parse(formToRaw(formData));
 
-  const eleve = await prisma.eleve.findUnique({ where: { id } });
+  const eleve = await db.eleve.findUnique({ where: { id } });
   if (!eleve || eleve.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
 
   const changeDeClasse = (data.classeId ?? null) !== (eleve.classeId ?? null);
   if (!changeDeClasse) {
-    await prisma.eleve.update({ where: { id }, data });
+    await db.eleve.update({ where: { id }, data });
     await enregistrerAudit({ userId: user.id, action: "UPDATE_ELEVE", entite: "Eleve", entiteId: id });
     revalidatePath("/eleves");
     revalidatePath("/eleves/" + id);
@@ -147,7 +149,7 @@ async function modifierEleveCorps(id: string, formData: FormData) {
   if (!user.roles.includes("DIRECTEUR")) throw new Error("Seul le directeur peut changer un eleve de classe");
 
   const nouvelle = data.classeId
-    ? await prisma.classe.findUnique({
+    ? await db.classe.findUnique({
         where: { id: data.classeId },
         include: {
           anneeScolaire: true,
@@ -165,7 +167,7 @@ async function modifierEleveCorps(id: string, formData: FormData) {
 
   const bilan = { notesDeplacees: 0, echeancesRecalculees: 0, fraisGeneres: false };
 
-  await prisma.$transaction(async (tx) => {
+  await db.$transaction(async (tx) => {
     await tx.eleve.update({ where: { id }, data });
     if (!nouvelle || !eleve.classeId) return;
 
@@ -205,7 +207,7 @@ async function modifierEleveCorps(id: string, formData: FormData) {
 
   // Eleve sans frais pour l'annee : generation selon la nouvelle classe
   if (nouvelle && (nouvelle.fraisInscription > 0 || nouvelle.fraisScolariteMensuel > 0)) {
-    const existe = await prisma.fraisScolarite.findUnique({
+    const existe = await db.fraisScolarite.findUnique({
       where: { eleveId_anneeScolaireId: { eleveId: id, anneeScolaireId: nouvelle.anneeScolaireId } },
       select: { id: true },
     });
@@ -238,22 +240,24 @@ async function modifierEleveCorps(id: string, formData: FormData) {
 
 export async function radierEleve(id: string) {
   const user = await requirePermission("eleve.delete");
-  const eleve = await prisma.eleve.findUnique({ where: { id } });
+  const db = ecole(user);
+  const eleve = await db.eleve.findUnique({ where: { id } });
   if (!eleve || eleve.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
-  await prisma.eleve.update({ where: { id }, data: { statut: "RADIE" } });
+  await db.eleve.update({ where: { id }, data: { statut: "RADIE" } });
   await enregistrerAudit({ userId: user.id, action: "RADIER_ELEVE", entite: "Eleve", entiteId: id });
   revalidatePath("/eleves");
 }
 // Nouveau code d'acces parent : l'ancien lien / QR code cesse de fonctionner
 async function regenererCodeParentCorps(id: string) {
   const user = await requirePermission("eleve.update");
-  const eleve = await prisma.eleve.findUnique({ where: { id } });
+  const db = ecole(user);
+  const eleve = await db.eleve.findUnique({ where: { id } });
   if (!eleve || eleve.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
-  await prisma.eleve.update({ where: { id }, data: { codeParent: genererCodeParent() } });
+  await db.eleve.update({ where: { id }, data: { codeParent: genererCodeParent() } });
   await enregistrerAudit({ userId: user.id, action: "REGENERER_CODE_PARENT", entite: "Eleve", entiteId: id });
   revalidatePath("/eleves/" + id);
 }

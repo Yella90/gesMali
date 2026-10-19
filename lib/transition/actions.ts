@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
@@ -83,8 +83,9 @@ async function preparerTransitionCorps(params: {
   nouveauLibelle: string;
 }): Promise<ApercuTransition> {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const anneeSource = await prisma.anneeScolaire.findUnique({
+  const anneeSource = await db.anneeScolaire.findUnique({
     where: { id: params.anneeSourceId },
     include: {
       trimestres: { orderBy: { ordre: "asc" } },
@@ -108,13 +109,13 @@ async function preparerTransitionCorps(params: {
     );
   }
 
-  const paramsEtab = await prisma.parametresEtablissement.findUnique({
+  const paramsEtab = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
   if (!paramsEtab) throw new Error("Paramètres établissement manquants");
 
   // Charger tous les eleves actifs avec leurs bulletins
-  const eleves = await prisma.eleve.findMany({
+  const eleves = await db.eleve.findMany({
     where: {
       etablissementId: user.etablissementId,
       statut: "INSCRIT",
@@ -259,8 +260,9 @@ async function appliquerTransitionCorps(params: {
   decisions: { eleveId: string; decision: DecisionType; niveauCible: number | null }[];
 }): Promise<{ success: true; anneeCibleId: string }> {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const anneeSource = await prisma.anneeScolaire.findUnique({
+  const anneeSource = await db.anneeScolaire.findUnique({
     where: { id: params.anneeSourceId },
     include: { trimestres: { orderBy: { ordre: "asc" } } },
   });
@@ -272,7 +274,7 @@ async function appliquerTransitionCorps(params: {
     throw new Error("Tous les trimestres doivent être clôturés");
   }
 
-  const paramsEtab = await prisma.parametresEtablissement.findUnique({
+  const paramsEtab = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
   if (!paramsEtab) throw new Error("Paramètres manquants");
@@ -282,13 +284,13 @@ async function appliquerTransitionCorps(params: {
   if (dateFin <= dateDebut) throw new Error("Date de fin après la date de début");
 
   // Verifier que le libelle n'existe pas
-  const existant = await prisma.anneeScolaire.findFirst({
+  const existant = await db.anneeScolaire.findFirst({
     where: { etablissementId: user.etablissementId, libelle: params.nouveauLibelle },
   });
   if (existant) throw new Error("Une année avec ce libellé existe déjà");
 
   // Charger les eleves + leurs classes
-  const eleves = await prisma.eleve.findMany({
+  const eleves = await db.eleve.findMany({
     where: {
       etablissementId: user.etablissementId,
       statut: "INSCRIT",
@@ -299,7 +301,7 @@ async function appliquerTransitionCorps(params: {
   const elevesMap = new Map(eleves.map((e) => [e.id, e]));
 
   // Charger les classes source avec leurs frais
-  const classesSource = await prisma.classe.findMany({
+  const classesSource = await db.classe.findMany({
     where: { anneeScolaireId: anneeSource.id },
   });
   const classesSourceMap = new Map(classesSource.map((c) => [c.id, c]));
@@ -312,7 +314,7 @@ async function appliquerTransitionCorps(params: {
   // ─────────────────────────────────────────────
   // 1. Creer la nouvelle annee + 3 trimestres
   // ─────────────────────────────────────────────
-  const anneeCible = await prisma.anneeScolaire.create({
+  const anneeCible = await db.anneeScolaire.create({
     data: {
       etablissementId: user.etablissementId,
       libelle: params.nouveauLibelle,
@@ -335,7 +337,7 @@ async function appliquerTransitionCorps(params: {
   ];
 
   for (const t of trimestresData) {
-    await prisma.trimestre.create({
+    await db.trimestre.create({
       data: {
         anneeScolaireId: anneeCible.id,
         nom: "Trimestre " + t.ordre,
@@ -385,7 +387,7 @@ async function appliquerTransitionCorps(params: {
     // Frais d'inscription : 0 ou fraisReinscription selon parametre
     const fraisInscription = paramsEtab.reinscriptionRequise ? paramsEtab.fraisReinscription : 0;
 
-    const nouvelleClasse = await prisma.classe.create({
+    const nouvelleClasse = await db.classe.create({
       data: {
         etablissementId: user.etablissementId,
         anneeScolaireId: anneeCible.id,
@@ -414,11 +416,11 @@ async function appliquerTransitionCorps(params: {
 
     // Cas DIPLOME : mettre a jour le statut de l'eleve
     if (d.decision === "DIPLOME" || d.niveauCible === null) {
-      await prisma.eleve.update({
+      await db.eleve.update({
         where: { id: eleve.id },
         data: { statut: "DIPLOME" },
       });
-      await prisma.inscriptionAnnuelle.create({
+      await db.inscriptionAnnuelle.create({
         data: {
           eleveId: eleve.id,
           classeId: eleve.classeId!,
@@ -441,12 +443,12 @@ async function appliquerTransitionCorps(params: {
     if (!classeCible) continue;
 
     // Verifier capacite
-    const effectifActuel = await prisma.eleve.count({
+    const effectifActuel = await db.eleve.count({
       where: { classeId: classeCible.id, statut: "INSCRIT" },
     });
     if (effectifActuel >= classeCible.capaciteMax) {
       // Augmenter la capacite de 1
-      await prisma.classe.update({
+      await db.classe.update({
         where: { id: classeCible.id },
         data: { capaciteMax: classeCible.capaciteMax + 1 },
       });
@@ -454,13 +456,13 @@ async function appliquerTransitionCorps(params: {
     }
 
     // Mettre a jour l'eleve
-    await prisma.eleve.update({
+    await db.eleve.update({
       where: { id: eleve.id },
       data: { classeId: classeCible.id },
     });
 
     // Creer InscriptionAnnuelle (trace historique)
-    await prisma.inscriptionAnnuelle.create({
+    await db.inscriptionAnnuelle.create({
       data: {
         eleveId: eleve.id,
         classeId: classeCible.id,
@@ -497,7 +499,7 @@ async function appliquerTransitionCorps(params: {
       if (moisCur > 12) { moisCur = 1; anneeCur++; }
     }
 
-    await prisma.fraisScolarite.create({
+    await db.fraisScolarite.create({
       data: {
         etablissementId: user.etablissementId,
         eleveId: eleve.id,
@@ -522,13 +524,13 @@ async function appliquerTransitionCorps(params: {
       );
       if (!sourceRef) continue;
 
-      const affectationsSource = await prisma.affectation.findMany({
+      const affectationsSource = await db.affectation.findMany({
         where: { classeId: sourceRef.id },
       });
 
       for (const aff of affectationsSource) {
         try {
-          await prisma.affectation.create({
+          await db.affectation.create({
             data: {
               enseignantId: aff.enseignantId,
               classeId: (classeCible as any).id,
@@ -550,12 +552,12 @@ async function appliquerTransitionCorps(params: {
   // ─────────────────────────────────────────────
   // 5. Archiver l'ancienne annee, activer la nouvelle
   // ─────────────────────────────────────────────
-  await prisma.anneeScolaire.update({
+  await db.anneeScolaire.update({
     where: { id: anneeSource.id },
     data: { archivee: true, archiveeLe: new Date(), active: false },
   });
 
-  await prisma.anneeScolaire.update({
+  await db.anneeScolaire.update({
     where: { id: anneeCible.id },
     data: { active: true },
   });
@@ -588,8 +590,9 @@ async function appliquerTransitionCorps(params: {
 
 export async function exporterNotesCSV(anneeId: string): Promise<string> {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const annee = await prisma.anneeScolaire.findUnique({
+  const annee = await db.anneeScolaire.findUnique({
     where: { id: anneeId },
     include: { trimestres: { orderBy: { ordre: "asc" } } },
   });
@@ -597,7 +600,7 @@ export async function exporterNotesCSV(anneeId: string): Promise<string> {
     throw new Error("Année introuvable");
   }
 
-  const bulletins = await prisma.bulletin.findMany({
+  const bulletins = await db.bulletin.findMany({
     where: {
       trimestre: { anneeScolaireId: anneeId },
     },
@@ -659,8 +662,9 @@ export async function exporterNotesCSV(anneeId: string): Promise<string> {
 
 export async function supprimerNotesAnnee(anneeId: string) {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const annee = await prisma.anneeScolaire.findUnique({
+  const annee = await db.anneeScolaire.findUnique({
     where: { id: anneeId },
   });
   if (!annee || annee.etablissementId !== user.etablissementId) {
@@ -682,16 +686,16 @@ export async function supprimerNotesAnnee(anneeId: string) {
   }
 
   // Supprimer les bulletins (cascade supprime BulletinLigne)
-  const bulletinsSupprimes = await prisma.bulletin.deleteMany({
+  const bulletinsSupprimes = await db.bulletin.deleteMany({
     where: { trimestre: { anneeScolaireId: anneeId } },
   });
 
   // Supprimer les notes
-  const notesSupprimees = await prisma.note.deleteMany({
+  const notesSupprimees = await db.note.deleteMany({
     where: { trimestre: { anneeScolaireId: anneeId } },
   });
 
-  await prisma.anneeScolaire.update({
+  await db.anneeScolaire.update({
     where: { id: anneeId },
     data: { notesSupprimees: true },
   });
@@ -718,7 +722,8 @@ export async function supprimerNotesAnnee(anneeId: string) {
 
 export async function getAnneesArchivables() {
   const user = await requirePermission("parametres.manage");
-  return prisma.anneeScolaire.findMany({
+  const db = ecole(user);
+  return db.anneeScolaire.findMany({
     where: { etablissementId: user.etablissementId },
     orderBy: { libelle: "desc" },
     include: {

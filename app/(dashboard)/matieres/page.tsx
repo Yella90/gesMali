@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 
 export default async function MatieresPage() {
   const user = await requirePermission("matiere.read");
+  const db = ecole(user);
 
-  const matieres = await prisma.matiere.findMany({
+  const matieres = await db.matiere.findMany({
     where: { etablissementId: user.etablissementId },
     include: { _count: { select: { notes: true } } },
     orderBy: [{ cycle: "asc" }, { nom: "asc" }],

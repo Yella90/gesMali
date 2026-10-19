@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { trimestreSchema, anneeScolaireSchema } from "@/lib/validators/trimestre";
@@ -9,6 +9,7 @@ import { capter } from "@/lib/actions/serveur";
 
 async function creerAnneeCorps(formData: FormData) {
   const user = await requirePermission("trimestre.manage");
+  const db = ecole(user);
   const raw = {
     libelle: formData.get("libelle"),
     dateDebut: formData.get("dateDebut"),
@@ -17,7 +18,7 @@ async function creerAnneeCorps(formData: FormData) {
   const data = anneeScolaireSchema.parse(raw);
   if (data.dateFin <= data.dateDebut) throw new Error("Date de fin doit etre apres la date de debut");
 
-  const annee = await prisma.anneeScolaire.create({
+  const annee = await db.anneeScolaire.create({
     data: { ...data, etablissementId: user.etablissementId },
   });
   await enregistrerAudit({ userId: user.id, action: "CREATE_ANNEE", entite: "AnneeScolaire", entiteId: annee.id });
@@ -27,6 +28,7 @@ async function creerAnneeCorps(formData: FormData) {
 
 async function creerTrimestreCorps(formData: FormData) {
   const user = await requirePermission("trimestre.manage");
+  const db = ecole(user);
   const raw = {
     anneeScolaireId: formData.get("anneeScolaireId"),
     nom: formData.get("nom"),
@@ -36,10 +38,10 @@ async function creerTrimestreCorps(formData: FormData) {
   };
   const data = trimestreSchema.parse(raw);
 
-  const annee = await prisma.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
+  const annee = await db.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
   if (!annee || annee.etablissementId !== user.etablissementId) throw new Error("Annee invalide");
 
-  const trimestre = await prisma.trimestre.create({ data });
+  const trimestre = await db.trimestre.create({ data });
   await enregistrerAudit({ userId: user.id, action: "CREATE_TRIMESTRE", entite: "Trimestre", entiteId: trimestre.id });
   revalidatePath("/trimestres");
   return { success: true };
@@ -47,13 +49,14 @@ async function creerTrimestreCorps(formData: FormData) {
 
 async function cloturerTrimestreCorps(id: string) {
   const user = await requirePermission("note.lock");
-  const t = await prisma.trimestre.findUnique({
+  const db = ecole(user);
+  const t = await db.trimestre.findUnique({
     where: { id },
     include: { anneeScolaire: true },
   });
   if (!t || t.anneeScolaire.etablissementId !== user.etablissementId) throw new Error("Acces refuse");
 
-  await prisma.$transaction(async (tx) => {
+  await db.$transaction(async (tx) => {
     await tx.note.updateMany({
       where: { trimestreId: id, statut: { in: ["BROUILLON", "SOUMISE", "VALIDEE"] } },
       data: { statut: "VERROUILLEE" },
@@ -74,8 +77,9 @@ async function modifierTrimestreCorps(
   }
 ) {
   const user = await requirePermission("trimestre.manage");
+  const db = ecole(user);
 
-  const trimestre = await prisma.trimestre.findUnique({
+  const trimestre = await db.trimestre.findUnique({
     where: { id },
     include: { anneeScolaire: true },
   });
@@ -98,7 +102,7 @@ async function modifierTrimestreCorps(
   }
 
   // Verifier chevauchement avec les autres trimestres de la meme annee
-  const autres = await prisma.trimestre.findMany({
+  const autres = await db.trimestre.findMany({
     where: {
       anneeScolaireId: trimestre.anneeScolaireId,
       id: { not: id },
@@ -130,7 +134,7 @@ async function modifierTrimestreCorps(
     }
   }
 
-  await prisma.trimestre.update({
+  await db.trimestre.update({
     where: { id },
     data: {
       nom: data.nom.trim(),

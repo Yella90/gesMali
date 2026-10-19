@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { EtablissementForm } from "./EtablissementForm";
 import { LogoEtablissement } from "./LogoEtablissement";
@@ -7,10 +7,11 @@ import { libTypeEtablissement } from "@/lib/libelles";
 
 export default async function EtablissementPage() {
   const user = await requirePermission("parametres.read");
+  const db = ecole(user);
 
   const [etablissement, annees] = await Promise.all([
-    prisma.etablissement.findUnique({ where: { id: user.etablissementId } }),
-    prisma.anneeScolaire.findMany({
+    db.etablissement.findUnique({ where: { id: user.etablissementId } }),
+    db.anneeScolaire.findMany({
       where: { etablissementId: user.etablissementId },
       orderBy: { libelle: "desc" },
       include: { _count: { select: { classes: true, trimestres: true } } },

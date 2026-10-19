@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { TrimestreForm } from "./TrimestreForm";
 
 export default async function NouveauTrimestrePage() {
   const user = await requirePermission("trimestre.manage");
-  const annees = await prisma.anneeScolaire.findMany({
+  const db = ecole(user);
+  const annees = await db.anneeScolaire.findMany({
     where: { etablissementId: user.etablissementId },
     include: { _count: { select: { trimestres: true } } },
     orderBy: { libelle: "desc" },

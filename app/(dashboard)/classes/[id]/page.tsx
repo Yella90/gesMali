@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { EditerClasse } from "./EditerClasse";
 import { libCycle } from "@/lib/libelles";
@@ -11,8 +11,9 @@ const JOURS_ORDRE = ["LUNDI", "MARDI", "MERCREDI", "JEUDI", "VENDREDI", "SAMEDI"
 export default async function ClasseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePermission("classe.read");
+  const db = ecole(user);
 
-  const classe = await prisma.classe.findUnique({
+  const classe = await db.classe.findUnique({
     where: { id },
     include: {
       anneeScolaire: true,
@@ -30,7 +31,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
   if (!(await classeVisible(user, classe.id))) notFound();
 
   // Matieres du cycle
-  const toutesMatieres = await prisma.matiere.findMany({
+  const toutesMatieres = await db.matiere.findMany({
     where: {
       etablissementId: user.etablissementId,
       cycle: classe.cycle,
@@ -39,7 +40,7 @@ export default async function ClasseDetailPage({ params }: { params: Promise<{ i
   });
 
   // Enseignants disponibles pour les affectations
-  const enseignants = await prisma.employe.findMany({
+  const enseignants = await db.employe.findMany({
     where: {
       etablissementId: user.etablissementId,
       poste: "Enseignant",

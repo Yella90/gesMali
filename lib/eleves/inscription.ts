@@ -1,7 +1,7 @@
 // Regles communes a l'inscription d'un eleve et a la reprise des donnees :
 // matricule "AAAA-NNNN" et echeancier des frais de l'annee scolaire.
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 
 const MOIS_FR = [
   "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
@@ -14,13 +14,14 @@ function periodeStr(annee: number, mois: number) {
 
 // Prochain numero de matricule de l'annee (plus grand numero existant + 1)
 export async function prochainNumeroMatricule(etablissementId: string, annee = new Date().getFullYear()): Promise<number> {
-  const existants = await prisma.eleve.findMany({
+  const db = ecole(etablissementId);
+  const existants = await db.eleve.findMany({
     where: { etablissementId, matricule: { startsWith: annee + "-" } },
     select: { matricule: true },
   });
   const max = existants.reduce((m, e) => Math.max(m, Number(e.matricule.slice(5)) || 0), 0);
   // Les anciens matricules venaient du nombre total d'eleves : on reste au-dessus
-  const total = await prisma.eleve.count({ where: { etablissementId } });
+  const total = await db.eleve.count({ where: { etablissementId } });
   return Math.max(max, total) + 1;
 }
 
@@ -76,7 +77,8 @@ export async function genererFraisPourEleve(
   dateFinAnnee: Date,
   etablissementId: string
 ): Promise<{ trancheInscriptionId: string | null; fraisId: string }> {
-  const frais = await prisma.fraisScolarite.create({
+  const db = ecole(etablissementId);
+  const frais = await db.fraisScolarite.create({
     data: {
       etablissementId,
       eleveId,

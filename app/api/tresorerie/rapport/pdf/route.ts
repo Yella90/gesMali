@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { utilisateurApi } from "@/lib/auth/api";
 import { reponsePdf } from "@/lib/pdf/reponse";
 import { montantPdf } from "@/lib/pdf/DocumentTableauPDF";
@@ -12,6 +12,7 @@ import { periodeRapport, rapportFinancier } from "@/lib/tresorerie/rapport";
 export async function GET(req: NextRequest) {
   const { user, erreur } = await utilisateurApi("tresorerie.read");
   if (erreur) return erreur;
+  const db = ecole(user);
   const finMois = moisValide(req.nextUrl.searchParams.get("fin") ?? undefined);
   const d = req.nextUrl.searchParams.get("debut") ?? undefined;
   const debutMois = d && moisValide(d) <= finMois ? moisValide(d) : finMois;
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest) {
 
   const [r, etablissement] = await Promise.all([
     rapportFinancier(user.etablissementId, debut, fin),
-    prisma.etablissement.findUniqueOrThrow({ where: { id: user.etablissementId } }),
+    db.etablissement.findUniqueOrThrow({ where: { id: user.etablissementId } }),
   ]);
   const periode = debutMois === finMois ? fmtPeriode(debutMois) : fmtPeriode(debutMois) + " à " + fmtPeriode(finMois);
   const deux = [

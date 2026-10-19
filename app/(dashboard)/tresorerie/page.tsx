@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
 import { fmtPeriode, periodeActuelle } from "@/lib/frais/periode";
@@ -12,6 +12,7 @@ const f = (n: number) => n.toLocaleString("fr-FR") + " F";
 
 export default async function TresoreriePage({ searchParams }: { searchParams: Promise<{ mois?: string }> }) {
   const user = await requirePermission("tresorerie.read");
+  const db = ecole(user);
   const { mois: m } = await searchParams;
   const mois = moisValide(m);
   const [a, mm] = mois.split("-").map(Number);
@@ -22,7 +23,7 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
     soldesCaisses(user.etablissementId),
     previsionMois(user.etablissementId),
     journal(user.etablissementId, debut, fin),
-    prisma.depenseRecurrente.findMany({ where: { etablissementId: user.etablissementId }, orderBy: [{ actif: "desc" }, { jourEcheance: "asc" }] }),
+    db.depenseRecurrente.findMany({ where: { etablissementId: user.etablissementId }, orderBy: [{ actif: "desc" }, { jourEcheance: "asc" }] }),
   ]);
 
   const total = soldes.reduce((s, c) => s + c.solde, 0);

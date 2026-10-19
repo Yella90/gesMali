@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { SaisieNotes } from "./SaisieNotes";
 import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
@@ -6,23 +6,24 @@ import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 
 export default async function NotesPage() {
   const user = await requirePermission("note.read");
+  const db = ecole(user);
 
   const [classes, matieres, trimestres, paramsEtab] = await Promise.all([
-    prisma.classe.findMany({
+    db.classe.findMany({
       where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
       include: { anneeScolaire: { select: { libelle: true, active: true } } },
       orderBy: ORDRE_CLASSES,
     }),
-    prisma.matiere.findMany({
+    db.matiere.findMany({
       where: { etablissementId: user.etablissementId },
       orderBy: { nom: "asc" },
     }),
-    prisma.trimestre.findMany({
+    db.trimestre.findMany({
       where: { anneeScolaire: { etablissementId: user.etablissementId } },
       include: { anneeScolaire: { select: { libelle: true } } },
       orderBy: [{ anneeScolaire: { libelle: "desc" } }, { ordre: "asc" }],
     }),
-    prisma.parametresEtablissement.findUnique({
+    db.parametresEtablissement.findUnique({
       where: { etablissementId: user.etablissementId },
     }),
   ]);

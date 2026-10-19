@@ -65,3 +65,8 @@ export async function requirePermission(permission: Permission): Promise<Utilisa
   if (!peut(user.roles, permission)) throw new Error("Permission refusee");
   return user;
 }
+
+// Un e-mail de connexion est unique sur toute la plateforme, toutes ecoles confondues
+export async function emailDejaUtilise(email: string): Promise<boolean> {
+  return (await prisma.user.count({ where: { email } })) > 0;
+}

@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { classeSchema } from "@/lib/validators/classe";
@@ -10,6 +10,7 @@ import { genererFraisPourEleve } from "@/lib/eleves/inscription";
 
 async function creerClasseCorps(formData: FormData) {
   const user = await requirePermission("classe.manage");
+  const db = ecole(user);
   const raw = {
     nom: formData.get("nom") || null,
     niveau: formData.get("niveau"),
@@ -24,10 +25,10 @@ async function creerClasseCorps(formData: FormData) {
   };
   const data = classeSchema.parse(raw);
 
-  const annee = await prisma.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
+  const annee = await db.anneeScolaire.findUnique({ where: { id: data.anneeScolaireId } });
   if (!annee || annee.etablissementId !== user.etablissementId) throw new Error("Annee invalide");
 
-  const classe = await prisma.classe.create({
+  const classe = await db.classe.create({
     data: { ...data, etablissementId: user.etablissementId },
   });
 
@@ -44,8 +45,9 @@ async function creerClasseCorps(formData: FormData) {
 
 async function modifierClasseCorps(classeId: string, formData: FormData) {
   const user = await requirePermission("classe.manage");
+  const db = ecole(user);
 
-  const classe = await prisma.classe.findUnique({ where: { id: classeId } });
+  const classe = await db.classe.findUnique({ where: { id: classeId } });
   if (!classe || classe.etablissementId !== user.etablissementId) {
     throw new Error("Acces refuse");
   }
@@ -64,7 +66,7 @@ async function modifierClasseCorps(classeId: string, formData: FormData) {
   };
   const data = classeSchema.parse(raw);
 
-  await prisma.classe.update({
+  await db.classe.update({
     where: { id: classeId },
     data: {
       nom: data.nom,
@@ -82,9 +84,9 @@ async function modifierClasseCorps(classeId: string, formData: FormData) {
   // Eleves deja inscrits sans echeancier (classe creee sans frais) : les mensualites
   // sont creees des que la classe en a. Pas de frais d'inscription : ils sont deja inscrits.
   let fraisGeneres = 0;
-  const annee = await prisma.anneeScolaire.findUnique({ where: { id: classe.anneeScolaireId } });
+  const annee = await db.anneeScolaire.findUnique({ where: { id: classe.anneeScolaireId } });
   if (annee?.active && data.fraisScolariteMensuel > 0) {
-    const sansEcheancier = await prisma.eleve.findMany({
+    const sansEcheancier = await db.eleve.findMany({
       where: { classeId, statut: "INSCRIT", fraisScolarite: { none: { anneeScolaireId: annee.id } } },
       select: { id: true },
     });
@@ -109,10 +111,11 @@ async function modifierClasseCorps(classeId: string, formData: FormData) {
 
 export async function supprimerClasse(id: string) {
   const user = await requirePermission("classe.manage");
-  const classe = await prisma.classe.findUnique({ where: { id }, include: { eleves: true } });
+  const db = ecole(user);
+  const classe = await db.classe.findUnique({ where: { id }, include: { eleves: true } });
   if (!classe || classe.etablissementId !== user.etablissementId) throw new Error("Acces refuse");
   if (classe.eleves.length > 0) throw new Error("Classe non vide");
-  await prisma.classe.delete({ where: { id } });
+  await db.classe.delete({ where: { id } });
   await enregistrerAudit({ userId: user.id, action: "DELETE_CLASSE", entite: "Classe", entiteId: id });
   revalidatePath("/classes");
 }

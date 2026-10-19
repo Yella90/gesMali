@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { RappelActions } from "./RappelActions";
 import { fmtPeriode } from "@/lib/frais/periode";
@@ -13,12 +13,13 @@ export default async function RappelsPage({
 }) {
   const { statut } = await searchParams;
   const user = await requirePermission("frais.read");
+  const db = ecole(user);
 
   const envoye = statut === "en_attente" ? false : statut === "envoye" ? true : undefined;
 
   const [rappels, statsRappels, periodesImpayees] = await Promise.all([
     listeRappels(user.etablissementId, envoye, 200),
-    prisma.rappel.groupBy({
+    db.rappel.groupBy({
       by: ["envoye"],
       where: { tranche: { frais: { etablissementId: user.etablissementId } } },
       _count: { _all: true },

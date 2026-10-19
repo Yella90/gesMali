@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { verifierClasse } from "@/lib/data/guard";
 import { enregistrerAudit } from "@/lib/audit";
@@ -20,13 +20,14 @@ export type LignePresence = {
 export async function enregistrerPresences(classeId: string, jour: string, lignes: LignePresence[]) {
   return capter(async () => {
     const user = await requirePermission("presence.manage");
+    const db = ecole(user);
     await verifierClasse(user, classeId);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(jour) || Number.isNaN(Date.parse(jour + "T00:00:00Z"))) throw new Error("Date invalide");
     if (jour > aujourdhui()) throw new Error("Impossible de faire l'appel d'un jour à venir");
     if (lignes.length === 0) throw new Error("Aucun élève à enregistrer");
 
     // Seuls les eleves inscrits dans cette classe
-    const inscrits = await prisma.eleve.findMany({
+    const inscrits = await db.eleve.findMany({
       where: { classeId, etablissementId: user.etablissementId, statut: "INSCRIT", id: { in: lignes.map((l) => l.eleveId) } },
       select: { id: true },
     });
@@ -47,13 +48,13 @@ export async function enregistrerPresences(classeId: string, jour: string, ligne
           dureeMinutes: duree,
           saisieParId: user.id,
         };
-        return prisma.presence.upsert({
+        return db.presence.upsert({
           where: { eleveId_date: { eleveId: l.eleveId, date } },
           create: { eleveId: l.eleveId, date, ...data },
           update: data,
         });
       });
-    await prisma.$transaction(ops);
+    await db.$transaction(ops);
 
     const absents = lignes.filter((l) => l.statut === "ABSENT").length;
     const retards = lignes.filter((l) => l.statut === "RETARD").length;

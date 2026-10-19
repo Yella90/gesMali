@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeEleves } from "./ListeEleves";
 import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
@@ -7,10 +7,11 @@ import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
 
 export default async function ElevesPage() {
   const user = await requirePermission("eleve.read");
+  const db = ecole(user);
 
   // Charge TOUS les eleves une seule fois
   const [eleves, classes] = await Promise.all([
-    prisma.eleve.findMany({
+    db.eleve.findMany({
       where: {
         etablissementId: user.etablissementId,
         statut: { not: "RADIE" },
@@ -21,7 +22,7 @@ export default async function ElevesPage() {
       },
       orderBy: [{ nom: "asc" }, { prenom: "asc" }],
     }),
-    prisma.classe.findMany({
+    db.classe.findMany({
       where: { etablissementId: user.etablissementId, ...(await filtreClasses(user)) },
       include: { anneeScolaire: { select: { libelle: true, active: true } } },
       orderBy: ORDRE_CLASSES,

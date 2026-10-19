@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { auth } from "@/auth";
 import { rendreBulletinEleve } from "@/lib/pdf/bulletinEleve";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { classeVisible } from "@/lib/data/guard";
@@ -11,17 +9,10 @@ export async function GET(
 ) {
   const { eleveId, trimestreId } = await params;
 
-  let session = null;
-  try { session = await auth(); } catch { return NextResponse.json({ error: "Non authentifie" }, { status: 401 }); }
-  if (!session?.user?.id) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
+  const user = await getUtilisateurCourant();
+  if (!user) return NextResponse.json({ error: "Non authentifie" }, { status: 401 });
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { etablissementId: true },
-  });
-  if (!user) return NextResponse.json({ error: "Utilisateur inconnu" }, { status: 401 });
-
-  const pdf = await rendreBulletinEleve(eleveId, trimestreId);
+  const pdf = await rendreBulletinEleve(user.etablissementId, eleveId, trimestreId);
   if (!pdf) return NextResponse.json({ error: "Bulletin introuvable" }, { status: 404 });
   if (pdf.etablissementId === user.etablissementId) {
     // Enseignant : uniquement ses classes

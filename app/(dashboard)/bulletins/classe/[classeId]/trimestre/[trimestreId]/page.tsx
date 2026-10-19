@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ListeClassement } from "./ListeClassement";
 import { classeVisible } from "@/lib/data/guard";
@@ -12,12 +12,13 @@ export default async function ClassementPage({
 }) {
   const { classeId, trimestreId } = await params;
   const user = await requirePermission("bulletin.read");
+  const db = ecole(user);
 
-  const classe = await prisma.classe.findUnique({
+  const classe = await db.classe.findUnique({
     where: { id: classeId },
     include: { anneeScolaire: true },
   });
-  const trimestre = await prisma.trimestre.findUnique({
+  const trimestre = await db.trimestre.findUnique({
     where: { id: trimestreId },
   });
 
@@ -25,7 +26,7 @@ export default async function ClassementPage({
     notFound();
   }
 
-  const bulletins = await prisma.bulletin.findMany({
+  const bulletins = await db.bulletin.findMany({
     where: { classeId, trimestreId },
     include: {
       eleve: {

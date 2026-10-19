@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { ModifierMatiere } from "./ModifierMatiere";
 
 export default async function MatiereDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const user = await requirePermission("matiere.read");
+  const db = ecole(user);
 
-  const matiere = await prisma.matiere.findUnique({
+  const matiere = await db.matiere.findUnique({
     where: { id },
     include: { _count: { select: { notes: true, bulletinLignes: true, affectations: true } } },
   });

@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { TransitionWizard } from "./TransitionWizard";
 
 export default async function NouvelleTransitionPage() {
   const user = await requirePermission("parametres.manage");
+  const db = ecole(user);
 
-  const annees = await prisma.anneeScolaire.findMany({
+  const annees = await db.anneeScolaire.findMany({
     where: {
       etablissementId: user.etablissementId,
       archivee: false,
@@ -17,7 +18,7 @@ export default async function NouvelleTransitionPage() {
     orderBy: { libelle: "desc" },
   });
 
-  const paramsEtab = await prisma.parametresEtablissement.findUnique({
+  const paramsEtab = await db.parametresEtablissement.findUnique({
     where: { etablissementId: user.etablissementId },
   });
 
