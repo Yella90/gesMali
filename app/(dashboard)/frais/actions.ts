@@ -333,8 +333,14 @@ async function genererRappelsCorps(periode?: string) {
 }
 
 // Marquer un rappel comme envoye
-export async function marquerRappelEnvoye(id: string) {
+async function marquerRappelEnvoyeCorps(id: string) {
   const user = await requirePermission("frais.manage");
+  // Le rappel doit appartenir a l'ecole : rappel -> echeance -> frais -> etablissement
+  const rappel = await prisma.rappel.findUnique({
+    where: { id },
+    select: { tranche: { select: { frais: { select: { etablissementId: true } } } } },
+  });
+  if (!rappel || rappel.tranche.frais.etablissementId !== user.etablissementId) throw new Error("Rappel introuvable");
   await prisma.rappel.update({ where: { id }, data: { envoye: true } });
   await enregistrerAudit({
     userId: user.id,
@@ -355,4 +361,7 @@ export async function genererFraisEleve(...a: Parameters<typeof genererFraisElev
 }
 export async function genererRappels(...a: Parameters<typeof genererRappelsCorps>) {
   return capter(() => genererRappelsCorps(...a));
+}
+export async function marquerRappelEnvoye(...a: Parameters<typeof marquerRappelEnvoyeCorps>) {
+  return capter(() => marquerRappelEnvoyeCorps(...a));
 }
