@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FileDown } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { requirePermission } from "@/lib/auth/session";
 import { peut } from "@/lib/auth/permissions";
@@ -34,12 +35,26 @@ export default async function EmploiDuTempsPage({ searchParams }: { searchParams
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold">Emploi du temps</h1>
-        <p className="text-sm text-[var(--color-ink-muted)] mt-1">
-          Sélectionnez une classe pour voir sa grille hebdomadaire
-          {annee ? " · année " + annee.libelle : ""}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Emploi du temps</h1>
+          <p className="text-sm text-[var(--color-ink-muted)] mt-1">
+            Sélectionnez une classe pour voir sa grille hebdomadaire
+            {annee ? " · année " + annee.libelle : ""}
+          </p>
+        </div>
+        {/* Une page par classe planifiee ; le PDF d'une seule classe s'exporte depuis sa grille */}
+        {annee && classes.length > sansHoraire && (
+          <a
+            href={"/api/emploi-du-temps/pdf?annee=" + annee.id}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm hover:bg-neutral-50"
+          >
+            <FileDown className="h-4 w-4" aria-hidden />
+            Exporter toutes les classes (PDF)
+          </a>
+        )}
       </div>
 
       <ChoixAnnee annees={annees} annee={annee} base="/emploi-du-temps" />

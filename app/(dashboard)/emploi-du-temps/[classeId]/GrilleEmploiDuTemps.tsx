@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, X } from "lucide-react";
+import { FileDown, Plus, Trash2, X } from "lucide-react";
 import {
   creerCreneau as creerCreneauAction,
   modifierCreneau as modifierCreneauAction,
@@ -13,7 +13,17 @@ import { relever } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { FORMAT_HEURE, JOURS, chevauche, decaler, enHeures, libJour } from "@/lib/emploi-du-temps/creneaux";
+import {
+  FORMAT_HEURE,
+  JOURS,
+  chevauche,
+  decaler,
+  disposer,
+  enHeures,
+  indiceCouleur,
+  libJour,
+  plageHeures,
+} from "@/lib/emploi-du-temps/creneaux";
 
 const creerCreneau = relever(creerCreneauAction);
 const modifierCreneau = relever(modifierCreneauAction);
@@ -43,14 +53,11 @@ type Edition =
   | { mode: "modifier"; creneau: Creneau }
   | { mode: "planifier"; affectation: AffectationGrille };
 
-// Creneaux standard affiches : 8h a 18h, elargis aux cours planifies hors de cette plage
-const HEURE_MIN = 8;
-const HEURE_MAX = 18;
 const HAUTEUR_HEURE = 56; // px
 
 const champSelect = "w-full h-10 rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm disabled:bg-neutral-50";
 
-// Couleurs par matiere (hash stable sur le nom)
+// Couleurs par matiere, dans l'ordre de la palette du PDF (indiceCouleur)
 const COULEURS = [
   "bg-blue-50 text-blue-800 border-blue-200",
   "bg-emerald-50 text-emerald-800 border-emerald-200",
@@ -61,39 +68,11 @@ const COULEURS = [
   "bg-orange-50 text-orange-800 border-orange-200",
   "bg-lime-50 text-lime-800 border-lime-200",
 ];
-function couleurMatiere(nom: string): string {
-  let h = 0;
-  for (let i = 0; i < nom.length; i++) h = (h * 31 + nom.charCodeAt(i)) % COULEURS.length;
-  return COULEURS[h];
-}
+const couleurMatiere = (nom: string) => COULEURS[indiceCouleur(nom)];
 
 const nomMatiere = (a: AffectationGrille) => a.matiere ?? "Titulariat";
 const hh = (h: number) => String(h).padStart(2, "0") + ":00";
 const planifie = (a: AffectationGrille): a is Creneau => !!(a.jour && a.heureDebut && a.heureFin);
-
-// Cours qui se chevauchent (donnees anciennes) : cote a cote, sur des voies
-function disposer(liste: Creneau[]) {
-  const places: { c: Creneau; voie: number; voies: number }[] = [];
-  let groupe: typeof places = [];
-  let finsVoies: string[] = [];
-  const clore = () => {
-    for (const p of groupe) p.voies = finsVoies.length;
-    groupe = [];
-    finsVoies = [];
-  };
-  const tries = [...liste].sort((a, b) => a.heureDebut.localeCompare(b.heureDebut) || a.heureFin.localeCompare(b.heureFin));
-  for (const c of tries) {
-    if (finsVoies.length && finsVoies.every((fin) => fin <= c.heureDebut)) clore();
-    let voie = finsVoies.findIndex((fin) => fin <= c.heureDebut);
-    if (voie < 0) voie = finsVoies.push(c.heureFin) - 1;
-    else finsVoies[voie] = c.heureFin;
-    const p = { c, voie, voies: 1 };
-    groupe.push(p);
-    places.push(p);
-  }
-  clore();
-  return places;
-}
 
 export function GrilleEmploiDuTemps({
   classeId,
@@ -132,13 +111,8 @@ export function GrilleEmploiDuTemps({
   }
   const nbSansHoraire = affectations.length - creneaux.length;
 
-  let min = HEURE_MIN;
-  let max = HEURE_MAX;
-  for (const c of creneaux) {
-    min = Math.min(min, Math.floor(enHeures(c.heureDebut)));
-    max = Math.max(max, Math.ceil(enHeures(c.heureFin)));
-  }
-  const heures = Array.from({ length: max - min }, (_, i) => min + i);
+  const heures = plageHeures(creneaux);
+  const min = heures[0];
   const duJour = (j: string) => creneaux.filter((c) => c.jour === j);
 
   // La fenetre s'ouvre une fois le formulaire rendu, le focus sur son premier champ utile
@@ -187,6 +161,15 @@ export function GrilleEmploiDuTemps({
           >
             Voir la classe
           </Link>
+          <a
+            href={"/api/emploi-du-temps/classe/" + classeId + "/pdf"}
+            target="_blank"
+            rel="noopener"
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[var(--color-border-strong)] bg-white text-sm hover:bg-neutral-50"
+          >
+            <FileDown className="h-4 w-4" aria-hidden />
+            Exporter en PDF
+          </a>
           {modifiable && (
             <Button type="button" onClick={() => ouvrirNouveau("")} className="gap-2">
               <Plus className="h-4 w-4" aria-hidden />
