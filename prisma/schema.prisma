@@ -47,7 +47,8 @@ model Employe {
 
 // User = compte de connexion (identite : e-mail et mot de passe). Un compte peut servir
 // dans plusieurs ecoles : ses roles et sa fiche employe par ecole sont dans Acces.
-// employeId, etablissementId et roles : fiche, ecole et roles d'origine (premiere ecole).
+// employeId, etablissementId et roles : fiche, ecole et roles d'origine (premiere ecole) ;
+// vides pour un administrateur de la plateforme qui n'appartient a aucune ecole.
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
@@ -55,11 +56,11 @@ model User {
   roles        Role[]
   actif        Boolean  @default(true)
 
-  employeId String   @unique
-  employe   Employe  @relation(fields: [employeId], references: [id], onDelete: Restrict)
+  employeId String?  @unique
+  employe   Employe? @relation(fields: [employeId], references: [id], onDelete: Restrict)
 
-  etablissementId String
-  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+  etablissementId String?
+  etablissement   Etablissement? @relation(fields: [etablissementId], references: [id], onDelete: Restrict)
 
   notesSaisies     Note[]       @relation("NotesSaisies")
   notesModifiees   Note[]       @relation("NotesModifiees")

@@ -173,8 +173,8 @@ export type UserGroupByOutputType = {
   passwordHash: string
   roles: $Enums.Role[]
   actif: boolean
-  employeId: string
-  etablissementId: string
+  employeId: string | null
+  etablissementId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -206,12 +206,12 @@ export type UserWhereInput = {
   passwordHash?: Prisma.StringFilter<"User"> | string
   roles?: Prisma.EnumRoleNullableListFilter<"User">
   actif?: Prisma.BoolFilter<"User"> | boolean
-  employeId?: Prisma.StringFilter<"User"> | string
-  etablissementId?: Prisma.StringFilter<"User"> | string
+  employeId?: Prisma.StringNullableFilter<"User"> | string | null
+  etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  employe?: Prisma.XOR<Prisma.EmployeScalarRelationFilter, Prisma.EmployeWhereInput>
-  etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
+  employe?: Prisma.XOR<Prisma.EmployeNullableScalarRelationFilter, Prisma.EmployeWhereInput> | null
+  etablissement?: Prisma.XOR<Prisma.EtablissementNullableScalarRelationFilter, Prisma.EtablissementWhereInput> | null
   notesSaisies?: Prisma.NoteListRelationFilter
   notesModifiees?: Prisma.NoteListRelationFilter
   bulletinsGeneres?: Prisma.BulletinListRelationFilter
@@ -231,8 +231,8 @@ export type UserOrderByWithRelationInput = {
   passwordHash?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   actif?: Prisma.SortOrder
-  employeId?: Prisma.SortOrder
-  etablissementId?: Prisma.SortOrder
+  employeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  etablissementId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   employe?: Prisma.EmployeOrderByWithRelationInput
@@ -260,11 +260,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringFilter<"User"> | string
   roles?: Prisma.EnumRoleNullableListFilter<"User">
   actif?: Prisma.BoolFilter<"User"> | boolean
-  etablissementId?: Prisma.StringFilter<"User"> | string
+  etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  employe?: Prisma.XOR<Prisma.EmployeScalarRelationFilter, Prisma.EmployeWhereInput>
-  etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
+  employe?: Prisma.XOR<Prisma.EmployeNullableScalarRelationFilter, Prisma.EmployeWhereInput> | null
+  etablissement?: Prisma.XOR<Prisma.EtablissementNullableScalarRelationFilter, Prisma.EtablissementWhereInput> | null
   notesSaisies?: Prisma.NoteListRelationFilter
   notesModifiees?: Prisma.NoteListRelationFilter
   bulletinsGeneres?: Prisma.BulletinListRelationFilter
@@ -284,8 +284,8 @@ export type UserOrderByWithAggregationInput = {
   passwordHash?: Prisma.SortOrder
   roles?: Prisma.SortOrder
   actif?: Prisma.SortOrder
-  employeId?: Prisma.SortOrder
-  etablissementId?: Prisma.SortOrder
+  employeId?: Prisma.SortOrderInput | Prisma.SortOrder
+  etablissementId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -302,8 +302,8 @@ export type UserScalarWhereWithAggregatesInput = {
   passwordHash?: Prisma.StringWithAggregatesFilter<"User"> | string
   roles?: Prisma.EnumRoleNullableListFilter<"User">
   actif?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  employeId?: Prisma.StringWithAggregatesFilter<"User"> | string
-  etablissementId?: Prisma.StringWithAggregatesFilter<"User"> | string
+  employeId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  etablissementId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -316,8 +316,8 @@ export type UserCreateInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -337,8 +337,8 @@ export type UserUncheckedCreateInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -362,8 +362,8 @@ export type UserUpdateInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -383,8 +383,8 @@ export type UserUncheckedUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -406,8 +406,8 @@ export type UserCreateManyInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -428,8 +428,8 @@ export type UserUncheckedUpdateManyInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -745,7 +745,7 @@ export type UserCreateWithoutEmployeInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -765,7 +765,7 @@ export type UserUncheckedCreateWithoutEmployeInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  etablissementId: string
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -805,7 +805,7 @@ export type UserUpdateWithoutEmployeInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -825,7 +825,7 @@ export type UserUncheckedUpdateWithoutEmployeInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -849,8 +849,8 @@ export type UserCreateWithoutAccesInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -869,8 +869,8 @@ export type UserUncheckedCreateWithoutAccesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -909,8 +909,8 @@ export type UserUpdateWithoutAccesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -929,8 +929,8 @@ export type UserUncheckedUpdateWithoutAccesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -953,7 +953,7 @@ export type UserCreateWithoutEtablissementInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -973,7 +973,7 @@ export type UserUncheckedCreateWithoutEtablissementInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
+  employeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1024,8 +1024,8 @@ export type UserScalarWhereInput = {
   passwordHash?: Prisma.StringFilter<"User"> | string
   roles?: Prisma.EnumRoleNullableListFilter<"User">
   actif?: Prisma.BoolFilter<"User"> | boolean
-  employeId?: Prisma.StringFilter<"User"> | string
-  etablissementId?: Prisma.StringFilter<"User"> | string
+  employeId?: Prisma.StringNullableFilter<"User"> | string | null
+  etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -1038,8 +1038,8 @@ export type UserCreateWithoutNotesSaisiesInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
   paiementsSaisis?: Prisma.PaiementCreateNestedManyWithoutSaisieParInput
@@ -1058,8 +1058,8 @@ export type UserUncheckedCreateWithoutNotesSaisiesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesModifiees?: Prisma.NoteUncheckedCreateNestedManyWithoutModifieeParInput
@@ -1087,8 +1087,8 @@ export type UserCreateWithoutNotesModifieesInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
   paiementsSaisis?: Prisma.PaiementCreateNestedManyWithoutSaisieParInput
@@ -1107,8 +1107,8 @@ export type UserUncheckedCreateWithoutNotesModifieesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1147,8 +1147,8 @@ export type UserUpdateWithoutNotesSaisiesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
   paiementsSaisis?: Prisma.PaiementUpdateManyWithoutSaisieParNestedInput
@@ -1167,8 +1167,8 @@ export type UserUncheckedUpdateWithoutNotesSaisiesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesModifiees?: Prisma.NoteUncheckedUpdateManyWithoutModifieeParNestedInput
@@ -1202,8 +1202,8 @@ export type UserUpdateWithoutNotesModifieesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
   paiementsSaisis?: Prisma.PaiementUpdateManyWithoutSaisieParNestedInput
@@ -1222,8 +1222,8 @@ export type UserUncheckedUpdateWithoutNotesModifieesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1246,8 +1246,8 @@ export type UserCreateWithoutBulletinsGeneresInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   paiementsSaisis?: Prisma.PaiementCreateNestedManyWithoutSaisieParInput
@@ -1266,8 +1266,8 @@ export type UserUncheckedCreateWithoutBulletinsGeneresInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1306,8 +1306,8 @@ export type UserUpdateWithoutBulletinsGeneresInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   paiementsSaisis?: Prisma.PaiementUpdateManyWithoutSaisieParNestedInput
@@ -1326,8 +1326,8 @@ export type UserUncheckedUpdateWithoutBulletinsGeneresInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1350,8 +1350,8 @@ export type UserCreateWithoutPaiementsSaisisInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1370,8 +1370,8 @@ export type UserUncheckedCreateWithoutPaiementsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1399,8 +1399,8 @@ export type UserCreateWithoutPaiementsAnnulesInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1419,8 +1419,8 @@ export type UserUncheckedCreateWithoutPaiementsAnnulesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1459,8 +1459,8 @@ export type UserUpdateWithoutPaiementsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1479,8 +1479,8 @@ export type UserUncheckedUpdateWithoutPaiementsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1514,8 +1514,8 @@ export type UserUpdateWithoutPaiementsAnnulesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1534,8 +1534,8 @@ export type UserUncheckedUpdateWithoutPaiementsAnnulesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1558,8 +1558,8 @@ export type UserCreateWithoutFraisSaisisInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1578,8 +1578,8 @@ export type UserUncheckedCreateWithoutFraisSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1618,8 +1618,8 @@ export type UserUpdateWithoutFraisSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1638,8 +1638,8 @@ export type UserUncheckedUpdateWithoutFraisSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1662,8 +1662,8 @@ export type UserCreateWithoutRappelsSaisisInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1682,8 +1682,8 @@ export type UserUncheckedCreateWithoutRappelsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1722,8 +1722,8 @@ export type UserUpdateWithoutRappelsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1742,8 +1742,8 @@ export type UserUncheckedUpdateWithoutRappelsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1766,8 +1766,8 @@ export type UserCreateWithoutAuditLogsInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1786,8 +1786,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1826,8 +1826,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1846,8 +1846,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1870,8 +1870,8 @@ export type UserCreateWithoutMouvementsSaisisInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1890,8 +1890,8 @@ export type UserUncheckedCreateWithoutMouvementsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1930,8 +1930,8 @@ export type UserUpdateWithoutMouvementsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -1950,8 +1950,8 @@ export type UserUncheckedUpdateWithoutMouvementsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1974,8 +1974,8 @@ export type UserCreateWithoutPresencesSaisiesInput = {
   actif?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  employe: Prisma.EmployeCreateNestedOneWithoutUserInput
-  etablissement: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
   notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
   notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
   bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
@@ -1994,8 +1994,8 @@ export type UserUncheckedCreateWithoutPresencesSaisiesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
-  etablissementId: string
+  employeId?: string | null
+  etablissementId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -2034,8 +2034,8 @@ export type UserUpdateWithoutPresencesSaisiesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
-  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutUsersNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -2054,8 +2054,8 @@ export type UserUncheckedUpdateWithoutPresencesSaisiesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
-  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -2076,7 +2076,7 @@ export type UserCreateManyEtablissementInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
-  employeId: string
+  employeId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2089,7 +2089,7 @@ export type UserUpdateWithoutEtablissementInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  employe?: Prisma.EmployeUpdateOneRequiredWithoutUserNestedInput
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -2109,7 +2109,7 @@ export type UserUncheckedUpdateWithoutEtablissementInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -2131,7 +2131,7 @@ export type UserUncheckedUpdateManyWithoutEtablissementInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  employeId?: Prisma.StringFieldUpdateOperationsInput | string
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2267,8 +2267,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   etablissementId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
   notesSaisies?: boolean | Prisma.User$notesSaisiesArgs<ExtArgs>
   notesModifiees?: boolean | Prisma.User$notesModifieesArgs<ExtArgs>
   bulletinsGeneres?: boolean | Prisma.User$bulletinsGeneresArgs<ExtArgs>
@@ -2293,8 +2293,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   etablissementId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2307,8 +2307,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   etablissementId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2325,8 +2325,8 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "roles" | "actif" | "employeId" | "etablissementId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
   notesSaisies?: boolean | Prisma.User$notesSaisiesArgs<ExtArgs>
   notesModifiees?: boolean | Prisma.User$notesModifieesArgs<ExtArgs>
   bulletinsGeneres?: boolean | Prisma.User$bulletinsGeneresArgs<ExtArgs>
@@ -2341,19 +2341,19 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  employe?: boolean | Prisma.EmployeDefaultArgs<ExtArgs>
-  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  employe?: boolean | Prisma.User$employeArgs<ExtArgs>
+  etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    employe: Prisma.$EmployePayload<ExtArgs>
-    etablissement: Prisma.$EtablissementPayload<ExtArgs>
+    employe: Prisma.$EmployePayload<ExtArgs> | null
+    etablissement: Prisma.$EtablissementPayload<ExtArgs> | null
     notesSaisies: Prisma.$NotePayload<ExtArgs>[]
     notesModifiees: Prisma.$NotePayload<ExtArgs>[]
     bulletinsGeneres: Prisma.$BulletinPayload<ExtArgs>[]
@@ -2372,8 +2372,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     passwordHash: string
     roles: $Enums.Role[]
     actif: boolean
-    employeId: string
-    etablissementId: string
+    employeId: string | null
+    etablissementId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2770,8 +2770,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  employe<T extends Prisma.EmployeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmployeDefaultArgs<ExtArgs>>): Prisma.Prisma__EmployeClient<runtime.Types.Result.GetResult<Prisma.$EmployePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  etablissement<T extends Prisma.EtablissementDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EtablissementDefaultArgs<ExtArgs>>): Prisma.Prisma__EtablissementClient<runtime.Types.Result.GetResult<Prisma.$EtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  employe<T extends Prisma.User$employeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$employeArgs<ExtArgs>>): Prisma.Prisma__EmployeClient<runtime.Types.Result.GetResult<Prisma.$EmployePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  etablissement<T extends Prisma.User$etablissementArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$etablissementArgs<ExtArgs>>): Prisma.Prisma__EtablissementClient<runtime.Types.Result.GetResult<Prisma.$EtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   notesSaisies<T extends Prisma.User$notesSaisiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notesSaisiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notesModifiees<T extends Prisma.User$notesModifieesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notesModifieesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   bulletinsGeneres<T extends Prisma.User$bulletinsGeneresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$bulletinsGeneresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BulletinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3219,6 +3219,44 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.employe
+ */
+export type User$employeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Employe
+   */
+  select?: Prisma.EmployeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Employe
+   */
+  omit?: Prisma.EmployeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EmployeInclude<ExtArgs> | null
+  where?: Prisma.EmployeWhereInput
+}
+
+/**
+ * User.etablissement
+ */
+export type User$etablissementArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Etablissement
+   */
+  select?: Prisma.EtablissementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Etablissement
+   */
+  omit?: Prisma.EtablissementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EtablissementInclude<ExtArgs> | null
+  where?: Prisma.EtablissementWhereInput
 }
 
 /**

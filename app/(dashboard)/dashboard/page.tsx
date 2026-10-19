@@ -571,13 +571,12 @@ export default async function DashboardPage({ searchParams }: { searchParams: Pr
                 {dernieresActions.map((a) => (
                   <div key={a.id} className="p-3 md:px-5 flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg bg-[var(--color-brand-soft)] text-[var(--color-brand)] flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                      {a.user.employe.nom.charAt(0)}
-                      {a.user.employe.prenom.charAt(0)}
+                      {a.user.employe ? a.user.employe.nom.charAt(0) + a.user.employe.prenom.charAt(0) : "G"}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium">{labelAction(a.action)}</p>
                       <p className="text-xs text-[var(--color-ink-muted)] mt-0.5">
-                        {a.user.employe.prenom} {a.user.employe.nom}
+                        {a.user.employe ? a.user.employe.prenom + " " + a.user.employe.nom : "Plateforme GES Mali"}
                         <span className="mx-1">·</span>
                         {ilYA(a.createdAt)}
                       </p>

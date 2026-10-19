@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { ecole } from "@/lib/data/ecole";
-import { accesUtilisable, chargerCompte, choisirAcces, ouvrirAcces, reinitialiserMotDePasse, retirerAcces } from "@/lib/auth/comptes";
+import { accesUtilisable, chargerCompte, choisirAcces, creerCompteAdministrateur, ouvrirAcces, reinitialiserMotDePasse, retirerAcces } from "@/lib/auth/comptes";
 import { etatEcole, finEssaiDans } from "@/lib/plateforme/etat";
 import { creerEcole, viderBase, type Ecole } from "./donnees";
 
@@ -111,6 +111,35 @@ describe("un compte dans plusieurs ecoles", () => {
 
   test("une ecole ne peut pas retirer l'acces d'une autre", async () => {
     await assert.rejects(retirerAcces(b.etablissementId, a.user.employeId), /Aucun compte/);
+  });
+});
+
+describe("administrateur de la plateforme sans ecole", () => {
+  test("compte cree sans fiche ni ecole, avec un mot de passe genere", async () => {
+    const r = await creerCompteAdministrateur(" Admin@Plateforme.ml ");
+    assert.equal(r.cree, true);
+    assert.ok(r.motDePasse && r.motDePasse.length >= 12);
+    const u = (await chargerCompte({ email: "admin@plateforme.ml" }))!;
+    assert.deepEqual([u.employeId, u.etablissementId, u.acces.length], [null, null, 0]);
+    assert.ok(await bcrypt.compare(r.motDePasse!, u.passwordHash));
+  });
+
+  test("compte existant : rien ne change, sauf demande de reinitialisation", async () => {
+    const avant = (await prisma.user.findUniqueOrThrow({ where: { email: "admin@plateforme.ml" } })).passwordHash;
+    assert.deepEqual(await creerCompteAdministrateur("admin@plateforme.ml"), { email: "admin@plateforme.ml", motDePasse: null, cree: false });
+    assert.equal((await prisma.user.findUniqueOrThrow({ where: { email: "admin@plateforme.ml" } })).passwordHash, avant);
+    const r = await creerCompteAdministrateur("admin@plateforme.ml", { reinitialiser: true });
+    const u = await prisma.user.findUniqueOrThrow({ where: { email: "admin@plateforme.ml" } });
+    assert.ok(await bcrypt.compare(r.motDePasse!, u.passwordHash));
+  });
+
+  test("e-mail invalide refuse", async () => {
+    await assert.rejects(creerCompteAdministrateur("pas-un-email"), /E-mail invalide/);
+  });
+
+  test("invisible dans les ecoles", async () => {
+    const u = await prisma.user.findUniqueOrThrow({ where: { email: "admin@plateforme.ml" } });
+    assert.equal(await ecole(a.etablissementId).user.findUnique({ where: { id: u.id } }), null);
   });
 });
 

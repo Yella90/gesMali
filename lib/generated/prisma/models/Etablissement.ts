@@ -510,6 +510,11 @@ export type EtablissementScalarRelationFilter = {
   isNot?: Prisma.EtablissementWhereInput
 }
 
+export type EtablissementNullableScalarRelationFilter = {
+  is?: Prisma.EtablissementWhereInput | null
+  isNot?: Prisma.EtablissementWhereInput | null
+}
+
 export type EtablissementCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   nom?: Prisma.SortOrder
@@ -555,11 +560,6 @@ export type EtablissementMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type EtablissementNullableScalarRelationFilter = {
-  is?: Prisma.EtablissementWhereInput | null
-  isNot?: Prisma.EtablissementWhereInput | null
-}
-
 export type EtablissementCreateNestedOneWithoutEmployesInput = {
   create?: Prisma.XOR<Prisma.EtablissementCreateWithoutEmployesInput, Prisma.EtablissementUncheckedCreateWithoutEmployesInput>
   connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutEmployesInput
@@ -580,10 +580,12 @@ export type EtablissementCreateNestedOneWithoutUsersInput = {
   connect?: Prisma.EtablissementWhereUniqueInput
 }
 
-export type EtablissementUpdateOneRequiredWithoutUsersNestedInput = {
+export type EtablissementUpdateOneWithoutUsersNestedInput = {
   create?: Prisma.XOR<Prisma.EtablissementCreateWithoutUsersInput, Prisma.EtablissementUncheckedCreateWithoutUsersInput>
   connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutUsersInput
   upsert?: Prisma.EtablissementUpsertWithoutUsersInput
+  disconnect?: Prisma.EtablissementWhereInput | boolean
+  delete?: Prisma.EtablissementWhereInput | boolean
   connect?: Prisma.EtablissementWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutUsersInput, Prisma.EtablissementUpdateWithoutUsersInput>, Prisma.EtablissementUncheckedUpdateWithoutUsersInput>
 }

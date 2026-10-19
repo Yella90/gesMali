@@ -215,10 +215,10 @@ describe("transactions", () => {
     });
     const cree = await prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { employe: true, acces: true } });
     assert.equal(cree.etablissementId, a.etablissementId);
-    assert.equal(cree.employe.etablissementId, a.etablissementId);
+    assert.equal(cree.employe?.etablissementId, a.etablissementId);
     assert.equal(cree.acces[0].etablissementId, a.etablissementId);
     await prisma.user.delete({ where: { id: userId } });
-    await prisma.employe.delete({ where: { id: cree.employeId } });
+    await prisma.employe.delete({ where: { id: cree.employeId! } });
   });
 
   test("transaction interactive : le client de transaction reste filtre", async () => {

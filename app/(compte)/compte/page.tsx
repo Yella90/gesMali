@@ -13,10 +13,16 @@ export default async function MonComptePage() {
   return (
     <div className="space-y-5">
       <div>
-        {courant && (
+        {courant ? (
           <Link href="/dashboard" className="text-xs text-[var(--color-ink-muted)] hover:underline">
             ← Retour au tableau de bord
           </Link>
+        ) : (
+          compte.administrateurPlateforme && (
+            <Link href="/plateforme" className="text-xs text-[var(--color-ink-muted)] hover:underline">
+              ← Retour à la plateforme
+            </Link>
+          )
         )}
         <h1 className="mt-1 text-2xl font-semibold">Mon compte</h1>
         <p className="mt-1 text-sm text-[var(--color-ink-muted)]">

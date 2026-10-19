@@ -598,6 +598,11 @@ export type EmployeSumOrderByAggregateInput = {
   salaireReference?: Prisma.SortOrder
 }
 
+export type EmployeNullableScalarRelationFilter = {
+  is?: Prisma.EmployeWhereInput | null
+  isNot?: Prisma.EmployeWhereInput | null
+}
+
 export type EmployeScalarRelationFilter = {
   is?: Prisma.EmployeWhereInput
   isNot?: Prisma.EmployeWhereInput
@@ -611,11 +616,6 @@ export type EmployeListRelationFilter = {
 
 export type EmployeOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type EmployeNullableScalarRelationFilter = {
-  is?: Prisma.EmployeWhereInput | null
-  isNot?: Prisma.EmployeWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -652,10 +652,12 @@ export type EmployeCreateNestedOneWithoutUserInput = {
   connect?: Prisma.EmployeWhereUniqueInput
 }
 
-export type EmployeUpdateOneRequiredWithoutUserNestedInput = {
+export type EmployeUpdateOneWithoutUserNestedInput = {
   create?: Prisma.XOR<Prisma.EmployeCreateWithoutUserInput, Prisma.EmployeUncheckedCreateWithoutUserInput>
   connectOrCreate?: Prisma.EmployeCreateOrConnectWithoutUserInput
   upsert?: Prisma.EmployeUpsertWithoutUserInput
+  disconnect?: Prisma.EmployeWhereInput | boolean
+  delete?: Prisma.EmployeWhereInput | boolean
   connect?: Prisma.EmployeWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.EmployeUpdateToOneWithWhereWithoutUserInput, Prisma.EmployeUpdateWithoutUserInput>, Prisma.EmployeUncheckedUpdateWithoutUserInput>
 }

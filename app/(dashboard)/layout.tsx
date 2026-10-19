@@ -7,8 +7,12 @@ import { identiteEtablissement } from "@/lib/etablissement/logo";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getUtilisateurCourant();
-  // Connecte sans ecole utilisable (a choisir, suspendue, essai termine) : page de ses ecoles
-  if (!user) redirect((await compteConnecte()) ? "/ecoles" : "/login?connexion");
+  // Connecte sans ecole utilisable (a choisir, suspendue, essai termine) : page de ses ecoles ;
+  // administrateur de la plateforme sans ecole : espace plateforme
+  if (!user) {
+    const compte = await compteConnecte();
+    redirect(!compte ? "/login?connexion" : compte.acces.length === 0 && compte.administrateurPlateforme ? "/plateforme" : "/ecoles");
+  }
   const permissions = Array.from(allPermissionsFor(user.roles));
   const etablissement = await identiteEtablissement(user.etablissementId);
 

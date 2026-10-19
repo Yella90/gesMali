@@ -1,6 +1,7 @@
 // Comptes de connexion et leurs acces aux ecoles (sans dependance a la session :
 // utilise par la connexion elle-meme, auth.ts, et par lib/auth/session.ts).
 
+import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma/client";
@@ -23,7 +24,8 @@ export type AccesCompte = CompteAvecAcces["acces"][number];
 // ecole) recoit son acces a son ecole d'origine.
 export async function chargerCompte(where: Prisma.UserWhereUniqueInput): Promise<CompteAvecAcces | null> {
   const user = await prisma.user.findUnique({ where, include: AVEC_ACCES });
-  if (!user || user.acces.length > 0) return user;
+  // Deja des acces, ou compte sans ecole d'origine (administrateur de la plateforme)
+  if (!user || user.acces.length > 0 || !user.etablissementId || !user.employeId) return user;
   try {
     await prisma.acces.create({
       data: { userId: user.id, etablissementId: user.etablissementId, employeId: user.employeId, roles: user.roles, actif: user.actif },
@@ -145,4 +147,25 @@ export async function reinitialiserMotDePasse(etablissementId: string, employeId
   }
   if (!motDePasse || motDePasse.length < 6) throw new Error("Mot de passe : 6 caracteres minimum");
   await modifierMotDePasseCompte(acces.userId, motDePasse);
+}
+
+// Compte de connexion d'un administrateur de la plateforme, sans ecole. Ses droits viennent
+// de ADMINS_PLATEFORME. Compte deja existant : rien n'est cree ; reinitialiser lui donne
+// un nouveau mot de passe. Renvoie le mot de passe genere (a changer dans « Mon compte »).
+export async function creerCompteAdministrateur(
+  email: string,
+  { reinitialiser = false }: { reinitialiser?: boolean } = {}
+): Promise<{ email: string; motDePasse: string | null; cree: boolean }> {
+  const adresse = email.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(adresse)) throw new Error("E-mail invalide : " + email);
+  const motDePasse = randomBytes(12).toString("base64url");
+
+  const existant = await prisma.user.findUnique({ where: { email: adresse } });
+  if (existant) {
+    if (!reinitialiser) return { email: adresse, motDePasse: null, cree: false };
+    await modifierMotDePasseCompte(existant.id, motDePasse);
+    return { email: adresse, motDePasse, cree: false };
+  }
+  await prisma.user.create({ data: { email: adresse, passwordHash: await bcrypt.hash(motDePasse, 10), roles: [] } });
+  return { email: adresse, motDePasse, cree: true };
 }

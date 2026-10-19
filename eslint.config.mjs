@@ -35,6 +35,7 @@ const eslintConfig = defineConfig([
       "lib/auth/session.ts",
       "lib/auth/limite.ts",
       "lib/auth/comptes.ts",
+      "scripts/creer-admin.ts",
       "lib/plateforme/creation.ts",
       "lib/plateforme/admin.ts",
       "lib/audit.ts",
