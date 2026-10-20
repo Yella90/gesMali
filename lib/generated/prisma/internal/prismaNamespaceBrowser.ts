@@ -69,13 +69,15 @@ export const ModelName = {
   FraisScolarite: 'FraisScolarite',
   TrancheFrais: 'TrancheFrais',
   PaiementFrais: 'PaiementFrais',
+  CompteurRecu: 'CompteurRecu',
   Rappel: 'Rappel',
   AuditLog: 'AuditLog',
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
   DepenseRecurrente: 'DepenseRecurrente',
   Presence: 'Presence',
-  EchecConnexion: 'EchecConnexion'
+  EchecConnexion: 'EchecConnexion',
+  JetonEmail: 'JetonEmail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -122,6 +124,8 @@ export const UserScalarFieldEnum = {
   actif: 'actif',
   employeId: 'employeId',
   etablissementId: 'etablissementId',
+  emailVerifieLe: 'emailVerifieLe',
+  motDePasseModifieLe: 'motDePasseModifieLe',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -395,6 +399,7 @@ export type TrancheFraisScalarFieldEnum = (typeof TrancheFraisScalarFieldEnum)[k
 
 export const PaiementFraisScalarFieldEnum = {
   id: 'id',
+  etablissementId: 'etablissementId',
   trancheId: 'trancheId',
   montant: 'montant',
   datePaiement: 'datePaiement',
@@ -408,6 +413,16 @@ export const PaiementFraisScalarFieldEnum = {
 } as const
 
 export type PaiementFraisScalarFieldEnum = (typeof PaiementFraisScalarFieldEnum)[keyof typeof PaiementFraisScalarFieldEnum]
+
+
+export const CompteurRecuScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  annee: 'annee',
+  dernier: 'dernier'
+} as const
+
+export type CompteurRecuScalarFieldEnum = (typeof CompteurRecuScalarFieldEnum)[keyof typeof CompteurRecuScalarFieldEnum]
 
 
 export const RappelScalarFieldEnum = {
@@ -511,6 +526,21 @@ export const EchecConnexionScalarFieldEnum = {
 } as const
 
 export type EchecConnexionScalarFieldEnum = (typeof EchecConnexionScalarFieldEnum)[keyof typeof EchecConnexionScalarFieldEnum]
+
+
+export const JetonEmailScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  email: 'email',
+  userId: 'userId',
+  donnees: 'donnees',
+  empreinte: 'empreinte',
+  expireLe: 'expireLe',
+  utiliseLe: 'utiliseLe',
+  createdAt: 'createdAt'
+} as const
+
+export type JetonEmailScalarFieldEnum = (typeof JetonEmailScalarFieldEnum)[keyof typeof JetonEmailScalarFieldEnum]
 
 
 export const SortOrder = {

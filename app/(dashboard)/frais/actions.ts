@@ -231,19 +231,22 @@ async function encaisserPaiementCorps(data: {
   const reste = tranche.montant - dejaPaye;
   if (data.montant > reste + 0.01) throw new Error("Montant superieur au reste a payer (" + reste.toFixed(2) + ")");
 
-  const recuNumero = await prochainNumeroRecu();
-
-  const paiement = await db.paiementFrais.create({
-    data: {
-      trancheId: data.trancheId,
-      montant: data.montant,
-      datePaiement: data.datePaiement ? new Date(data.datePaiement) : new Date(),
-      mode: data.mode,
-      reference: data.reference || null,
-      recuNumero,
-      saisieParId: user.id,
-    },
-  });
+  // Numero de recu et paiement dans la meme transaction : suite de l'ecole sans trou ni doublon
+  const paiement = await db.$transaction(async (tx) =>
+    tx.paiementFrais.create({
+      data: {
+        etablissementId: user.etablissementId,
+        trancheId: data.trancheId,
+        montant: data.montant,
+        datePaiement: data.datePaiement ? new Date(data.datePaiement) : new Date(),
+        mode: data.mode,
+        reference: data.reference || null,
+        recuNumero: await prochainNumeroRecu(tx, user.etablissementId),
+        saisieParId: user.id,
+      },
+    })
+  );
+  const recuNumero = paiement.recuNumero;
 
   await enregistrerAudit({
     userId: user.id,

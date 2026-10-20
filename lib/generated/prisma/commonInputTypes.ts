@@ -596,6 +596,23 @@ export type EnumStatutPresenceWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
 }
 
+export type EnumTypeJetonFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeJeton | Prisma.EnumTypeJetonFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel> | $Enums.TypeJeton
+}
+
+export type EnumTypeJetonWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeJeton | Prisma.EnumTypeJetonFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeJetonWithAggregatesFilter<$PrismaModel> | $Enums.TypeJeton
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1140,6 +1157,23 @@ export type NestedEnumStatutPresenceWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStatutPresenceFilter<$PrismaModel>
+}
+
+export type NestedEnumTypeJetonFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeJeton | Prisma.EnumTypeJetonFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel> | $Enums.TypeJeton
+}
+
+export type NestedEnumTypeJetonWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.TypeJeton | Prisma.EnumTypeJetonFieldRefInput<$PrismaModel>
+  in?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  notIn?: $Enums.TypeJeton[] | Prisma.ListEnumTypeJetonFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumTypeJetonWithAggregatesFilter<$PrismaModel> | $Enums.TypeJeton
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumTypeJetonFilter<$PrismaModel>
 }
 
 

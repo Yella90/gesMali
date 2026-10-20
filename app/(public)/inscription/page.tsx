@@ -2,6 +2,8 @@ import Link from "next/link";
 import { compteConnecte } from "@/lib/auth/session";
 import { anneeParDefaut } from "@/lib/plateforme/creation";
 import { DUREE_ESSAI_JOURS } from "@/lib/plateforme/etat";
+import { envoiDisponible } from "@/lib/email/file";
+import { LEGAL } from "@/lib/legal";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 import { FormulaireInscription } from "./FormulaireInscription";
 
@@ -41,16 +43,30 @@ export default async function InscriptionPage() {
           </p>
         </div>
 
-        <FormulaireInscription
-          connecte={!!compte}
-          defauts={{
-            anneeDebut: annee.debut,
-            anneeFin: annee.fin,
-            directeurNom: fiche?.nom,
-            directeurPrenom: fiche?.prenom,
-            directeurEmail: compte?.email,
-          }}
-        />
+        {/* Sans envoi d'e-mails, une adresse ne peut pas etre confirmee : inscription fermee */}
+        {!compte && !envoiDisponible() ? (
+          <div className="rounded-2xl bg-white p-5 text-sm leading-relaxed text-[var(--color-ink)] shadow-xl sm:p-7">
+            <p className="font-semibold">Les inscriptions en ligne ouvrent bientôt.</p>
+            <p className="mt-2">
+              Pour créer votre école dès maintenant, écrivez à{" "}
+              <a href={"mailto:" + LEGAL.email} className="text-[var(--color-brand)] underline">
+                {LEGAL.email}
+              </a>{" "}
+              ou appelez le {LEGAL.telephone}.
+            </p>
+          </div>
+        ) : (
+          <FormulaireInscription
+            connecte={!!compte}
+            defauts={{
+              anneeDebut: annee.debut,
+              anneeFin: annee.fin,
+              directeurNom: fiche?.nom,
+              directeurPrenom: fiche?.prenom,
+              directeurEmail: compte?.email,
+            }}
+          />
+        )}
 
         <footer className="mt-8 text-xs text-white/60">
           <LiensLegaux className="text-white/60" />

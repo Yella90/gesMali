@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { ecole } from "@/lib/data/ecole";
 import { creerEcole, ecoleSchema, MATIERES_PAR_CYCLE, trimestresDe, type DonneesEcole } from "@/lib/plateforme/creation";
-import { changerStatutEcole } from "@/lib/plateforme/admin";
+import { changerStatutEcole, supprimerEcole } from "@/lib/plateforme/admin";
 import { inscriptionAutorisee, MAX_INSCRIPTIONS_PAR_JOUR, noterInscription } from "@/lib/auth/limite";
 import { creerEcole as creerEcoleTest, viderBase, type Ecole } from "./donnees";
 
@@ -74,14 +74,27 @@ describe("creation d'une ecole", () => {
     assert.equal(await ecole(etablissementId).classe.count(), 0);
   });
 
-  test("un compte existant devient directeur de la nouvelle ecole et garde son mot de passe", async () => {
+  test("compte existant a l'adresse non confirmee : refuse, sauf pour le compte qui cree l'ecole", async () => {
+    const avant = await prisma.etablissement.count();
+    await assert.rejects(
+      creerEcole(donnees({ nom: "École Usurpée", directeurEmail: "mariam.keita@baobabs.ml" }), { statut: "ACTIF", motDePasse: null }),
+      /pas encore confirmée/
+    );
+    assert.equal(await prisma.etablissement.count(), avant);
+    // Le titulaire connecte cree sa propre ecole (inscription depuis « Mes ecoles »)
+    const r = await creerEcole(donnees({ nom: "École Seconde", directeurEmail: "mariam.keita@baobabs.ml" }), { statut: "ESSAI", parUserId: userId });
+    assert.deepEqual([r.userId, r.compteExistant], [userId, true]);
+  });
+
+  test("un compte existant (adresse confirmee) devient directeur de la nouvelle ecole et garde son mot de passe", async () => {
+    await prisma.user.update({ where: { id: userId }, data: { emailVerifieLe: new Date() } });
     const r = await creerEcole(donnees({ nom: "École Les Fromagers", directeurEmail: "mariam.keita@baobabs.ml" }), {
       statut: "ACTIF",
       motDePasse: null,
     });
     assert.deepEqual([r.userId, r.compteExistant], [userId, true]);
     const u = await prisma.user.findUniqueOrThrow({ where: { id: userId }, include: { acces: true } });
-    assert.equal(u.acces.length, 2);
+    assert.equal(u.acces.length, 3);
     assert.ok(await bcrypt.compare("motdepasse8", u.passwordHash));
   });
 
@@ -131,5 +144,47 @@ describe("inscriptions limitees par adresse IP", () => {
     assert.equal(await inscriptionAutorisee("41.0.0.1", t0), false);
     assert.equal(await inscriptionAutorisee("41.0.0.2", t0), true);
     assert.equal(await inscriptionAutorisee("41.0.0.1", new Date("2026-10-21T09:00:00Z")), true);
+  });
+});
+
+describe("suppression d'une ecole vide", () => {
+  test("nom mal retape : rien n'est supprime", async () => {
+    const r = await creerEcole(donnees({ nom: "École Erreur", directeurEmail: "erreur@vide.test" }), { statut: "ESSAI", motDePasse: "motdepasse8" });
+    await assert.rejects(supprimerEcole(r.etablissementId, a.ids.User, "Ecole Erreur"), /ne correspond pas/);
+    assert.ok(await prisma.etablissement.findUnique({ where: { id: r.etablissementId } }));
+  });
+
+  test("ecole creee par erreur : tout est efface, compte sans autre usage compris", async () => {
+    const r = await creerEcole(donnees({ nom: "École En Double", directeurEmail: "double@vide.test" }), { statut: "ESSAI", motDePasse: "motdepasse8" });
+    const res = await supprimerEcole(r.etablissementId, a.ids.User, " École En Double ");
+    assert.deepEqual(res.comptesSupprimes, ["double@vide.test"]);
+    assert.equal(await prisma.etablissement.findUnique({ where: { id: r.etablissementId } }), null);
+    assert.equal(await prisma.user.count({ where: { email: "double@vide.test" } }), 0);
+    for (const n of await Promise.all([
+      prisma.employe.count({ where: { etablissementId: r.etablissementId } }),
+      prisma.matiere.count({ where: { etablissementId: r.etablissementId } }),
+      prisma.anneeScolaire.count({ where: { etablissementId: r.etablissementId } }),
+      prisma.acces.count({ where: { etablissementId: r.etablissementId } }),
+    ])) {
+      assert.equal(n, 0);
+    }
+    const journal = await prisma.auditLog.findFirstOrThrow({ where: { action: "PLATEFORME_SUPPRIMER", entiteId: r.etablissementId } });
+    assert.deepEqual([journal.etablissementId, journal.userId], [null, a.ids.User]);
+  });
+
+  test("compte qui sert dans une autre ecole : garde, sans l'acces supprime", async () => {
+    const vide = await creerEcole(donnees({ nom: "École Vide", directeurEmail: "partage@vide.test" }), { statut: "ESSAI", motDePasse: "motdepasse8" });
+    await prisma.user.update({ where: { id: vide.userId }, data: { emailVerifieLe: new Date() } });
+    const autre = await creerEcole(donnees({ nom: "École Gardée", directeurEmail: "partage@vide.test" }), { statut: "ESSAI" });
+    const res = await supprimerEcole(vide.etablissementId, a.ids.User, "École Vide");
+    assert.deepEqual(res.comptesSupprimes, []);
+    const u = await prisma.user.findUniqueOrThrow({ where: { id: vide.userId }, include: { acces: true } });
+    assert.deepEqual(u.acces.map((x) => x.etablissementId), [autre.etablissementId]);
+    assert.deepEqual([u.etablissementId, u.employeId], [null, null], "plus d'ecole ni de fiche d'origine supprimee");
+  });
+
+  test("ecole avec des donnees : refus, a suspendre", async () => {
+    await assert.rejects(supprimerEcole(a.etablissementId, a.ids.User, "Ecole A"), /contient des données \(.*élèves/);
+    assert.ok(await prisma.etablissement.findUnique({ where: { id: a.etablissementId } }));
   });
 });

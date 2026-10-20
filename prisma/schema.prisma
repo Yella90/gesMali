@@ -73,6 +73,12 @@ model User {
   mouvementsSaisis MouvementTresorerie[] @relation("MouvementsSaisis")
   presencesSaisies Presence[]
   acces            Acces[]
+  jetons           JetonEmail[]
+
+  // Adresse e-mail confirmee par un lien recu (confirmation ou mot de passe oublie)
+  emailVerifieLe DateTime?
+  // Dernier changement de mot de passe : les sessions ouvertes avant sont fermees
+  motDePasseModifieLe DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -128,6 +134,8 @@ model Etablissement {
   users           User[]
   acces           Acces[]
   auditLogs       AuditLog[]
+  paiementsFrais  PaiementFrais[]
+  compteursRecus  CompteurRecu[]
   employes        Employe[]
   anneesScolaires AnneeScolaire[]
   matieres        Matiere[]
@@ -610,6 +618,10 @@ model TrancheFrais {
 model PaiementFrais {
   id String @id @default(cuid())
 
+  // Ecole du paiement : les numeros de recu sont propres a chaque ecole
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
   trancheId String
   tranche   TrancheFrais @relation(fields: [trancheId], references: [id])
 
@@ -617,7 +629,7 @@ model PaiementFrais {
   datePaiement    DateTime
   mode            ModePaiement
   reference       String?
-  recuNumero      String       @unique
+  recuNumero      String
   annule          Boolean      @default(false)
   motifAnnulation String?
 
@@ -626,7 +638,19 @@ model PaiementFrais {
 
   createdAt DateTime @default(now())
 
+  @@unique([etablissementId, recuNumero])
   @@index([trancheId])
+}
+
+// Dernier numero de recu attribue, par ecole et par annee : suite continue propre a l'ecole
+model CompteurRecu {
+  id              String        @id @default(cuid())
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+  annee           Int
+  dernier         Int
+
+  @@unique([etablissementId, annee])
 }
 
 model Rappel {
@@ -817,4 +841,28 @@ model EchecConnexion {
   depuis DateTime @default(now())
 
   @@index([depuis])
+}
+
+// Liens envoyes par e-mail : inscription d'une ecole, confirmation d'adresse, mot de passe
+// oublie. Seule l'empreinte du jeton est stockee. Table de la plateforme, sans ecole.
+enum TypeJeton {
+  INSCRIPTION
+  VERIFICATION
+  REINITIALISATION
+}
+
+model JetonEmail {
+  id        String    @id @default(cuid())
+  type      TypeJeton
+  email     String
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Inscription : formulaire de l'ecole et empreinte du mot de passe choisi
+  donnees   Json?
+  empreinte String    @unique
+  expireLe  DateTime
+  utiliseLe DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([email, type])
 }

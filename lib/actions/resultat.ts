@@ -16,3 +16,10 @@ export async function executer<T>(appel: Promise<Resultat<T>>): Promise<T> {
 export function relever<A extends unknown[], T>(action: (...a: A) => Promise<Resultat<T>>) {
   return (...a: A): Promise<T> => executer(action(...a));
 }
+
+// Cote client : une action qui redirige rejette sa promesse avec l'erreur NEXT_REDIRECT pendant
+// que Next change de page. Ce n'est pas une erreur a afficher.
+export function estRedirection(e: unknown): boolean {
+  const digest = (e as { digest?: unknown } | null)?.digest;
+  return (typeof digest === "string" && digest.startsWith("NEXT_REDIRECT")) || (e instanceof Error && e.message === "NEXT_REDIRECT");
+}

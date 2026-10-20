@@ -79,8 +79,9 @@ export async function creerEcole(nom: string) {
   });
   const tranche = frais.tranches[0];
   const paiementFrais = await prisma.paiementFrais.create({
-    data: { trancheId: tranche.id, montant: 5000, datePaiement: new Date("2026-10-03"), mode: "ESPECES", recuNumero: "R-" + s, saisieParId: user.id },
+    data: { etablissementId, trancheId: tranche.id, montant: 5000, datePaiement: new Date("2026-10-03"), mode: "ESPECES", recuNumero: "R-" + s, saisieParId: user.id },
   });
+  const compteur = await prisma.compteurRecu.create({ data: { etablissementId, annee: 2026, dernier: 1 } });
   const rappel = await prisma.rappel.create({ data: { trancheId: tranche.id, saisieParId: user.id } });
   const paiement = await prisma.paiement.create({
     data: {
@@ -124,6 +125,7 @@ export async function creerEcole(nom: string) {
       FraisScolarite: frais.id,
       TrancheFrais: tranche.id,
       PaiementFrais: paiementFrais.id,
+      CompteurRecu: compteur.id,
       Rappel: rappel.id,
       Paiement: paiement.id,
       InscriptionAnnuelle: inscription.id,

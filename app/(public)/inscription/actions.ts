@@ -2,17 +2,24 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { signIn } from "@/auth";
 import { capter } from "@/lib/actions/serveur";
-import { COOKIE_ECOLE, compteConnecte, emailDejaUtilise } from "@/lib/auth/session";
-import { adresseIp, inscriptionAutorisee, noterInscription } from "@/lib/auth/limite";
+import { COOKIE_ECOLE, compteConnecte } from "@/lib/auth/session";
+import { adresseIp, envoiAutorise, inscriptionAutorisee, noterInscription } from "@/lib/auth/limite";
+import { envoiDisponible } from "@/lib/email/file";
+import {
+  confirmerInscription as confirmerInscriptionParLien,
+  demanderInscription,
+  INSCRIPTION_FERMEE,
+  verifierMotDePasse,
+} from "@/lib/email/parcours";
 import { creerEcole, lireEcole } from "@/lib/plateforme/creation";
+import { urlApplication } from "@/lib/portail/acces";
 
-const MOT_DE_PASSE_MIN = 8;
-
-// Inscription d'une ecole en ligne : periode d'essai, puis connexion directe a la nouvelle ecole.
-// Deja connecte : l'ecole est ajoutee au compte (qui en devient le directeur).
-async function inscrireEcoleCorps(fd: FormData) {
+// Inscription d'une ecole en ligne, en periode d'essai.
+// Deja connecte : l'ecole est ajoutee au compte (qui en devient le directeur), tout de suite.
+// Sinon : un lien est envoye a l'adresse du directeur ; l'ecole et son compte ne sont crees
+// qu'au clic sur ce lien (adresse confirmee).
+async function inscrireEcoleCorps(fd: FormData): Promise<{ email: string }> {
   // Champ invisible rempli par les robots
   if (String(fd.get("site") ?? "")) throw new Error("Inscription refusée");
   if (fd.get("conditions") !== "on") throw new Error("Acceptez les conditions d'utilisation pour créer votre école");
@@ -23,35 +30,42 @@ async function inscrireEcoleCorps(fd: FormData) {
   }
 
   const compte = await compteConnecte();
-  if (compte) fd.set("directeurEmail", compte.email);
-  const donnees = lireEcole(fd);
-
-  const motDePasse = String(fd.get("motDePasse") ?? "");
-  if (!compte) {
-    if (await emailDejaUtilise(donnees.directeurEmail)) {
-      throw new Error("Cette adresse a déjà un compte GES Mali : connectez-vous, puis créez l'école depuis « Mes écoles »");
-    }
-    if (motDePasse.length < MOT_DE_PASSE_MIN) throw new Error("Mot de passe : " + MOT_DE_PASSE_MIN + " caractères minimum");
-    if (motDePasse !== String(fd.get("confirmation") ?? "")) throw new Error("La confirmation ne correspond pas au mot de passe");
+  if (compte) {
+    fd.set("directeurEmail", compte.email);
+    const r = await creerEcole(lireEcole(fd), { statut: "ESSAI", parUserId: compte.id });
+    await noterInscription(ip);
+    // La nouvelle ecole devient l'ecole courante
+    (await cookies()).set(COOKIE_ECOLE, r.etablissementId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 365 * 24 * 3600,
+    });
+    redirect("/dashboard");
   }
 
-  const r = await creerEcole(donnees, { statut: "ESSAI", motDePasse: compte ? null : motDePasse });
+  if (!envoiDisponible()) throw new Error(INSCRIPTION_FERMEE);
+  const donnees = lireEcole(fd);
+  verifierMotDePasse(String(fd.get("motDePasse") ?? ""), String(fd.get("confirmation") ?? ""));
+  if (!(await envoiAutorise(ip, donnees.directeurEmail))) {
+    throw new Error("Trop de demandes envoyées : réessayez dans une heure");
+  }
+  await demanderInscription(donnees, String(fd.get("motDePasse")), await urlApplication());
   await noterInscription(ip);
+  return { email: donnees.directeurEmail };
+}
 
-  // La nouvelle ecole devient l'ecole courante
-  (await cookies()).set(COOKIE_ECOLE, r.etablissementId, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 365 * 24 * 3600,
-  });
-
-  if (compte) redirect("/dashboard");
-  await signIn("credentials", { email: donnees.directeurEmail, password: motDePasse, redirectTo: "/dashboard" });
-  return { ok: true };
+// Clic sur « Créer mon école » depuis le lien recu (un bouton, et non la simple ouverture
+// du lien : les messageries qui verifient les liens d'un e-mail ne creent pas l'ecole)
+async function confirmerInscriptionCorps(jeton: string) {
+  await confirmerInscriptionParLien(String(jeton ?? ""));
+  redirect("/login?connexion=ecole-creee");
 }
 
 export async function inscrireEcole(...a: Parameters<typeof inscrireEcoleCorps>) {
   return capter(() => inscrireEcoleCorps(...a));
+}
+export async function confirmerInscription(...a: Parameters<typeof confirmerInscriptionCorps>) {
+  return capter(() => confirmerInscriptionCorps(...a));
 }

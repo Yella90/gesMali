@@ -132,6 +132,11 @@ export type TrancheFrais = Prisma.TrancheFraisModel
  */
 export type PaiementFrais = Prisma.PaiementFraisModel
 /**
+ * Model CompteurRecu
+ * 
+ */
+export type CompteurRecu = Prisma.CompteurRecuModel
+/**
  * Model Rappel
  * 
  */
@@ -166,3 +171,8 @@ export type Presence = Prisma.PresenceModel
  * 
  */
 export type EchecConnexion = Prisma.EchecConnexionModel
+/**
+ * Model JetonEmail
+ * 
+ */
+export type JetonEmail = Prisma.JetonEmailModel

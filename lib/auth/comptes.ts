@@ -52,9 +52,43 @@ export async function emailDejaUtilise(email: string): Promise<boolean> {
   return (await prisma.user.count({ where: { email } })) > 0;
 }
 
-// Nouveau mot de passe d'un compte (valable dans toutes ses ecoles)
-export async function modifierMotDePasseCompte(userId: string, motDePasse: string) {
-  await prisma.user.update({ where: { id: userId }, data: { passwordHash: await bcrypt.hash(motDePasse, 10) } });
+// Nouveau mot de passe d'un compte (valable dans toutes ses ecoles). Les sessions ouvertes
+// avant sont fermees (voir sessionValable). emailVerifie : le changement vient d'un lien
+// recu a cette adresse (mot de passe oublie).
+export async function modifierMotDePasseCompte(userId: string, motDePasse: string, { emailVerifie = false } = {}) {
+  const maintenant = new Date();
+  await prisma.user.update({
+    where: { id: userId },
+    data: {
+      passwordHash: await bcrypt.hash(motDePasse, 10),
+      motDePasseModifieLe: maintenant,
+      ...(emailVerifie ? { emailVerifieLe: maintenant } : {}),
+    },
+  });
+}
+
+// Session ouverte (connecteLe, en ms) apres le dernier changement de mot de passe
+export function sessionValable(user: { motDePasseModifieLe: Date | null }, connecteLe: number | undefined): boolean {
+  return !user.motDePasseModifieLe || (connecteLe ?? 0) >= user.motDePasseModifieLe.getTime();
+}
+
+const ADRESSE_NON_CONFIRMEE =
+  "Cette adresse a déjà un compte GES Mali, mais elle n'est pas encore confirmée : la personne doit d'abord la confirmer " +
+  "depuis « Mon compte » (lien reçu par e-mail) pour être rattachée à une autre école";
+
+// Un compte existant n'est rattache a une nouvelle ecole que si son adresse est confirmee :
+// sinon, quelqu'un qui aurait cree un compte avec l'adresse d'une autre personne recevrait
+// l'acces aux ecoles de cette personne
+export function verifierRattachement(existant: { emailVerifieLe: Date | null }) {
+  if (!existant.emailVerifieLe) throw new Error(ADRESSE_NON_CONFIRMEE);
+}
+
+// Avant de creer une fiche employe avec son compte : l'adresse a-t-elle deja un compte ?
+// (refus si ce compte ne pourra pas etre rattache)
+export async function compteARattacher(email: string): Promise<boolean> {
+  const existant = await prisma.user.findUnique({ where: { email }, select: { emailVerifieLe: true } });
+  if (existant) verifierRattachement(existant);
+  return !!existant;
 }
 
 // ─── Comptes du personnel d'une ecole ───────────────────────────────────────────
@@ -91,6 +125,7 @@ export async function ouvrirAcces(p: {
     const existant = await tx.user.findUnique({ where: { email }, include: { acces: { where: { etablissementId: p.etablissementId } } } });
     if (existant) {
       if (existant.acces.length) throw new Error("Ce compte a déjà accès à votre école, avec une autre fiche employé");
+      verifierRattachement(existant);
       await tx.acces.create({ data: { userId: existant.id, etablissementId: p.etablissementId, employeId: p.employeId, roles: [role] } });
       return { userId: existant.id, compteExistant: true };
     }

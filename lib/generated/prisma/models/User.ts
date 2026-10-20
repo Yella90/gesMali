@@ -31,6 +31,8 @@ export type UserMinAggregateOutputType = {
   actif: boolean | null
   employeId: string | null
   etablissementId: string | null
+  emailVerifieLe: Date | null
+  motDePasseModifieLe: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -42,6 +44,8 @@ export type UserMaxAggregateOutputType = {
   actif: boolean | null
   employeId: string | null
   etablissementId: string | null
+  emailVerifieLe: Date | null
+  motDePasseModifieLe: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,6 +58,8 @@ export type UserCountAggregateOutputType = {
   actif: number
   employeId: number
   etablissementId: number
+  emailVerifieLe: number
+  motDePasseModifieLe: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -67,6 +73,8 @@ export type UserMinAggregateInputType = {
   actif?: true
   employeId?: true
   etablissementId?: true
+  emailVerifieLe?: true
+  motDePasseModifieLe?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -78,6 +86,8 @@ export type UserMaxAggregateInputType = {
   actif?: true
   employeId?: true
   etablissementId?: true
+  emailVerifieLe?: true
+  motDePasseModifieLe?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -90,6 +100,8 @@ export type UserCountAggregateInputType = {
   actif?: true
   employeId?: true
   etablissementId?: true
+  emailVerifieLe?: true
+  motDePasseModifieLe?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -175,6 +187,8 @@ export type UserGroupByOutputType = {
   actif: boolean
   employeId: string | null
   etablissementId: string | null
+  emailVerifieLe: Date | null
+  motDePasseModifieLe: Date | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -208,6 +222,8 @@ export type UserWhereInput = {
   actif?: Prisma.BoolFilter<"User"> | boolean
   employeId?: Prisma.StringNullableFilter<"User"> | string | null
   etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  motDePasseModifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   employe?: Prisma.XOR<Prisma.EmployeNullableScalarRelationFilter, Prisma.EmployeWhereInput> | null
@@ -223,6 +239,7 @@ export type UserWhereInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieListRelationFilter
   presencesSaisies?: Prisma.PresenceListRelationFilter
   acces?: Prisma.AccesListRelationFilter
+  jetons?: Prisma.JetonEmailListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -233,6 +250,8 @@ export type UserOrderByWithRelationInput = {
   actif?: Prisma.SortOrder
   employeId?: Prisma.SortOrderInput | Prisma.SortOrder
   etablissementId?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifieLe?: Prisma.SortOrderInput | Prisma.SortOrder
+  motDePasseModifieLe?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   employe?: Prisma.EmployeOrderByWithRelationInput
@@ -248,6 +267,7 @@ export type UserOrderByWithRelationInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieOrderByRelationAggregateInput
   presencesSaisies?: Prisma.PresenceOrderByRelationAggregateInput
   acces?: Prisma.AccesOrderByRelationAggregateInput
+  jetons?: Prisma.JetonEmailOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -261,6 +281,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   roles?: Prisma.EnumRoleNullableListFilter<"User">
   actif?: Prisma.BoolFilter<"User"> | boolean
   etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  motDePasseModifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   employe?: Prisma.XOR<Prisma.EmployeNullableScalarRelationFilter, Prisma.EmployeWhereInput> | null
@@ -276,6 +298,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   mouvementsSaisis?: Prisma.MouvementTresorerieListRelationFilter
   presencesSaisies?: Prisma.PresenceListRelationFilter
   acces?: Prisma.AccesListRelationFilter
+  jetons?: Prisma.JetonEmailListRelationFilter
 }, "id" | "email" | "employeId">
 
 export type UserOrderByWithAggregationInput = {
@@ -286,6 +309,8 @@ export type UserOrderByWithAggregationInput = {
   actif?: Prisma.SortOrder
   employeId?: Prisma.SortOrderInput | Prisma.SortOrder
   etablissementId?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVerifieLe?: Prisma.SortOrderInput | Prisma.SortOrder
+  motDePasseModifieLe?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -304,6 +329,8 @@ export type UserScalarWhereWithAggregatesInput = {
   actif?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   employeId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   etablissementId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailVerifieLe?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  motDePasseModifieLe?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -314,6 +341,8 @@ export type UserCreateInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -329,6 +358,7 @@ export type UserCreateInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -339,6 +369,8 @@ export type UserUncheckedCreateInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -352,6 +384,7 @@ export type UserUncheckedCreateInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -360,6 +393,8 @@ export type UserUpdateInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -375,6 +410,7 @@ export type UserUpdateInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -385,6 +421,8 @@ export type UserUncheckedUpdateInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -398,6 +436,7 @@ export type UserUncheckedUpdateInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -408,6 +447,8 @@ export type UserCreateManyInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -418,6 +459,8 @@ export type UserUpdateManyMutationInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -430,6 +473,8 @@ export type UserUncheckedUpdateManyInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -455,6 +500,8 @@ export type UserCountOrderByAggregateInput = {
   actif?: Prisma.SortOrder
   employeId?: Prisma.SortOrder
   etablissementId?: Prisma.SortOrder
+  emailVerifieLe?: Prisma.SortOrder
+  motDePasseModifieLe?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -466,6 +513,8 @@ export type UserMaxOrderByAggregateInput = {
   actif?: Prisma.SortOrder
   employeId?: Prisma.SortOrder
   etablissementId?: Prisma.SortOrder
+  emailVerifieLe?: Prisma.SortOrder
+  motDePasseModifieLe?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -477,6 +526,8 @@ export type UserMinOrderByAggregateInput = {
   actif?: Prisma.SortOrder
   employeId?: Prisma.SortOrder
   etablissementId?: Prisma.SortOrder
+  emailVerifieLe?: Prisma.SortOrder
+  motDePasseModifieLe?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -737,12 +788,30 @@ export type UserUpdateOneRequiredWithoutPresencesSaisiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPresencesSaisiesInput, Prisma.UserUpdateWithoutPresencesSaisiesInput>, Prisma.UserUncheckedUpdateWithoutPresencesSaisiesInput>
 }
 
+export type UserCreateNestedOneWithoutJetonsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJetonsInput, Prisma.UserUncheckedCreateWithoutJetonsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJetonsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutJetonsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJetonsInput, Prisma.UserUncheckedCreateWithoutJetonsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJetonsInput
+  upsert?: Prisma.UserUpsertWithoutJetonsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJetonsInput, Prisma.UserUpdateWithoutJetonsInput>, Prisma.UserUncheckedUpdateWithoutJetonsInput>
+}
+
 export type UserCreateWithoutEmployeInput = {
   id?: string
   email: string
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
@@ -757,6 +826,7 @@ export type UserCreateWithoutEmployeInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmployeInput = {
@@ -766,6 +836,8 @@ export type UserUncheckedCreateWithoutEmployeInput = {
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -779,6 +851,7 @@ export type UserUncheckedCreateWithoutEmployeInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmployeInput = {
@@ -803,6 +876,8 @@ export type UserUpdateWithoutEmployeInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
@@ -817,6 +892,7 @@ export type UserUpdateWithoutEmployeInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmployeInput = {
@@ -826,6 +902,8 @@ export type UserUncheckedUpdateWithoutEmployeInput = {
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -839,6 +917,7 @@ export type UserUncheckedUpdateWithoutEmployeInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccesInput = {
@@ -847,6 +926,8 @@ export type UserCreateWithoutAccesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -861,6 +942,7 @@ export type UserCreateWithoutAccesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccesInput = {
@@ -871,6 +953,8 @@ export type UserUncheckedCreateWithoutAccesInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -883,6 +967,7 @@ export type UserUncheckedCreateWithoutAccesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccesInput = {
@@ -907,6 +992,8 @@ export type UserUpdateWithoutAccesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -921,6 +1008,7 @@ export type UserUpdateWithoutAccesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccesInput = {
@@ -931,6 +1019,8 @@ export type UserUncheckedUpdateWithoutAccesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -943,6 +1033,7 @@ export type UserUncheckedUpdateWithoutAccesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEtablissementInput = {
@@ -951,6 +1042,8 @@ export type UserCreateWithoutEtablissementInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -965,6 +1058,7 @@ export type UserCreateWithoutEtablissementInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEtablissementInput = {
@@ -974,6 +1068,8 @@ export type UserUncheckedCreateWithoutEtablissementInput = {
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
   employeId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -987,6 +1083,7 @@ export type UserUncheckedCreateWithoutEtablissementInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEtablissementInput = {
@@ -1026,6 +1123,8 @@ export type UserScalarWhereInput = {
   actif?: Prisma.BoolFilter<"User"> | boolean
   employeId?: Prisma.StringNullableFilter<"User"> | string | null
   etablissementId?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVerifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  motDePasseModifieLe?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -1036,6 +1135,8 @@ export type UserCreateWithoutNotesSaisiesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1050,6 +1151,7 @@ export type UserCreateWithoutNotesSaisiesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotesSaisiesInput = {
@@ -1060,6 +1162,8 @@ export type UserUncheckedCreateWithoutNotesSaisiesInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesModifiees?: Prisma.NoteUncheckedCreateNestedManyWithoutModifieeParInput
@@ -1072,6 +1176,7 @@ export type UserUncheckedCreateWithoutNotesSaisiesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotesSaisiesInput = {
@@ -1085,6 +1190,8 @@ export type UserCreateWithoutNotesModifieesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1099,6 +1206,7 @@ export type UserCreateWithoutNotesModifieesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotesModifieesInput = {
@@ -1109,6 +1217,8 @@ export type UserUncheckedCreateWithoutNotesModifieesInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1121,6 +1231,7 @@ export type UserUncheckedCreateWithoutNotesModifieesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotesModifieesInput = {
@@ -1145,6 +1256,8 @@ export type UserUpdateWithoutNotesSaisiesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1159,6 +1272,7 @@ export type UserUpdateWithoutNotesSaisiesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotesSaisiesInput = {
@@ -1169,6 +1283,8 @@ export type UserUncheckedUpdateWithoutNotesSaisiesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesModifiees?: Prisma.NoteUncheckedUpdateManyWithoutModifieeParNestedInput
@@ -1181,6 +1297,7 @@ export type UserUncheckedUpdateWithoutNotesSaisiesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutNotesModifieesInput = {
@@ -1200,6 +1317,8 @@ export type UserUpdateWithoutNotesModifieesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1214,6 +1333,7 @@ export type UserUpdateWithoutNotesModifieesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotesModifieesInput = {
@@ -1224,6 +1344,8 @@ export type UserUncheckedUpdateWithoutNotesModifieesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1236,6 +1358,7 @@ export type UserUncheckedUpdateWithoutNotesModifieesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBulletinsGeneresInput = {
@@ -1244,6 +1367,8 @@ export type UserCreateWithoutBulletinsGeneresInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1258,6 +1383,7 @@ export type UserCreateWithoutBulletinsGeneresInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBulletinsGeneresInput = {
@@ -1268,6 +1394,8 @@ export type UserUncheckedCreateWithoutBulletinsGeneresInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1280,6 +1408,7 @@ export type UserUncheckedCreateWithoutBulletinsGeneresInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBulletinsGeneresInput = {
@@ -1304,6 +1433,8 @@ export type UserUpdateWithoutBulletinsGeneresInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1318,6 +1449,7 @@ export type UserUpdateWithoutBulletinsGeneresInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBulletinsGeneresInput = {
@@ -1328,6 +1460,8 @@ export type UserUncheckedUpdateWithoutBulletinsGeneresInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1340,6 +1474,7 @@ export type UserUncheckedUpdateWithoutBulletinsGeneresInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaiementsSaisisInput = {
@@ -1348,6 +1483,8 @@ export type UserCreateWithoutPaiementsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1362,6 +1499,7 @@ export type UserCreateWithoutPaiementsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaiementsSaisisInput = {
@@ -1372,6 +1510,8 @@ export type UserUncheckedCreateWithoutPaiementsSaisisInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1384,6 +1524,7 @@ export type UserUncheckedCreateWithoutPaiementsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaiementsSaisisInput = {
@@ -1397,6 +1538,8 @@ export type UserCreateWithoutPaiementsAnnulesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1411,6 +1554,7 @@ export type UserCreateWithoutPaiementsAnnulesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaiementsAnnulesInput = {
@@ -1421,6 +1565,8 @@ export type UserUncheckedCreateWithoutPaiementsAnnulesInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1433,6 +1579,7 @@ export type UserUncheckedCreateWithoutPaiementsAnnulesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaiementsAnnulesInput = {
@@ -1457,6 +1604,8 @@ export type UserUpdateWithoutPaiementsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1471,6 +1620,7 @@ export type UserUpdateWithoutPaiementsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaiementsSaisisInput = {
@@ -1481,6 +1631,8 @@ export type UserUncheckedUpdateWithoutPaiementsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1493,6 +1645,7 @@ export type UserUncheckedUpdateWithoutPaiementsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutPaiementsAnnulesInput = {
@@ -1512,6 +1665,8 @@ export type UserUpdateWithoutPaiementsAnnulesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1526,6 +1681,7 @@ export type UserUpdateWithoutPaiementsAnnulesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaiementsAnnulesInput = {
@@ -1536,6 +1692,8 @@ export type UserUncheckedUpdateWithoutPaiementsAnnulesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1548,6 +1706,7 @@ export type UserUncheckedUpdateWithoutPaiementsAnnulesInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFraisSaisisInput = {
@@ -1556,6 +1715,8 @@ export type UserCreateWithoutFraisSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1570,6 +1731,7 @@ export type UserCreateWithoutFraisSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFraisSaisisInput = {
@@ -1580,6 +1742,8 @@ export type UserUncheckedCreateWithoutFraisSaisisInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1592,6 +1756,7 @@ export type UserUncheckedCreateWithoutFraisSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFraisSaisisInput = {
@@ -1616,6 +1781,8 @@ export type UserUpdateWithoutFraisSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1630,6 +1797,7 @@ export type UserUpdateWithoutFraisSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFraisSaisisInput = {
@@ -1640,6 +1808,8 @@ export type UserUncheckedUpdateWithoutFraisSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1652,6 +1822,7 @@ export type UserUncheckedUpdateWithoutFraisSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRappelsSaisisInput = {
@@ -1660,6 +1831,8 @@ export type UserCreateWithoutRappelsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1674,6 +1847,7 @@ export type UserCreateWithoutRappelsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRappelsSaisisInput = {
@@ -1684,6 +1858,8 @@ export type UserUncheckedCreateWithoutRappelsSaisisInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1696,6 +1872,7 @@ export type UserUncheckedCreateWithoutRappelsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRappelsSaisisInput = {
@@ -1720,6 +1897,8 @@ export type UserUpdateWithoutRappelsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1734,6 +1913,7 @@ export type UserUpdateWithoutRappelsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRappelsSaisisInput = {
@@ -1744,6 +1924,8 @@ export type UserUncheckedUpdateWithoutRappelsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1756,6 +1938,7 @@ export type UserUncheckedUpdateWithoutRappelsSaisisInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1764,6 +1947,8 @@ export type UserCreateWithoutAuditLogsInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1778,6 +1963,7 @@ export type UserCreateWithoutAuditLogsInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1788,6 +1974,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1800,6 +1988,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1824,6 +2013,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1838,6 +2029,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -1848,6 +2040,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1860,6 +2054,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMouvementsSaisisInput = {
@@ -1868,6 +2063,8 @@ export type UserCreateWithoutMouvementsSaisisInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1882,6 +2079,7 @@ export type UserCreateWithoutMouvementsSaisisInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMouvementsSaisisInput = {
@@ -1892,6 +2090,8 @@ export type UserUncheckedCreateWithoutMouvementsSaisisInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -1904,6 +2104,7 @@ export type UserUncheckedCreateWithoutMouvementsSaisisInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMouvementsSaisisInput = {
@@ -1928,6 +2129,8 @@ export type UserUpdateWithoutMouvementsSaisisInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -1942,6 +2145,7 @@ export type UserUpdateWithoutMouvementsSaisisInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMouvementsSaisisInput = {
@@ -1952,6 +2156,8 @@ export type UserUncheckedUpdateWithoutMouvementsSaisisInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -1964,6 +2170,7 @@ export type UserUncheckedUpdateWithoutMouvementsSaisisInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPresencesSaisiesInput = {
@@ -1972,6 +2179,8 @@ export type UserCreateWithoutPresencesSaisiesInput = {
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
@@ -1986,6 +2195,7 @@ export type UserCreateWithoutPresencesSaisiesInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPresencesSaisiesInput = {
@@ -1996,6 +2206,8 @@ export type UserUncheckedCreateWithoutPresencesSaisiesInput = {
   actif?: boolean
   employeId?: string | null
   etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
@@ -2008,6 +2220,7 @@ export type UserUncheckedCreateWithoutPresencesSaisiesInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPresencesSaisiesInput = {
@@ -2032,6 +2245,8 @@ export type UserUpdateWithoutPresencesSaisiesInput = {
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
@@ -2046,6 +2261,7 @@ export type UserUpdateWithoutPresencesSaisiesInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPresencesSaisiesInput = {
@@ -2056,6 +2272,8 @@ export type UserUncheckedUpdateWithoutPresencesSaisiesInput = {
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -2068,28 +2286,87 @@ export type UserUncheckedUpdateWithoutPresencesSaisiesInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
 
-export type UserCreateManyEtablissementInput = {
+export type UserCreateWithoutJetonsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
+  notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
+  bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
+  paiementsSaisis?: Prisma.PaiementCreateNestedManyWithoutSaisieParInput
+  paiementsAnnules?: Prisma.PaiementCreateNestedManyWithoutAnnuleParInput
+  fraisSaisis?: Prisma.PaiementFraisCreateNestedManyWithoutSaisieParInput
+  rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
+  acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJetonsInput = {
   id?: string
   email: string
   passwordHash: string
   roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
   actif?: boolean
   employeId?: string | null
+  etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
+  notesModifiees?: Prisma.NoteUncheckedCreateNestedManyWithoutModifieeParInput
+  bulletinsGeneres?: Prisma.BulletinUncheckedCreateNestedManyWithoutGenereParInput
+  paiementsSaisis?: Prisma.PaiementUncheckedCreateNestedManyWithoutSaisieParInput
+  paiementsAnnules?: Prisma.PaiementUncheckedCreateNestedManyWithoutAnnuleParInput
+  fraisSaisis?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutSaisieParInput
+  rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserUpdateWithoutEtablissementInput = {
+export type UserCreateOrConnectWithoutJetonsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJetonsInput, Prisma.UserUncheckedCreateWithoutJetonsInput>
+}
+
+export type UserUpsertWithoutJetonsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJetonsInput, Prisma.UserUncheckedUpdateWithoutJetonsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJetonsInput, Prisma.UserUncheckedCreateWithoutJetonsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJetonsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJetonsInput, Prisma.UserUncheckedUpdateWithoutJetonsInput>
+}
+
+export type UserUpdateWithoutJetonsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
   notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
   notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
   bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
@@ -2103,13 +2380,16 @@ export type UserUpdateWithoutEtablissementInput = {
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutEtablissementInput = {
+export type UserUncheckedUpdateWithoutJetonsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
@@ -2125,6 +2405,69 @@ export type UserUncheckedUpdateWithoutEtablissementInput = {
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
 }
 
+export type UserCreateManyEtablissementInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  actif?: boolean
+  employeId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserUpdateWithoutEtablissementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
+  notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
+  bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
+  paiementsSaisis?: Prisma.PaiementUpdateManyWithoutSaisieParNestedInput
+  paiementsAnnules?: Prisma.PaiementUpdateManyWithoutAnnuleParNestedInput
+  fraisSaisis?: Prisma.PaiementFraisUpdateManyWithoutSaisieParNestedInput
+  rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutEtablissementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
+  notesModifiees?: Prisma.NoteUncheckedUpdateManyWithoutModifieeParNestedInput
+  bulletinsGeneres?: Prisma.BulletinUncheckedUpdateManyWithoutGenereParNestedInput
+  paiementsSaisis?: Prisma.PaiementUncheckedUpdateManyWithoutSaisieParNestedInput
+  paiementsAnnules?: Prisma.PaiementUncheckedUpdateManyWithoutAnnuleParNestedInput
+  fraisSaisis?: Prisma.PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput
+  rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserUncheckedUpdateManyWithoutEtablissementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2132,6 +2475,8 @@ export type UserUncheckedUpdateManyWithoutEtablissementInput = {
   roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
   actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
   employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2153,6 +2498,7 @@ export type UserCountOutputType = {
   mouvementsSaisis: number
   presencesSaisies: number
   acces: number
+  jetons: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2167,6 +2513,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   mouvementsSaisis?: boolean | UserCountOutputTypeCountMouvementsSaisisArgs
   presencesSaisies?: boolean | UserCountOutputTypeCountPresencesSaisiesArgs
   acces?: boolean | UserCountOutputTypeCountAccesArgs
+  jetons?: boolean | UserCountOutputTypeCountJetonsArgs
 }
 
 /**
@@ -2256,6 +2603,13 @@ export type UserCountOutputTypeCountAccesArgs<ExtArgs extends runtime.Types.Exte
   where?: Prisma.AccesWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountJetonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JetonEmailWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2265,6 +2619,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   actif?: boolean
   employeId?: boolean
   etablissementId?: boolean
+  emailVerifieLe?: boolean
+  motDePasseModifieLe?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employe?: boolean | Prisma.User$employeArgs<ExtArgs>
@@ -2280,6 +2636,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   mouvementsSaisis?: boolean | Prisma.User$mouvementsSaisisArgs<ExtArgs>
   presencesSaisies?: boolean | Prisma.User$presencesSaisiesArgs<ExtArgs>
   acces?: boolean | Prisma.User$accesArgs<ExtArgs>
+  jetons?: boolean | Prisma.User$jetonsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2291,6 +2648,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   actif?: boolean
   employeId?: boolean
   etablissementId?: boolean
+  emailVerifieLe?: boolean
+  motDePasseModifieLe?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employe?: boolean | Prisma.User$employeArgs<ExtArgs>
@@ -2305,6 +2664,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   actif?: boolean
   employeId?: boolean
   etablissementId?: boolean
+  emailVerifieLe?: boolean
+  motDePasseModifieLe?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   employe?: boolean | Prisma.User$employeArgs<ExtArgs>
@@ -2319,11 +2680,13 @@ export type UserSelectScalar = {
   actif?: boolean
   employeId?: boolean
   etablissementId?: boolean
+  emailVerifieLe?: boolean
+  motDePasseModifieLe?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "roles" | "actif" | "employeId" | "etablissementId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "roles" | "actif" | "employeId" | "etablissementId" | "emailVerifieLe" | "motDePasseModifieLe" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   employe?: boolean | Prisma.User$employeArgs<ExtArgs>
   etablissement?: boolean | Prisma.User$etablissementArgs<ExtArgs>
@@ -2338,6 +2701,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   mouvementsSaisis?: boolean | Prisma.User$mouvementsSaisisArgs<ExtArgs>
   presencesSaisies?: boolean | Prisma.User$presencesSaisiesArgs<ExtArgs>
   acces?: boolean | Prisma.User$accesArgs<ExtArgs>
+  jetons?: boolean | Prisma.User$jetonsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2365,6 +2729,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     mouvementsSaisis: Prisma.$MouvementTresoreriePayload<ExtArgs>[]
     presencesSaisies: Prisma.$PresencePayload<ExtArgs>[]
     acces: Prisma.$AccesPayload<ExtArgs>[]
+    jetons: Prisma.$JetonEmailPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2374,6 +2739,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     actif: boolean
     employeId: string | null
     etablissementId: string | null
+    emailVerifieLe: Date | null
+    motDePasseModifieLe: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -2783,6 +3150,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   mouvementsSaisis<T extends Prisma.User$mouvementsSaisisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mouvementsSaisisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MouvementTresoreriePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   presencesSaisies<T extends Prisma.User$presencesSaisiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$presencesSaisiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   acces<T extends Prisma.User$accesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jetons<T extends Prisma.User$jetonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jetonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JetonEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2819,6 +3187,8 @@ export interface UserFieldRefs {
   readonly actif: Prisma.FieldRef<"User", 'Boolean'>
   readonly employeId: Prisma.FieldRef<"User", 'String'>
   readonly etablissementId: Prisma.FieldRef<"User", 'String'>
+  readonly emailVerifieLe: Prisma.FieldRef<"User", 'DateTime'>
+  readonly motDePasseModifieLe: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3521,6 +3891,30 @@ export type User$accesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.AccesScalarFieldEnum | Prisma.AccesScalarFieldEnum[]
+}
+
+/**
+ * User.jetons
+ */
+export type User$jetonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JetonEmail
+   */
+  select?: Prisma.JetonEmailSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JetonEmail
+   */
+  omit?: Prisma.JetonEmailOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JetonEmailInclude<ExtArgs> | null
+  where?: Prisma.JetonEmailWhereInput
+  orderBy?: Prisma.JetonEmailOrderByWithRelationInput | Prisma.JetonEmailOrderByWithRelationInput[]
+  cursor?: Prisma.JetonEmailWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JetonEmailScalarFieldEnum | Prisma.JetonEmailScalarFieldEnum[]
 }
 
 /**

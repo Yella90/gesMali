@@ -292,10 +292,31 @@ export async function listeRappels(etablissementId: string, envoye: boolean | un
   }));
 }
 
-// Numero du prochain recu de frais. recuNumero est unique dans toute la base : la
-// numerotation reste commune a toutes les ecoles (une numerotation par ecole demandera
-// une colonne etablissementId sur les paiements de frais).
-export async function prochainNumeroRecu(): Promise<string> {
-  const nb = await prisma.paiementFrais.count();
-  return "REC-" + new Date().getFullYear() + "-" + String(nb + 1).padStart(5, "0");
+// Numero du prochain recu de frais de l'ecole : suite propre a chaque ecole et a chaque annee
+// (REC-2026-00001, REC-2026-00002...), sans doublon meme pour des encaissements simultanes.
+// A appeler dans la transaction qui cree le paiement : le compteur avance avec elle, et revient
+// en arriere si elle echoue (pas de trou). Premier recu de l'annee pour l'ecole : la suite
+// reprend apres le plus grand numero deja emis par l'ecole.
+export async function prochainNumeroRecu(
+  client: Pick<typeof prisma, "$queryRaw">,
+  etablissementId: string,
+  maintenant = new Date()
+): Promise<string> {
+  const annee = maintenant.getFullYear();
+  const prefixe = "REC-" + annee + "-";
+  const [r] = await client.$queryRaw<{ dernier: number }[]>`
+    INSERT INTO ${T("CompteurRecu")} AS c ("id", "etablissementId", "annee", "dernier")
+    VALUES (
+      gen_random_uuid()::text, ${etablissementId}, ${annee},
+      COALESCE((
+        -- ::int : sans type, PostgreSQL prendrait la forme "expression reguliere" de SUBSTRING
+        SELECT MAX(CAST(SUBSTRING(p."recuNumero" FROM ${prefixe.length + 1}::int) AS INTEGER))
+        FROM ${T("PaiementFrais")} p
+        WHERE p."etablissementId" = ${etablissementId} AND p."recuNumero" ~ ${"^" + prefixe + "[0-9]+$"}
+      ), 0) + 1
+    )
+    ON CONFLICT ("etablissementId", "annee") DO UPDATE SET "dernier" = c."dernier" + 1
+    RETURNING "dernier"
+  `;
+  return prefixe + String(r.dernier).padStart(5, "0");
 }

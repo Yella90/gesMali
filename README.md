@@ -15,11 +15,15 @@ npm run db:deploy         # applique les migrations
 npm run dev               # http://localhost:3000
 ```
 
-Vérifications avant de livrer :
+Vérifications avant de livrer (les mêmes tournent dans GitHub Actions à chaque envoi, voir
+`.github/workflows/ci.yml`) :
 
 ```bash
-npm run typecheck && npm run lint && npm run build
+npm run typecheck && npm run lint && npm test && npm run build
 ```
+
+`npm test` utilise une base PostgreSQL **locale** uniquement (`npx prisma dev -n ges-mali-test -d`
+une fois), jamais celle du `.env`.
 
 ## Mise en production
 
@@ -33,7 +37,9 @@ npm run typecheck && npm run lint && npm run build
 | `AUTH_TRUST_HOST` | `true` derrière un reverse proxy (Nginx, Docker…). Inutile sur Vercel. |
 | `DIRECT_URL` | Facultatif. URL des migrations : Supabase « Session pooler » (port 5432), Neon URL sans `-pooler`. |
 | `DATABASE_SCHEMA` | Facultatif, défaut `public`. Schéma PostgreSQL de l'application et des migrations. |
-| `APP_URL` | URL utilisée dans les liens et QR codes parents (par défaut `AUTH_URL`). Elle doit être joignable depuis le téléphone des parents. |
+| `APP_URL` | URL utilisée dans les liens et QR codes parents et dans les liens des e-mails (par défaut `AUTH_URL`). Elle doit être joignable depuis le téléphone des parents. |
+| `ADMINS_PLATEFORME` | E-mails des administrateurs de la plateforme (`/plateforme`), séparés par des virgules. |
+| `MAIL_DATABASE_URL` | Base PostgreSQL de la file d'envoi des e-mails (`envoi-mails/`). Sans elle, l'inscription en ligne et « mot de passe oublié » restent fermés. |
 
 ### Déploiement
 
@@ -59,14 +65,16 @@ Recommandé : définir aussi `DIRECT_URL` pour les migrations (voir le tableau).
 
 ### Checklist sécurité
 
-- [ ] Changer le mot de passe du compte directeur créé par le seed (`prisma/seed.ts` utilise un mot de passe par défaut).
+- [ ] Changer le mot de passe du compte directeur créé par le seed (tiré au hasard, ou `SEED_MOT_DE_PASSE`), et de tout compte créé par une version antérieure du seed.
 - [ ] `AUTH_SECRET` propre à la production, jamais commité.
 - [ ] Servir uniquement en HTTPS (l'en-tête HSTS est envoyé).
 - [ ] Les scripts de maintenance locaux (`check-*.ts`, `reset-password.ts`…) ne sont pas versionnés ; ne pas les déployer.
 
 Déjà en place : en-têtes de sécurité (`next.config.ts`), limitation des tentatives de connexion
-(5 échecs / 15 min par e-mail, mémoire du processus), contrôle des permissions par rôle sur
-chaque page, action serveur et route API.
+(5 échecs / 15 min par e-mail, 50 par adresse IP, en base), données de chaque école isolées
+(`lib/data/ecole.ts`), contrôle des permissions par rôle sur chaque page, action serveur et route
+API, liens reçus par e-mail à usage unique, sessions fermées après un changement de mot de passe,
+rattachement d'un compte à une autre école seulement si son adresse est confirmée.
 
 ## Instances : démonstration et clients
 

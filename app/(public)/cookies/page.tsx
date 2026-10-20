@@ -21,6 +21,11 @@ const COOKIES = [
     role: "Retient la page à afficher après la connexion.",
     duree: "Durée de la session du navigateur",
   },
+  {
+    nom: "gesmali-ecole",
+    role: "Retient l'école choisie par une personne qui travaille dans plusieurs écoles.",
+    duree: "1 an, ou jusqu'au choix d'une autre école",
+  },
 ];
 
 export default function CookiesPage() {

@@ -1,18 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { changerMonMotDePasse as changerMonMotDePasseAction } from "./actions";
-import { relever } from "@/lib/actions/resultat";
+import { changerMonMotDePasse } from "./actions";
+import { estRedirection } from "@/lib/actions/resultat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const changerMonMotDePasse = relever(changerMonMotDePasseAction);
-
-export function MotDePasse() {
+// modifie : retour apres un changement reussi (l'action redirige vers /compte?mot-de-passe=modifie)
+export function MotDePasse({ modifie = false }: { modifie?: boolean }) {
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
-  const [fait, setFait] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,12 +18,16 @@ export function MotDePasse() {
     const fd = new FormData(form);
     setEnCours(true);
     setErreur(null);
-    setFait(false);
     try {
-      await changerMonMotDePasse(String(fd.get("actuel")), String(fd.get("nouveau")), String(fd.get("confirmation")));
+      // Succes : l'action redirige (pas de resultat)
+      const r = await changerMonMotDePasse(String(fd.get("actuel")), String(fd.get("nouveau")), String(fd.get("confirmation")));
+      if (r && !r.ok) throw new Error(r.erreur);
       form.reset();
-      setFait(true);
     } catch (err) {
+      if (estRedirection(err)) {
+        form.reset();
+        return;
+      }
       setErreur(err instanceof Error ? err.message : "Modification impossible");
     } finally {
       setEnCours(false);
@@ -55,7 +57,11 @@ export function MotDePasse() {
           {erreur}
         </p>
       )}
-      {fait && <p className="text-sm text-[var(--color-accent)]">Mot de passe modifié.</p>}
+      {modifie && !erreur && !enCours && (
+        <p role="status" className="text-sm text-[var(--color-accent)]">
+          Mot de passe modifié. Les sessions ouvertes sur d&apos;autres appareils ont été fermées.
+        </p>
+      )}
       <Button type="submit" disabled={enCours}>
         {enCours ? "Enregistrement…" : "Enregistrer"}
       </Button>

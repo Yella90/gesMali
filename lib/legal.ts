@@ -13,7 +13,9 @@ export const LEGAL = {
 
   // Hebergement
   hebergeurApplication: "Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis (exécution en région Francfort, Allemagne)",
-  hebergeurBase: "Supabase Inc. (base de données PostgreSQL), serveurs situés à Francfort, Allemagne",
+  hebergeurBase: "Neon Inc. (base de données PostgreSQL), serveurs Amazon Web Services situés à Francfort, Allemagne",
+  // File d'envoi et envoi des e-mails (liens de confirmation, mot de passe oublie)
+  hebergeurEmails: "alwaysdata SAS, Paris, France (file d'envoi et serveur d'envoi des e-mails)",
 
-  miseAJour: "18 octobre 2026",
+  miseAJour: "20 octobre 2026",
 } as const;

@@ -241,6 +241,8 @@ export type EtablissementWhereInput = {
   users?: Prisma.UserListRelationFilter
   acces?: Prisma.AccesListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  paiementsFrais?: Prisma.PaiementFraisListRelationFilter
+  compteursRecus?: Prisma.CompteurRecuListRelationFilter
   employes?: Prisma.EmployeListRelationFilter
   anneesScolaires?: Prisma.AnneeScolaireListRelationFilter
   matieres?: Prisma.MatiereListRelationFilter
@@ -269,6 +271,8 @@ export type EtablissementOrderByWithRelationInput = {
   users?: Prisma.UserOrderByRelationAggregateInput
   acces?: Prisma.AccesOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  paiementsFrais?: Prisma.PaiementFraisOrderByRelationAggregateInput
+  compteursRecus?: Prisma.CompteurRecuOrderByRelationAggregateInput
   employes?: Prisma.EmployeOrderByRelationAggregateInput
   anneesScolaires?: Prisma.AnneeScolaireOrderByRelationAggregateInput
   matieres?: Prisma.MatiereOrderByRelationAggregateInput
@@ -300,6 +304,8 @@ export type EtablissementWhereUniqueInput = Prisma.AtLeast<{
   users?: Prisma.UserListRelationFilter
   acces?: Prisma.AccesListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  paiementsFrais?: Prisma.PaiementFraisListRelationFilter
+  compteursRecus?: Prisma.CompteurRecuListRelationFilter
   employes?: Prisma.EmployeListRelationFilter
   anneesScolaires?: Prisma.AnneeScolaireListRelationFilter
   matieres?: Prisma.MatiereListRelationFilter
@@ -364,6 +370,8 @@ export type EtablissementCreateInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -392,6 +400,8 @@ export type EtablissementUncheckedCreateInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -420,6 +430,8 @@ export type EtablissementUpdateInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -448,6 +460,8 @@ export type EtablissementUncheckedUpdateInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -710,6 +724,34 @@ export type EtablissementUpdateOneRequiredWithoutFraisScolariteNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutFraisScolariteInput, Prisma.EtablissementUpdateWithoutFraisScolariteInput>, Prisma.EtablissementUncheckedUpdateWithoutFraisScolariteInput>
 }
 
+export type EtablissementCreateNestedOneWithoutPaiementsFraisInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedCreateWithoutPaiementsFraisInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutPaiementsFraisInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneRequiredWithoutPaiementsFraisNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedCreateWithoutPaiementsFraisInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutPaiementsFraisInput
+  upsert?: Prisma.EtablissementUpsertWithoutPaiementsFraisInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutPaiementsFraisInput, Prisma.EtablissementUpdateWithoutPaiementsFraisInput>, Prisma.EtablissementUncheckedUpdateWithoutPaiementsFraisInput>
+}
+
+export type EtablissementCreateNestedOneWithoutCompteursRecusInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedCreateWithoutCompteursRecusInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutCompteursRecusInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+}
+
+export type EtablissementUpdateOneRequiredWithoutCompteursRecusNestedInput = {
+  create?: Prisma.XOR<Prisma.EtablissementCreateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedCreateWithoutCompteursRecusInput>
+  connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutCompteursRecusInput
+  upsert?: Prisma.EtablissementUpsertWithoutCompteursRecusInput
+  connect?: Prisma.EtablissementWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EtablissementUpdateToOneWithWhereWithoutCompteursRecusInput, Prisma.EtablissementUpdateWithoutCompteursRecusInput>, Prisma.EtablissementUncheckedUpdateWithoutCompteursRecusInput>
+}
+
 export type EtablissementCreateNestedOneWithoutAuditLogsInput = {
   create?: Prisma.XOR<Prisma.EtablissementCreateWithoutAuditLogsInput, Prisma.EtablissementUncheckedCreateWithoutAuditLogsInput>
   connectOrCreate?: Prisma.EtablissementCreateOrConnectWithoutAuditLogsInput
@@ -770,6 +812,8 @@ export type EtablissementCreateWithoutEmployesInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -797,6 +841,8 @@ export type EtablissementUncheckedCreateWithoutEmployesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -840,6 +886,8 @@ export type EtablissementUpdateWithoutEmployesInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -867,6 +915,8 @@ export type EtablissementUncheckedUpdateWithoutEmployesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -893,6 +943,8 @@ export type EtablissementCreateWithoutUsersInput = {
   updatedAt?: Date | string
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -920,6 +972,8 @@ export type EtablissementUncheckedCreateWithoutUsersInput = {
   updatedAt?: Date | string
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -963,6 +1017,8 @@ export type EtablissementUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -990,6 +1046,8 @@ export type EtablissementUncheckedUpdateWithoutUsersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1017,6 +1075,8 @@ export type EtablissementCreateWithoutAccesInput = {
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1044,6 +1104,8 @@ export type EtablissementUncheckedCreateWithoutAccesInput = {
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1087,6 +1149,8 @@ export type EtablissementUpdateWithoutAccesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1114,6 +1178,8 @@ export type EtablissementUncheckedUpdateWithoutAccesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1142,6 +1208,8 @@ export type EtablissementCreateWithoutParametresInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1169,6 +1237,8 @@ export type EtablissementUncheckedCreateWithoutParametresInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1212,6 +1282,8 @@ export type EtablissementUpdateWithoutParametresInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1239,6 +1311,8 @@ export type EtablissementUncheckedUpdateWithoutParametresInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1266,6 +1340,8 @@ export type EtablissementCreateWithoutAnneesScolairesInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -1293,6 +1369,8 @@ export type EtablissementUncheckedCreateWithoutAnneesScolairesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1336,6 +1414,8 @@ export type EtablissementUpdateWithoutAnneesScolairesInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -1363,6 +1443,8 @@ export type EtablissementUncheckedUpdateWithoutAnneesScolairesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1390,6 +1472,8 @@ export type EtablissementCreateWithoutMatieresInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
@@ -1417,6 +1501,8 @@ export type EtablissementUncheckedCreateWithoutMatieresInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1460,6 +1546,8 @@ export type EtablissementUpdateWithoutMatieresInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
@@ -1487,6 +1575,8 @@ export type EtablissementUncheckedUpdateWithoutMatieresInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1514,6 +1604,8 @@ export type EtablissementCreateWithoutClassesInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1541,6 +1633,8 @@ export type EtablissementUncheckedCreateWithoutClassesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1584,6 +1678,8 @@ export type EtablissementUpdateWithoutClassesInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1611,6 +1707,8 @@ export type EtablissementUncheckedUpdateWithoutClassesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1638,6 +1736,8 @@ export type EtablissementCreateWithoutElevesInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1665,6 +1765,8 @@ export type EtablissementUncheckedCreateWithoutElevesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1708,6 +1810,8 @@ export type EtablissementUpdateWithoutElevesInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1735,6 +1839,8 @@ export type EtablissementUncheckedUpdateWithoutElevesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1762,6 +1868,8 @@ export type EtablissementCreateWithoutPaiementsInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1789,6 +1897,8 @@ export type EtablissementUncheckedCreateWithoutPaiementsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1832,6 +1942,8 @@ export type EtablissementUpdateWithoutPaiementsInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1859,6 +1971,8 @@ export type EtablissementUncheckedUpdateWithoutPaiementsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -1886,6 +2000,8 @@ export type EtablissementCreateWithoutFraisScolariteInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -1913,6 +2029,8 @@ export type EtablissementUncheckedCreateWithoutFraisScolariteInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -1956,6 +2074,8 @@ export type EtablissementUpdateWithoutFraisScolariteInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -1983,12 +2103,278 @@ export type EtablissementUncheckedUpdateWithoutFraisScolariteInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
   classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
   eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
   paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutPaiementsFraisInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutPaiementsFraisInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutPaiementsFraisInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedCreateWithoutPaiementsFraisInput>
+}
+
+export type EtablissementUpsertWithoutPaiementsFraisInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedUpdateWithoutPaiementsFraisInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedCreateWithoutPaiementsFraisInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutPaiementsFraisInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutPaiementsFraisInput, Prisma.EtablissementUncheckedUpdateWithoutPaiementsFraisInput>
+}
+
+export type EtablissementUpdateWithoutPaiementsFraisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutPaiementsFraisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementCreateWithoutCompteursRecusInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementUncheckedCreateWithoutCompteursRecusInput = {
+  id?: string
+  nom: string
+  type: $Enums.TypeEtablissement
+  adresse?: string | null
+  telephone?: string | null
+  email?: string | null
+  logo?: string | null
+  actif?: boolean
+  statut?: $Enums.StatutEtablissement
+  finEssai?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
+  matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
+  classes?: Prisma.ClasseUncheckedCreateNestedManyWithoutEtablissementInput
+  eleves?: Prisma.EleveUncheckedCreateNestedManyWithoutEtablissementInput
+  paiements?: Prisma.PaiementUncheckedCreateNestedManyWithoutEtablissementInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedCreateNestedManyWithoutEtablissementInput
+  mouvements?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutEtablissementInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedCreateNestedManyWithoutEtablissementInput
+  parametres?: Prisma.ParametresEtablissementUncheckedCreateNestedOneWithoutEtablissementInput
+}
+
+export type EtablissementCreateOrConnectWithoutCompteursRecusInput = {
+  where: Prisma.EtablissementWhereUniqueInput
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedCreateWithoutCompteursRecusInput>
+}
+
+export type EtablissementUpsertWithoutCompteursRecusInput = {
+  update: Prisma.XOR<Prisma.EtablissementUpdateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedUpdateWithoutCompteursRecusInput>
+  create: Prisma.XOR<Prisma.EtablissementCreateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedCreateWithoutCompteursRecusInput>
+  where?: Prisma.EtablissementWhereInput
+}
+
+export type EtablissementUpdateToOneWithWhereWithoutCompteursRecusInput = {
+  where?: Prisma.EtablissementWhereInput
+  data: Prisma.XOR<Prisma.EtablissementUpdateWithoutCompteursRecusInput, Prisma.EtablissementUncheckedUpdateWithoutCompteursRecusInput>
+}
+
+export type EtablissementUpdateWithoutCompteursRecusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUpdateManyWithoutEtablissementNestedInput
+  mouvements?: Prisma.MouvementTresorerieUpdateManyWithoutEtablissementNestedInput
+  depensesRecurrentes?: Prisma.DepenseRecurrenteUpdateManyWithoutEtablissementNestedInput
+  parametres?: Prisma.ParametresEtablissementUpdateOneWithoutEtablissementNestedInput
+}
+
+export type EtablissementUncheckedUpdateWithoutCompteursRecusInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nom?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeEtablissementFieldUpdateOperationsInput | $Enums.TypeEtablissement
+  adresse?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telephone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  statut?: Prisma.EnumStatutEtablissementFieldUpdateOperationsInput | $Enums.StatutEtablissement
+  finEssai?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
+  anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
+  matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
+  classes?: Prisma.ClasseUncheckedUpdateManyWithoutEtablissementNestedInput
+  eleves?: Prisma.EleveUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiements?: Prisma.PaiementUncheckedUpdateManyWithoutEtablissementNestedInput
+  fraisScolarite?: Prisma.FraisScolariteUncheckedUpdateManyWithoutEtablissementNestedInput
   mouvements?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementNestedInput
   depensesRecurrentes?: Prisma.DepenseRecurrenteUncheckedUpdateManyWithoutEtablissementNestedInput
   parametres?: Prisma.ParametresEtablissementUncheckedUpdateOneWithoutEtablissementNestedInput
@@ -2009,6 +2395,8 @@ export type EtablissementCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -2036,6 +2424,8 @@ export type EtablissementUncheckedCreateWithoutAuditLogsInput = {
   updatedAt?: Date | string
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -2079,6 +2469,8 @@ export type EtablissementUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -2106,6 +2498,8 @@ export type EtablissementUncheckedUpdateWithoutAuditLogsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -2134,6 +2528,8 @@ export type EtablissementCreateWithoutMouvementsInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -2161,6 +2557,8 @@ export type EtablissementUncheckedCreateWithoutMouvementsInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -2204,6 +2602,8 @@ export type EtablissementUpdateWithoutMouvementsInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -2231,6 +2631,8 @@ export type EtablissementUncheckedUpdateWithoutMouvementsInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -2258,6 +2660,8 @@ export type EtablissementCreateWithoutDepensesRecurrentesInput = {
   users?: Prisma.UserCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereCreateNestedManyWithoutEtablissementInput
@@ -2285,6 +2689,8 @@ export type EtablissementUncheckedCreateWithoutDepensesRecurrentesInput = {
   users?: Prisma.UserUncheckedCreateNestedManyWithoutEtablissementInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutEtablissementInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutEtablissementInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedCreateNestedManyWithoutEtablissementInput
   employes?: Prisma.EmployeUncheckedCreateNestedManyWithoutEtablissementInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedCreateNestedManyWithoutEtablissementInput
   matieres?: Prisma.MatiereUncheckedCreateNestedManyWithoutEtablissementInput
@@ -2328,6 +2734,8 @@ export type EtablissementUpdateWithoutDepensesRecurrentesInput = {
   users?: Prisma.UserUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUpdateManyWithoutEtablissementNestedInput
@@ -2355,6 +2763,8 @@ export type EtablissementUncheckedUpdateWithoutDepensesRecurrentesInput = {
   users?: Prisma.UserUncheckedUpdateManyWithoutEtablissementNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutEtablissementNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutEtablissementNestedInput
+  paiementsFrais?: Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput
+  compteursRecus?: Prisma.CompteurRecuUncheckedUpdateManyWithoutEtablissementNestedInput
   employes?: Prisma.EmployeUncheckedUpdateManyWithoutEtablissementNestedInput
   anneesScolaires?: Prisma.AnneeScolaireUncheckedUpdateManyWithoutEtablissementNestedInput
   matieres?: Prisma.MatiereUncheckedUpdateManyWithoutEtablissementNestedInput
@@ -2375,6 +2785,8 @@ export type EtablissementCountOutputType = {
   users: number
   acces: number
   auditLogs: number
+  paiementsFrais: number
+  compteursRecus: number
   employes: number
   anneesScolaires: number
   matieres: number
@@ -2390,6 +2802,8 @@ export type EtablissementCountOutputTypeSelect<ExtArgs extends runtime.Types.Ext
   users?: boolean | EtablissementCountOutputTypeCountUsersArgs
   acces?: boolean | EtablissementCountOutputTypeCountAccesArgs
   auditLogs?: boolean | EtablissementCountOutputTypeCountAuditLogsArgs
+  paiementsFrais?: boolean | EtablissementCountOutputTypeCountPaiementsFraisArgs
+  compteursRecus?: boolean | EtablissementCountOutputTypeCountCompteursRecusArgs
   employes?: boolean | EtablissementCountOutputTypeCountEmployesArgs
   anneesScolaires?: boolean | EtablissementCountOutputTypeCountAnneesScolairesArgs
   matieres?: boolean | EtablissementCountOutputTypeCountMatieresArgs
@@ -2430,6 +2844,20 @@ export type EtablissementCountOutputTypeCountAccesArgs<ExtArgs extends runtime.T
  */
 export type EtablissementCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountPaiementsFraisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaiementFraisWhereInput
+}
+
+/**
+ * EtablissementCountOutputType without action
+ */
+export type EtablissementCountOutputTypeCountCompteursRecusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompteurRecuWhereInput
 }
 
 /**
@@ -2512,6 +2940,8 @@ export type EtablissementSelect<ExtArgs extends runtime.Types.Extensions.Interna
   users?: boolean | Prisma.Etablissement$usersArgs<ExtArgs>
   acces?: boolean | Prisma.Etablissement$accesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Etablissement$auditLogsArgs<ExtArgs>
+  paiementsFrais?: boolean | Prisma.Etablissement$paiementsFraisArgs<ExtArgs>
+  compteursRecus?: boolean | Prisma.Etablissement$compteursRecusArgs<ExtArgs>
   employes?: boolean | Prisma.Etablissement$employesArgs<ExtArgs>
   anneesScolaires?: boolean | Prisma.Etablissement$anneesScolairesArgs<ExtArgs>
   matieres?: boolean | Prisma.Etablissement$matieresArgs<ExtArgs>
@@ -2575,6 +3005,8 @@ export type EtablissementInclude<ExtArgs extends runtime.Types.Extensions.Intern
   users?: boolean | Prisma.Etablissement$usersArgs<ExtArgs>
   acces?: boolean | Prisma.Etablissement$accesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Etablissement$auditLogsArgs<ExtArgs>
+  paiementsFrais?: boolean | Prisma.Etablissement$paiementsFraisArgs<ExtArgs>
+  compteursRecus?: boolean | Prisma.Etablissement$compteursRecusArgs<ExtArgs>
   employes?: boolean | Prisma.Etablissement$employesArgs<ExtArgs>
   anneesScolaires?: boolean | Prisma.Etablissement$anneesScolairesArgs<ExtArgs>
   matieres?: boolean | Prisma.Etablissement$matieresArgs<ExtArgs>
@@ -2596,6 +3028,8 @@ export type $EtablissementPayload<ExtArgs extends runtime.Types.Extensions.Inter
     users: Prisma.$UserPayload<ExtArgs>[]
     acces: Prisma.$AccesPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    paiementsFrais: Prisma.$PaiementFraisPayload<ExtArgs>[]
+    compteursRecus: Prisma.$CompteurRecuPayload<ExtArgs>[]
     employes: Prisma.$EmployePayload<ExtArgs>[]
     anneesScolaires: Prisma.$AnneeScolairePayload<ExtArgs>[]
     matieres: Prisma.$MatierePayload<ExtArgs>[]
@@ -3017,6 +3451,8 @@ export interface Prisma__EtablissementClient<T, Null = never, ExtArgs extends ru
   users<T extends Prisma.Etablissement$usersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$usersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   acces<T extends Prisma.Etablissement$accesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$accesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Etablissement$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paiementsFrais<T extends Prisma.Etablissement$paiementsFraisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$paiementsFraisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaiementFraisPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  compteursRecus<T extends Prisma.Etablissement$compteursRecusArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$compteursRecusArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompteurRecuPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   employes<T extends Prisma.Etablissement$employesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$employesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmployePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   anneesScolaires<T extends Prisma.Etablissement$anneesScolairesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$anneesScolairesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnneeScolairePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matieres<T extends Prisma.Etablissement$matieresArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Etablissement$matieresArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatierePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3530,6 +3966,54 @@ export type Etablissement$auditLogsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.paiementsFrais
+ */
+export type Etablissement$paiementsFraisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaiementFrais
+   */
+  select?: Prisma.PaiementFraisSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaiementFrais
+   */
+  omit?: Prisma.PaiementFraisOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaiementFraisInclude<ExtArgs> | null
+  where?: Prisma.PaiementFraisWhereInput
+  orderBy?: Prisma.PaiementFraisOrderByWithRelationInput | Prisma.PaiementFraisOrderByWithRelationInput[]
+  cursor?: Prisma.PaiementFraisWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaiementFraisScalarFieldEnum | Prisma.PaiementFraisScalarFieldEnum[]
+}
+
+/**
+ * Etablissement.compteursRecus
+ */
+export type Etablissement$compteursRecusArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CompteurRecu
+   */
+  select?: Prisma.CompteurRecuSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CompteurRecu
+   */
+  omit?: Prisma.CompteurRecuOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CompteurRecuInclude<ExtArgs> | null
+  where?: Prisma.CompteurRecuWhereInput
+  orderBy?: Prisma.CompteurRecuOrderByWithRelationInput | Prisma.CompteurRecuOrderByWithRelationInput[]
+  cursor?: Prisma.CompteurRecuWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CompteurRecuScalarFieldEnum | Prisma.CompteurRecuScalarFieldEnum[]
 }
 
 /**

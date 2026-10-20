@@ -36,6 +36,7 @@ export type PaiementFraisSumAggregateOutputType = {
 
 export type PaiementFraisMinAggregateOutputType = {
   id: string | null
+  etablissementId: string | null
   trancheId: string | null
   montant: number | null
   datePaiement: Date | null
@@ -50,6 +51,7 @@ export type PaiementFraisMinAggregateOutputType = {
 
 export type PaiementFraisMaxAggregateOutputType = {
   id: string | null
+  etablissementId: string | null
   trancheId: string | null
   montant: number | null
   datePaiement: Date | null
@@ -64,6 +66,7 @@ export type PaiementFraisMaxAggregateOutputType = {
 
 export type PaiementFraisCountAggregateOutputType = {
   id: number
+  etablissementId: number
   trancheId: number
   montant: number
   datePaiement: number
@@ -88,6 +91,7 @@ export type PaiementFraisSumAggregateInputType = {
 
 export type PaiementFraisMinAggregateInputType = {
   id?: true
+  etablissementId?: true
   trancheId?: true
   montant?: true
   datePaiement?: true
@@ -102,6 +106,7 @@ export type PaiementFraisMinAggregateInputType = {
 
 export type PaiementFraisMaxAggregateInputType = {
   id?: true
+  etablissementId?: true
   trancheId?: true
   montant?: true
   datePaiement?: true
@@ -116,6 +121,7 @@ export type PaiementFraisMaxAggregateInputType = {
 
 export type PaiementFraisCountAggregateInputType = {
   id?: true
+  etablissementId?: true
   trancheId?: true
   montant?: true
   datePaiement?: true
@@ -217,6 +223,7 @@ export type PaiementFraisGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 
 export type PaiementFraisGroupByOutputType = {
   id: string
+  etablissementId: string
   trancheId: string
   montant: number
   datePaiement: Date
@@ -254,6 +261,7 @@ export type PaiementFraisWhereInput = {
   OR?: Prisma.PaiementFraisWhereInput[]
   NOT?: Prisma.PaiementFraisWhereInput | Prisma.PaiementFraisWhereInput[]
   id?: Prisma.StringFilter<"PaiementFrais"> | string
+  etablissementId?: Prisma.StringFilter<"PaiementFrais"> | string
   trancheId?: Prisma.StringFilter<"PaiementFrais"> | string
   montant?: Prisma.FloatFilter<"PaiementFrais"> | number
   datePaiement?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
@@ -264,12 +272,14 @@ export type PaiementFraisWhereInput = {
   motifAnnulation?: Prisma.StringNullableFilter<"PaiementFrais"> | string | null
   saisieParId?: Prisma.StringFilter<"PaiementFrais"> | string
   createdAt?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
+  etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
   tranche?: Prisma.XOR<Prisma.TrancheFraisScalarRelationFilter, Prisma.TrancheFraisWhereInput>
   saisiePar?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PaiementFraisOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  etablissementId?: Prisma.SortOrder
   trancheId?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   datePaiement?: Prisma.SortOrder
@@ -280,31 +290,36 @@ export type PaiementFraisOrderByWithRelationInput = {
   motifAnnulation?: Prisma.SortOrderInput | Prisma.SortOrder
   saisieParId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  etablissement?: Prisma.EtablissementOrderByWithRelationInput
   tranche?: Prisma.TrancheFraisOrderByWithRelationInput
   saisiePar?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PaiementFraisWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  recuNumero?: string
+  etablissementId_recuNumero?: Prisma.PaiementFraisEtablissementIdRecuNumeroCompoundUniqueInput
   AND?: Prisma.PaiementFraisWhereInput | Prisma.PaiementFraisWhereInput[]
   OR?: Prisma.PaiementFraisWhereInput[]
   NOT?: Prisma.PaiementFraisWhereInput | Prisma.PaiementFraisWhereInput[]
+  etablissementId?: Prisma.StringFilter<"PaiementFrais"> | string
   trancheId?: Prisma.StringFilter<"PaiementFrais"> | string
   montant?: Prisma.FloatFilter<"PaiementFrais"> | number
   datePaiement?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
   mode?: Prisma.EnumModePaiementFilter<"PaiementFrais"> | $Enums.ModePaiement
   reference?: Prisma.StringNullableFilter<"PaiementFrais"> | string | null
+  recuNumero?: Prisma.StringFilter<"PaiementFrais"> | string
   annule?: Prisma.BoolFilter<"PaiementFrais"> | boolean
   motifAnnulation?: Prisma.StringNullableFilter<"PaiementFrais"> | string | null
   saisieParId?: Prisma.StringFilter<"PaiementFrais"> | string
   createdAt?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
+  etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
   tranche?: Prisma.XOR<Prisma.TrancheFraisScalarRelationFilter, Prisma.TrancheFraisWhereInput>
   saisiePar?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "recuNumero">
+}, "id" | "etablissementId_recuNumero">
 
 export type PaiementFraisOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  etablissementId?: Prisma.SortOrder
   trancheId?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   datePaiement?: Prisma.SortOrder
@@ -327,6 +342,7 @@ export type PaiementFraisScalarWhereWithAggregatesInput = {
   OR?: Prisma.PaiementFraisScalarWhereWithAggregatesInput[]
   NOT?: Prisma.PaiementFraisScalarWhereWithAggregatesInput | Prisma.PaiementFraisScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"PaiementFrais"> | string
+  etablissementId?: Prisma.StringWithAggregatesFilter<"PaiementFrais"> | string
   trancheId?: Prisma.StringWithAggregatesFilter<"PaiementFrais"> | string
   montant?: Prisma.FloatWithAggregatesFilter<"PaiementFrais"> | number
   datePaiement?: Prisma.DateTimeWithAggregatesFilter<"PaiementFrais"> | Date | string
@@ -349,12 +365,14 @@ export type PaiementFraisCreateInput = {
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutPaiementsFraisInput
   tranche: Prisma.TrancheFraisCreateNestedOneWithoutPaiementsInput
   saisiePar: Prisma.UserCreateNestedOneWithoutFraisSaisisInput
 }
 
 export type PaiementFraisUncheckedCreateInput = {
   id?: string
+  etablissementId: string
   trancheId: string
   montant: number
   datePaiement: Date | string
@@ -377,12 +395,14 @@ export type PaiementFraisUpdateInput = {
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutPaiementsFraisNestedInput
   tranche?: Prisma.TrancheFraisUpdateOneRequiredWithoutPaiementsNestedInput
   saisiePar?: Prisma.UserUpdateOneRequiredWithoutFraisSaisisNestedInput
 }
 
 export type PaiementFraisUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   trancheId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -397,6 +417,7 @@ export type PaiementFraisUncheckedUpdateInput = {
 
 export type PaiementFraisCreateManyInput = {
   id?: string
+  etablissementId: string
   trancheId: string
   montant: number
   datePaiement: Date | string
@@ -423,6 +444,7 @@ export type PaiementFraisUpdateManyMutationInput = {
 
 export type PaiementFraisUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   trancheId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -445,8 +467,14 @@ export type PaiementFraisOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type PaiementFraisEtablissementIdRecuNumeroCompoundUniqueInput = {
+  etablissementId: string
+  recuNumero: string
+}
+
 export type PaiementFraisCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  etablissementId?: Prisma.SortOrder
   trancheId?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   datePaiement?: Prisma.SortOrder
@@ -465,6 +493,7 @@ export type PaiementFraisAvgOrderByAggregateInput = {
 
 export type PaiementFraisMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  etablissementId?: Prisma.SortOrder
   trancheId?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   datePaiement?: Prisma.SortOrder
@@ -479,6 +508,7 @@ export type PaiementFraisMaxOrderByAggregateInput = {
 
 export type PaiementFraisMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  etablissementId?: Prisma.SortOrder
   trancheId?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   datePaiement?: Prisma.SortOrder
@@ -537,6 +567,48 @@ export type PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput = {
   deleteMany?: Prisma.PaiementFraisScalarWhereInput | Prisma.PaiementFraisScalarWhereInput[]
 }
 
+export type PaiementFraisCreateNestedManyWithoutEtablissementInput = {
+  create?: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput> | Prisma.PaiementFraisCreateWithoutEtablissementInput[] | Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput[]
+  connectOrCreate?: Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput | Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput[]
+  createMany?: Prisma.PaiementFraisCreateManyEtablissementInputEnvelope
+  connect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+}
+
+export type PaiementFraisUncheckedCreateNestedManyWithoutEtablissementInput = {
+  create?: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput> | Prisma.PaiementFraisCreateWithoutEtablissementInput[] | Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput[]
+  connectOrCreate?: Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput | Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput[]
+  createMany?: Prisma.PaiementFraisCreateManyEtablissementInputEnvelope
+  connect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+}
+
+export type PaiementFraisUpdateManyWithoutEtablissementNestedInput = {
+  create?: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput> | Prisma.PaiementFraisCreateWithoutEtablissementInput[] | Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput[]
+  connectOrCreate?: Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput | Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput[]
+  upsert?: Prisma.PaiementFraisUpsertWithWhereUniqueWithoutEtablissementInput | Prisma.PaiementFraisUpsertWithWhereUniqueWithoutEtablissementInput[]
+  createMany?: Prisma.PaiementFraisCreateManyEtablissementInputEnvelope
+  set?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  disconnect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  delete?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  connect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  update?: Prisma.PaiementFraisUpdateWithWhereUniqueWithoutEtablissementInput | Prisma.PaiementFraisUpdateWithWhereUniqueWithoutEtablissementInput[]
+  updateMany?: Prisma.PaiementFraisUpdateManyWithWhereWithoutEtablissementInput | Prisma.PaiementFraisUpdateManyWithWhereWithoutEtablissementInput[]
+  deleteMany?: Prisma.PaiementFraisScalarWhereInput | Prisma.PaiementFraisScalarWhereInput[]
+}
+
+export type PaiementFraisUncheckedUpdateManyWithoutEtablissementNestedInput = {
+  create?: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput> | Prisma.PaiementFraisCreateWithoutEtablissementInput[] | Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput[]
+  connectOrCreate?: Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput | Prisma.PaiementFraisCreateOrConnectWithoutEtablissementInput[]
+  upsert?: Prisma.PaiementFraisUpsertWithWhereUniqueWithoutEtablissementInput | Prisma.PaiementFraisUpsertWithWhereUniqueWithoutEtablissementInput[]
+  createMany?: Prisma.PaiementFraisCreateManyEtablissementInputEnvelope
+  set?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  disconnect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  delete?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  connect?: Prisma.PaiementFraisWhereUniqueInput | Prisma.PaiementFraisWhereUniqueInput[]
+  update?: Prisma.PaiementFraisUpdateWithWhereUniqueWithoutEtablissementInput | Prisma.PaiementFraisUpdateWithWhereUniqueWithoutEtablissementInput[]
+  updateMany?: Prisma.PaiementFraisUpdateManyWithWhereWithoutEtablissementInput | Prisma.PaiementFraisUpdateManyWithWhereWithoutEtablissementInput[]
+  deleteMany?: Prisma.PaiementFraisScalarWhereInput | Prisma.PaiementFraisScalarWhereInput[]
+}
+
 export type PaiementFraisCreateNestedManyWithoutTrancheInput = {
   create?: Prisma.XOR<Prisma.PaiementFraisCreateWithoutTrancheInput, Prisma.PaiementFraisUncheckedCreateWithoutTrancheInput> | Prisma.PaiementFraisCreateWithoutTrancheInput[] | Prisma.PaiementFraisUncheckedCreateWithoutTrancheInput[]
   connectOrCreate?: Prisma.PaiementFraisCreateOrConnectWithoutTrancheInput | Prisma.PaiementFraisCreateOrConnectWithoutTrancheInput[]
@@ -589,11 +661,13 @@ export type PaiementFraisCreateWithoutSaisieParInput = {
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutPaiementsFraisInput
   tranche: Prisma.TrancheFraisCreateNestedOneWithoutPaiementsInput
 }
 
 export type PaiementFraisUncheckedCreateWithoutSaisieParInput = {
   id?: string
+  etablissementId: string
   trancheId: string
   montant: number
   datePaiement: Date | string
@@ -636,6 +710,7 @@ export type PaiementFraisScalarWhereInput = {
   OR?: Prisma.PaiementFraisScalarWhereInput[]
   NOT?: Prisma.PaiementFraisScalarWhereInput | Prisma.PaiementFraisScalarWhereInput[]
   id?: Prisma.StringFilter<"PaiementFrais"> | string
+  etablissementId?: Prisma.StringFilter<"PaiementFrais"> | string
   trancheId?: Prisma.StringFilter<"PaiementFrais"> | string
   montant?: Prisma.FloatFilter<"PaiementFrais"> | number
   datePaiement?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
@@ -648,6 +723,60 @@ export type PaiementFraisScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"PaiementFrais"> | Date | string
 }
 
+export type PaiementFraisCreateWithoutEtablissementInput = {
+  id?: string
+  montant: number
+  datePaiement: Date | string
+  mode: $Enums.ModePaiement
+  reference?: string | null
+  recuNumero: string
+  annule?: boolean
+  motifAnnulation?: string | null
+  createdAt?: Date | string
+  tranche: Prisma.TrancheFraisCreateNestedOneWithoutPaiementsInput
+  saisiePar: Prisma.UserCreateNestedOneWithoutFraisSaisisInput
+}
+
+export type PaiementFraisUncheckedCreateWithoutEtablissementInput = {
+  id?: string
+  trancheId: string
+  montant: number
+  datePaiement: Date | string
+  mode: $Enums.ModePaiement
+  reference?: string | null
+  recuNumero: string
+  annule?: boolean
+  motifAnnulation?: string | null
+  saisieParId: string
+  createdAt?: Date | string
+}
+
+export type PaiementFraisCreateOrConnectWithoutEtablissementInput = {
+  where: Prisma.PaiementFraisWhereUniqueInput
+  create: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput>
+}
+
+export type PaiementFraisCreateManyEtablissementInputEnvelope = {
+  data: Prisma.PaiementFraisCreateManyEtablissementInput | Prisma.PaiementFraisCreateManyEtablissementInput[]
+  skipDuplicates?: boolean
+}
+
+export type PaiementFraisUpsertWithWhereUniqueWithoutEtablissementInput = {
+  where: Prisma.PaiementFraisWhereUniqueInput
+  update: Prisma.XOR<Prisma.PaiementFraisUpdateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedUpdateWithoutEtablissementInput>
+  create: Prisma.XOR<Prisma.PaiementFraisCreateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedCreateWithoutEtablissementInput>
+}
+
+export type PaiementFraisUpdateWithWhereUniqueWithoutEtablissementInput = {
+  where: Prisma.PaiementFraisWhereUniqueInput
+  data: Prisma.XOR<Prisma.PaiementFraisUpdateWithoutEtablissementInput, Prisma.PaiementFraisUncheckedUpdateWithoutEtablissementInput>
+}
+
+export type PaiementFraisUpdateManyWithWhereWithoutEtablissementInput = {
+  where: Prisma.PaiementFraisScalarWhereInput
+  data: Prisma.XOR<Prisma.PaiementFraisUpdateManyMutationInput, Prisma.PaiementFraisUncheckedUpdateManyWithoutEtablissementInput>
+}
+
 export type PaiementFraisCreateWithoutTrancheInput = {
   id?: string
   montant: number
@@ -658,11 +787,13 @@ export type PaiementFraisCreateWithoutTrancheInput = {
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutPaiementsFraisInput
   saisiePar: Prisma.UserCreateNestedOneWithoutFraisSaisisInput
 }
 
 export type PaiementFraisUncheckedCreateWithoutTrancheInput = {
   id?: string
+  etablissementId: string
   montant: number
   datePaiement: Date | string
   mode: $Enums.ModePaiement
@@ -702,6 +833,7 @@ export type PaiementFraisUpdateManyWithWhereWithoutTrancheInput = {
 
 export type PaiementFraisCreateManySaisieParInput = {
   id?: string
+  etablissementId: string
   trancheId: string
   montant: number
   datePaiement: Date | string
@@ -723,11 +855,13 @@ export type PaiementFraisUpdateWithoutSaisieParInput = {
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutPaiementsFraisNestedInput
   tranche?: Prisma.TrancheFraisUpdateOneRequiredWithoutPaiementsNestedInput
 }
 
 export type PaiementFraisUncheckedUpdateWithoutSaisieParInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   trancheId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -741,6 +875,7 @@ export type PaiementFraisUncheckedUpdateWithoutSaisieParInput = {
 
 export type PaiementFraisUncheckedUpdateManyWithoutSaisieParInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   trancheId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -752,8 +887,65 @@ export type PaiementFraisUncheckedUpdateManyWithoutSaisieParInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type PaiementFraisCreateManyEtablissementInput = {
+  id?: string
+  trancheId: string
+  montant: number
+  datePaiement: Date | string
+  mode: $Enums.ModePaiement
+  reference?: string | null
+  recuNumero: string
+  annule?: boolean
+  motifAnnulation?: string | null
+  saisieParId: string
+  createdAt?: Date | string
+}
+
+export type PaiementFraisUpdateWithoutEtablissementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.EnumModePaiementFieldUpdateOperationsInput | $Enums.ModePaiement
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recuNumero?: Prisma.StringFieldUpdateOperationsInput | string
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tranche?: Prisma.TrancheFraisUpdateOneRequiredWithoutPaiementsNestedInput
+  saisiePar?: Prisma.UserUpdateOneRequiredWithoutFraisSaisisNestedInput
+}
+
+export type PaiementFraisUncheckedUpdateWithoutEtablissementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  trancheId?: Prisma.StringFieldUpdateOperationsInput | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.EnumModePaiementFieldUpdateOperationsInput | $Enums.ModePaiement
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recuNumero?: Prisma.StringFieldUpdateOperationsInput | string
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saisieParId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type PaiementFraisUncheckedUpdateManyWithoutEtablissementInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  trancheId?: Prisma.StringFieldUpdateOperationsInput | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mode?: Prisma.EnumModePaiementFieldUpdateOperationsInput | $Enums.ModePaiement
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recuNumero?: Prisma.StringFieldUpdateOperationsInput | string
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saisieParId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type PaiementFraisCreateManyTrancheInput = {
   id?: string
+  etablissementId: string
   montant: number
   datePaiement: Date | string
   mode: $Enums.ModePaiement
@@ -775,11 +967,13 @@ export type PaiementFraisUpdateWithoutTrancheInput = {
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutPaiementsFraisNestedInput
   saisiePar?: Prisma.UserUpdateOneRequiredWithoutFraisSaisisNestedInput
 }
 
 export type PaiementFraisUncheckedUpdateWithoutTrancheInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.EnumModePaiementFieldUpdateOperationsInput | $Enums.ModePaiement
@@ -793,6 +987,7 @@ export type PaiementFraisUncheckedUpdateWithoutTrancheInput = {
 
 export type PaiementFraisUncheckedUpdateManyWithoutTrancheInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   datePaiement?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   mode?: Prisma.EnumModePaiementFieldUpdateOperationsInput | $Enums.ModePaiement
@@ -808,6 +1003,7 @@ export type PaiementFraisUncheckedUpdateManyWithoutTrancheInput = {
 
 export type PaiementFraisSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  etablissementId?: boolean
   trancheId?: boolean
   montant?: boolean
   datePaiement?: boolean
@@ -818,12 +1014,14 @@ export type PaiementFraisSelect<ExtArgs extends runtime.Types.Extensions.Interna
   motifAnnulation?: boolean
   saisieParId?: boolean
   createdAt?: boolean
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paiementFrais"]>
 
 export type PaiementFraisSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  etablissementId?: boolean
   trancheId?: boolean
   montant?: boolean
   datePaiement?: boolean
@@ -834,12 +1032,14 @@ export type PaiementFraisSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   motifAnnulation?: boolean
   saisieParId?: boolean
   createdAt?: boolean
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paiementFrais"]>
 
 export type PaiementFraisSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  etablissementId?: boolean
   trancheId?: boolean
   montant?: boolean
   datePaiement?: boolean
@@ -850,12 +1050,14 @@ export type PaiementFraisSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   motifAnnulation?: boolean
   saisieParId?: boolean
   createdAt?: boolean
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["paiementFrais"]>
 
 export type PaiementFraisSelectScalar = {
   id?: boolean
+  etablissementId?: boolean
   trancheId?: boolean
   montant?: boolean
   datePaiement?: boolean
@@ -868,16 +1070,19 @@ export type PaiementFraisSelectScalar = {
   createdAt?: boolean
 }
 
-export type PaiementFraisOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "trancheId" | "montant" | "datePaiement" | "mode" | "reference" | "recuNumero" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["paiementFrais"]>
+export type PaiementFraisOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "trancheId" | "montant" | "datePaiement" | "mode" | "reference" | "recuNumero" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["paiementFrais"]>
 export type PaiementFraisInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaiementFraisIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PaiementFraisIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   tranche?: boolean | Prisma.TrancheFraisDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -885,11 +1090,13 @@ export type PaiementFraisIncludeUpdateManyAndReturn<ExtArgs extends runtime.Type
 export type $PaiementFraisPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaiementFrais"
   objects: {
+    etablissement: Prisma.$EtablissementPayload<ExtArgs>
     tranche: Prisma.$TrancheFraisPayload<ExtArgs>
     saisiePar: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    etablissementId: string
     trancheId: string
     montant: number
     datePaiement: Date
@@ -1294,6 +1501,7 @@ readonly fields: PaiementFraisFieldRefs;
  */
 export interface Prisma__PaiementFraisClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  etablissement<T extends Prisma.EtablissementDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EtablissementDefaultArgs<ExtArgs>>): Prisma.Prisma__EtablissementClient<runtime.Types.Result.GetResult<Prisma.$EtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tranche<T extends Prisma.TrancheFraisDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TrancheFraisDefaultArgs<ExtArgs>>): Prisma.Prisma__TrancheFraisClient<runtime.Types.Result.GetResult<Prisma.$TrancheFraisPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   saisiePar<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1326,6 +1534,7 @@ export interface Prisma__PaiementFraisClient<T, Null = never, ExtArgs extends ru
  */
 export interface PaiementFraisFieldRefs {
   readonly id: Prisma.FieldRef<"PaiementFrais", 'String'>
+  readonly etablissementId: Prisma.FieldRef<"PaiementFrais", 'String'>
   readonly trancheId: Prisma.FieldRef<"PaiementFrais", 'String'>
   readonly montant: Prisma.FieldRef<"PaiementFrais", 'Float'>
   readonly datePaiement: Prisma.FieldRef<"PaiementFrais", 'DateTime'>

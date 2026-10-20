@@ -5,6 +5,7 @@
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { verifierRattachement } from "@/lib/auth/comptes";
 import { DUREE_ESSAI_JOURS, finEssaiDans } from "./etat";
 
 type Cycle = "PRESCOLAIRE" | "PREMIER_CYCLE" | "SECOND_CYCLE";
@@ -113,19 +114,29 @@ export function trimestresDe(debut: Date, fin: Date) {
 }
 
 // Cree l'ecole et l'acces de son directeur. Compte du directeur : celui qui existe deja pour cet
-// e-mail (il garde son mot de passe), sinon un nouveau compte avec motDePasse.
+// e-mail (il garde son mot de passe), sinon un nouveau compte avec motDePasse (ou son empreinte
+// motDePasseHash, choisie lors d'une inscription confirmee par e-mail : emailVerifie).
+// Un compte existant n'est rattache que si son adresse est confirmee, ou si c'est le compte
+// qui cree l'ecole (parUserId).
 export async function creerEcole(
   d: DonneesEcole,
-  options: { statut: "ESSAI" | "ACTIF"; motDePasse: string | null; parUserId?: string }
+  options: {
+    statut: "ESSAI" | "ACTIF";
+    motDePasse?: string | null;
+    motDePasseHash?: string;
+    emailVerifie?: boolean;
+    parUserId?: string;
+  }
 ): Promise<{ etablissementId: string; userId: string; compteExistant: boolean }> {
   const debut = new Date(jour(d.anneeDebut));
   const fin = new Date(jour(d.anneeFin));
+  const passwordHash =
+    options.motDePasseHash ?? (options.motDePasse && options.motDePasse.length >= 8 ? await bcrypt.hash(options.motDePasse, 10) : null);
 
   return prisma.$transaction(async (tx) => {
     const existant = await tx.user.findUnique({ where: { email: d.directeurEmail } });
-    if (!existant && (!options.motDePasse || options.motDePasse.length < 8)) {
-      throw new Error("Mot de passe du directeur : 8 caractères minimum");
-    }
+    if (existant && existant.id !== options.parUserId) verifierRattachement(existant);
+    if (!existant && !passwordHash) throw new Error("Mot de passe du directeur : 8 caractères minimum");
 
     const etablissement = await tx.etablissement.create({
       data: {
@@ -157,7 +168,8 @@ export async function creerEcole(
       (await tx.user.create({
         data: {
           email: d.directeurEmail,
-          passwordHash: await bcrypt.hash(options.motDePasse!, 10),
+          passwordHash: passwordHash!,
+          emailVerifieLe: options.emailVerifie ? new Date() : null,
           roles: ["DIRECTEUR"],
           employeId: employe.id,
           etablissementId,

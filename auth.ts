@@ -45,12 +45,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id;
+      // connecteLe : heure de la connexion, conservee quand le jeton est renouvele
+      // (une session ouverte avant un changement de mot de passe est refusee)
+      if (user) {
+        token.id = user.id;
+        token.connecteLe = Date.now();
+      }
       return token;
     },
     async session({ session, token }) {
       if (session.user) session.user.id = token.id as string;
-      return session;
+      return { ...session, connecteLe: typeof token.connecteLe === "number" ? token.connecteLe : 0 };
     },
   },
   pages: { signIn: "/login" },

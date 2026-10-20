@@ -83,19 +83,22 @@ async function creerEleveCorps(formData: FormData) {
 
       // Si l'inscription est marquee payee ET qu'une tranche inscription existe
       if (fraisInscriptionPaye && trancheInscriptionId) {
-        const recuNumero = await prochainNumeroRecu();
-
-        paiementInscription = await db.paiementFrais.create({
-          data: {
-            trancheId: trancheInscriptionId,
-            montant: classe.fraisInscription,
-            datePaiement: new Date(),
-            mode: modePaiementInscription as any,
-            reference: referenceInscription,
-            recuNumero,
-            saisieParId: user.id,
-          },
-        });
+        // Numero de recu et paiement dans la meme transaction (suite de l'ecole sans trou)
+        paiementInscription = await db.$transaction(async (tx) =>
+          tx.paiementFrais.create({
+            data: {
+              etablissementId: user.etablissementId,
+              trancheId: trancheInscriptionId,
+              montant: classe.fraisInscription,
+              datePaiement: new Date(),
+              mode: modePaiementInscription as any,
+              reference: referenceInscription,
+              recuNumero: await prochainNumeroRecu(tx, user.etablissementId),
+              saisieParId: user.id,
+            },
+          })
+        );
+        const recuNumero = paiementInscription.recuNumero;
 
         await enregistrerAudit({
           userId: user.id,

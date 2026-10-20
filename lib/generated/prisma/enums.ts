@@ -176,3 +176,12 @@ export const StatutPresence = {
 } as const
 
 export type StatutPresence = (typeof StatutPresence)[keyof typeof StatutPresence]
+
+
+export const TypeJeton = {
+  INSCRIPTION: 'INSCRIPTION',
+  VERIFICATION: 'VERIFICATION',
+  REINITIALISATION: 'REINITIALISATION'
+} as const
+
+export type TypeJeton = (typeof TypeJeton)[keyof typeof TypeJeton]

@@ -1,8 +1,8 @@
 "use server";
 
 import { ecole } from "@/lib/data/ecole";
-import { emailDejaUtilise, requirePermission } from "@/lib/auth/session";
-import { ouvrirAcces, reinitialiserMotDePasse, retirerAcces, roleValide } from "@/lib/auth/comptes";
+import { requirePermission } from "@/lib/auth/session";
+import { compteARattacher, ouvrirAcces, reinitialiserMotDePasse, retirerAcces, roleValide } from "@/lib/auth/comptes";
 import { enregistrerAudit } from "@/lib/audit";
 import { revalidatePath } from "next/cache";
 import { capter } from "@/lib/actions/serveur";
@@ -45,11 +45,11 @@ async function creerEmployeCorps(formData: FormData) {
   }
 
   // Compte : verifie avant de creer la fiche. Un e-mail deja utilise (la meme personne
-  // dans une autre ecole) recoit l'acces a cette ecole et garde son mot de passe.
+  // dans une autre ecole, adresse confirmee) recoit l'acces a cette ecole et garde son mot de passe.
   if (creerCompte) {
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Email invalide");
     if (!roleValide(role)) throw new Error("Role invalide");
-    if (!(await emailDejaUtilise(email)) && motDePasse.length < 6) throw new Error("Mot de passe : 6 caracteres minimum");
+    if (!(await compteARattacher(email)) && motDePasse.length < 6) throw new Error("Mot de passe : 6 caracteres minimum");
   }
 
   const salaireReference = salaireRefRaw ? Number(salaireRefRaw) : null;
@@ -253,8 +253,10 @@ async function changerMotDePasseCorps(employeId: string, nouveauMotDePasse: stri
   const admin = await requirePermission("personnel.manage");
   await reinitialiserMotDePasse(admin.etablissementId, employeId, nouveauMotDePasse);
 
+  // Ecole explicite : si la direction a change son propre mot de passe, sa session vient d'etre fermee
   await enregistrerAudit({
     userId: admin.id,
+    etablissementId: admin.etablissementId,
     action: "CHANGER_MOT_DE_PASSE",
     entite: "User",
     entiteId: employeId,

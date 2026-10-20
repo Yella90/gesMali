@@ -66,3 +66,19 @@ export async function inscriptionAutorisee(ip: string | null, maintenant = new D
 export async function noterInscription(ip: string | null, maintenant = new Date()) {
   if (ip) await incrementer("inscription:" + ip, JOUR_MS, maintenant);
 }
+
+// Envois d'e-mails demandes depuis une page publique (mot de passe oublie, confirmation,
+// inscription) : 10 par heure depuis une meme adresse IP, 3 par heure pour une meme adresse e-mail
+export const MAX_ENVOIS = { ip: 10, email: 3 };
+const HEURE_MS = 3600 * 1000;
+
+export async function envoiAutorise(ip: string | null, email: string, maintenant = new Date()): Promise<boolean> {
+  const cles = [{ cle: "envoi:email:" + email.trim().toLowerCase(), max: MAX_ENVOIS.email }];
+  if (ip) cles.push({ cle: "envoi:ip:" + ip, max: MAX_ENVOIS.ip });
+  const lignes = await prisma.echecConnexion.findMany({
+    where: { cle: { in: cles.map((c) => c.cle) }, depuis: { gt: new Date(maintenant.getTime() - HEURE_MS) } },
+  });
+  if (lignes.some((l) => l.nombre >= (cles.find((c) => c.cle === l.cle)?.max ?? 0))) return false;
+  for (const c of cles) await incrementer(c.cle, HEURE_MS, maintenant);
+  return true;
+}

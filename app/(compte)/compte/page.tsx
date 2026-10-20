@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { compteConnecte, getUtilisateurCourant } from "@/lib/auth/session";
+import { envoiDisponible } from "@/lib/email/file";
 import { MotDePasse } from "./MotDePasse";
+import { ConfirmerAdresse } from "./ConfirmerAdresse";
 
 export const metadata = { title: "Mon compte · GES Mali" };
 
-export default async function MonComptePage() {
+export default async function MonComptePage({ searchParams }: { searchParams: Promise<{ "mot-de-passe"?: string }> }) {
   const compte = await compteConnecte();
   if (!compte) redirect("/login?connexion");
   const courant = await getUtilisateurCourant();
@@ -32,7 +34,12 @@ export default async function MonComptePage() {
           </Link>
         </p>
       </div>
-      <MotDePasse />
+      <ConfirmerAdresse
+        email={compte.email}
+        verifieLe={compte.emailVerifieLe ? compte.emailVerifieLe.toLocaleDateString("fr-FR", { timeZone: "UTC" }) : null}
+        envoiPossible={envoiDisponible()}
+      />
+      <MotDePasse modifie={(await searchParams)["mot-de-passe"] === "modifie"} />
     </div>
   );
 }

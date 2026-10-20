@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageLegale } from "@/components/legal/PageLegale";
 import { LEGAL } from "@/lib/legal";
+import { DUREE_ESSAI_JOURS } from "@/lib/plateforme/etat";
 
 export const metadata: Metadata = { title: "Conditions d'utilisation - GES Mali" };
 
@@ -20,10 +21,16 @@ export default function ConditionsUtilisationPage() {
         <li>Éditeur : {LEGAL.editeur}, {LEGAL.adresse}, {LEGAL.email}, {LEGAL.telephone}.</li>
         <li>Application hébergée par : {LEGAL.hebergeurApplication}.</li>
         <li>Données hébergées par : {LEGAL.hebergeurBase}.</li>
+        <li>E-mails envoyés par : {LEGAL.hebergeurEmails}.</li>
       </ul>
 
       <h2>3. Utilisateurs et accès</h2>
       <ul>
+        <li>
+          <strong>Établissements</strong> : une école s&apos;inscrit en ligne ; son compte de direction est créé après
+          confirmation de l&apos;adresse e-mail du directeur. Chaque établissement dispose de son propre espace : ses
+          données ne sont visibles que de son personnel et des parents de ses élèves.
+        </li>
         <li>
           <strong>Personnel de l&apos;établissement</strong> (direction, secrétariat, comptabilité,
           enseignants) : accès par compte nominatif créé par l&apos;établissement. Chaque rôle n&apos;accède
@@ -64,7 +71,13 @@ export default function ConditionsUtilisationPage() {
         <Link href="/cookies" className="text-[var(--color-brand)] underline">politique cookies</Link>.
       </p>
 
-      <h2>7. Suspension de l&apos;accès</h2>
+      <h2>7. Période d&apos;essai, suspension et suppression</h2>
+      <p>
+        Une école inscrite en ligne bénéficie d&apos;une période d&apos;essai de {DUREE_ESSAI_JOURS} jours. À son terme,
+        l&apos;accès de son personnel est suspendu jusqu&apos;à l&apos;activation de l&apos;école par l&apos;éditeur ; ses
+        données sont conservées. L&apos;éditeur peut aussi suspendre une école en cas d&apos;usage contraire aux
+        présentes conditions, et supprimer une école restée vide (sans élèves, classes ni paiements).
+      </p>
       <p>
         L&apos;établissement peut désactiver un compte ou remplacer un lien parent à tout moment, notamment
         en cas de départ, de radiation ou de transfert d&apos;un élève, ou d&apos;usage contraire aux présentes

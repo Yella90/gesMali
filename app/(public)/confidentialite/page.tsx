@@ -26,7 +26,18 @@ export default function ConfidentialitePage() {
           l&apos;application pour le compte de l&apos;établissement et n&apos;utilise pas les données à
           d&apos;autres fins.
         </li>
+        <li>
+          <strong>Comptes de connexion et inscription des écoles</strong> : {LEGAL.editeur} est responsable des
+          données de la plateforme elle-même (adresse e-mail et mot de passe des comptes, inscription d&apos;une école en
+          ligne, e-mails de confirmation), utilisées seulement pour faire fonctionner le service.
+        </li>
       </ul>
+      <p>
+        Plusieurs établissements utilisent GES Mali. Les données de chacun sont séparées : un établissement ne voit
+        jamais les élèves, les notes, les paiements ni le personnel d&apos;un autre. Une même personne peut travailler
+        dans plusieurs établissements avec un seul compte : chacun ne voit que la fiche et les droits qui le
+        concernent.
+      </p>
 
       <h2>2. Données traitées</h2>
       <table>
@@ -47,6 +58,14 @@ export default function ConfidentialitePage() {
             <td>Nom, prénom, téléphone, poste, rôle, e-mail de connexion, mot de passe (stocké chiffré, jamais en clair), rémunération et paiements.</td>
           </tr>
           <tr>
+            <td>Directeurs qui inscrivent une école</td>
+            <td>Nom, prénom, adresse e-mail, mot de passe (stocké chiffré), nom, adresse et téléphone de l&apos;école.</td>
+          </tr>
+          <tr>
+            <td>Destinataires d&apos;e-mails de GES Mali</td>
+            <td>Adresse e-mail, objet et contenu du message (lien de confirmation ou de nouveau mot de passe), dates d&apos;envoi.</td>
+          </tr>
+          <tr>
             <td>Tous les utilisateurs connectés</td>
             <td>Journal des actions importantes (audit : qui a fait quoi et quand), cookies de session.</td>
           </tr>
@@ -60,6 +79,7 @@ export default function ConfidentialitePage() {
         <li>Gestion financière : frais de scolarité, reçus, rappels d&apos;impayés, paiements du personnel — exécution du contrat et obligations comptables.</li>
         <li>Information des parents via l&apos;espace parent — mission éducative et intérêt de l&apos;élève.</li>
         <li>Sécurité : authentification, traçabilité des actions (audit), prévention des accès frauduleux — intérêt légitime de l&apos;établissement.</li>
+        <li>Fonctionnement de la plateforme : inscription d&apos;une école, confirmation d&apos;adresse e-mail, mot de passe oublié — exécution du service demandé.</li>
       </ul>
 
       <h2>4. Qui peut voir les données ?</h2>
@@ -72,7 +92,8 @@ export default function ConfidentialitePage() {
       <h2>5. Où sont les données ?</h2>
       <p>
         Les données sont hébergées par {LEGAL.hebergeurBase} ; l&apos;application par{" "}
-        {LEGAL.hebergeurApplication}. Les données sont donc transférées hors du Mali : ce transfert est
+        {LEGAL.hebergeurApplication} ; les e-mails sont envoyés par {LEGAL.hebergeurEmails}. Les données sont
+        donc transférées hors du Mali : ce transfert est
         encadré conformément à la loi n° 2013-015 et aux exigences de l&apos;Autorité de Protection des
         Données à caractère Personnel (APDP).
       </p>
@@ -83,13 +104,16 @@ export default function ConfidentialitePage() {
         <li>Données financières (frais, reçus, paiements) : durée imposée par les obligations comptables.</li>
         <li>Comptes du personnel : jusqu&apos;à la fin de la relation de travail, puis désactivation.</li>
         <li>Lien d&apos;accès parent : désactivé dès la radiation ou le transfert de l&apos;élève, ou à la demande du parent.</li>
+        <li>E-mails envoyés : supprimés 30 jours après leur envoi. Liens reçus par e-mail : valables 1 heure (mot de passe oublié) ou 48 heures, supprimés une semaine après leur expiration.</li>
+        <li>Inscription d&apos;une école non confirmée : rien n&apos;est créé ; la demande disparaît avec son lien.</li>
         <li>Cookies de session : 30 jours au plus (voir la <Link href="/cookies" className="text-[var(--color-brand)] underline">politique cookies</Link>).</li>
       </ul>
 
       <h2>7. Sécurité</h2>
       <ul>
         <li>Connexions chiffrées (HTTPS) et base de données accessible uniquement par connexion chiffrée vérifiée.</li>
-        <li>Mots de passe stockés sous forme chiffrée (bcrypt) ; tentatives de connexion répétées bloquées.</li>
+        <li>Mots de passe stockés sous forme chiffrée (bcrypt) ; tentatives de connexion répétées bloquées ; après un changement de mot de passe, les sessions ouvertes ailleurs sont fermées.</li>
+        <li>Liens reçus par e-mail à usage unique et à durée limitée ; seule leur empreinte est conservée.</li>
         <li>Droits d&apos;accès par rôle, journal d&apos;audit des actions sensibles.</li>
         <li>Lien parent aléatoire et non devinable, remplaçable à tout moment ; pages parent non indexées par les moteurs de recherche.</li>
       </ul>

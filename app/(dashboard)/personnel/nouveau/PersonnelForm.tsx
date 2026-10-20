@@ -187,7 +187,7 @@ export function PersonnelForm() {
                   Générer
                 </button>
               </div>
-              <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum. Si cette adresse a déjà un compte GES Mali dans une autre école, laissez le mot de passe vide : la personne recevra l'accès à votre école avec son mot de passe habituel.</p>
+              <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum. Si cette adresse a déjà un compte GES Mali dans une autre école, laissez le mot de passe vide : la personne recevra l'accès à votre école avec son mot de passe habituel (son adresse doit être confirmée, depuis « Mon compte »).</p>
             </div>
           </>
         )}

@@ -415,13 +415,15 @@ export const ModelName = {
   FraisScolarite: 'FraisScolarite',
   TrancheFrais: 'TrancheFrais',
   PaiementFrais: 'PaiementFrais',
+  CompteurRecu: 'CompteurRecu',
   Rappel: 'Rappel',
   AuditLog: 'AuditLog',
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
   DepenseRecurrente: 'DepenseRecurrente',
   Presence: 'Presence',
-  EchecConnexion: 'EchecConnexion'
+  EchecConnexion: 'EchecConnexion',
+  JetonEmail: 'JetonEmail'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -437,7 +439,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "employe" | "user" | "acces" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion"
+    modelProps: "employe" | "user" | "acces" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "compteurRecu" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion" | "jetonEmail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1773,6 +1775,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CompteurRecu: {
+      payload: Prisma.$CompteurRecuPayload<ExtArgs>
+      fields: Prisma.CompteurRecuFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompteurRecuFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompteurRecuFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        findFirst: {
+          args: Prisma.CompteurRecuFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompteurRecuFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        findMany: {
+          args: Prisma.CompteurRecuFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>[]
+        }
+        create: {
+          args: Prisma.CompteurRecuCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        createMany: {
+          args: Prisma.CompteurRecuCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompteurRecuCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>[]
+        }
+        delete: {
+          args: Prisma.CompteurRecuDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        update: {
+          args: Prisma.CompteurRecuUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompteurRecuDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompteurRecuUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompteurRecuUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompteurRecuUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompteurRecuPayload>
+        }
+        aggregate: {
+          args: Prisma.CompteurRecuAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompteurRecu>
+        }
+        groupBy: {
+          args: Prisma.CompteurRecuGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompteurRecuGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompteurRecuCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompteurRecuCountAggregateOutputType> | number
+        }
+      }
+    }
     Rappel: {
       payload: Prisma.$RappelPayload<ExtArgs>
       fields: Prisma.RappelFieldRefs
@@ -2291,6 +2367,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JetonEmail: {
+      payload: Prisma.$JetonEmailPayload<ExtArgs>
+      fields: Prisma.JetonEmailFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JetonEmailFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JetonEmailFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        findFirst: {
+          args: Prisma.JetonEmailFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JetonEmailFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        findMany: {
+          args: Prisma.JetonEmailFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>[]
+        }
+        create: {
+          args: Prisma.JetonEmailCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        createMany: {
+          args: Prisma.JetonEmailCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JetonEmailCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>[]
+        }
+        delete: {
+          args: Prisma.JetonEmailDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        update: {
+          args: Prisma.JetonEmailUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        deleteMany: {
+          args: Prisma.JetonEmailDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JetonEmailUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JetonEmailUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>[]
+        }
+        upsert: {
+          args: Prisma.JetonEmailUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JetonEmailPayload>
+        }
+        aggregate: {
+          args: Prisma.JetonEmailAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJetonEmail>
+        }
+        groupBy: {
+          args: Prisma.JetonEmailGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JetonEmailGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JetonEmailCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JetonEmailCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2358,6 +2508,8 @@ export const UserScalarFieldEnum = {
   actif: 'actif',
   employeId: 'employeId',
   etablissementId: 'etablissementId',
+  emailVerifieLe: 'emailVerifieLe',
+  motDePasseModifieLe: 'motDePasseModifieLe',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2631,6 +2783,7 @@ export type TrancheFraisScalarFieldEnum = (typeof TrancheFraisScalarFieldEnum)[k
 
 export const PaiementFraisScalarFieldEnum = {
   id: 'id',
+  etablissementId: 'etablissementId',
   trancheId: 'trancheId',
   montant: 'montant',
   datePaiement: 'datePaiement',
@@ -2644,6 +2797,16 @@ export const PaiementFraisScalarFieldEnum = {
 } as const
 
 export type PaiementFraisScalarFieldEnum = (typeof PaiementFraisScalarFieldEnum)[keyof typeof PaiementFraisScalarFieldEnum]
+
+
+export const CompteurRecuScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  annee: 'annee',
+  dernier: 'dernier'
+} as const
+
+export type CompteurRecuScalarFieldEnum = (typeof CompteurRecuScalarFieldEnum)[keyof typeof CompteurRecuScalarFieldEnum]
 
 
 export const RappelScalarFieldEnum = {
@@ -2747,6 +2910,21 @@ export const EchecConnexionScalarFieldEnum = {
 } as const
 
 export type EchecConnexionScalarFieldEnum = (typeof EchecConnexionScalarFieldEnum)[keyof typeof EchecConnexionScalarFieldEnum]
+
+
+export const JetonEmailScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  email: 'email',
+  userId: 'userId',
+  donnees: 'donnees',
+  empreinte: 'empreinte',
+  expireLe: 'expireLe',
+  utiliseLe: 'utiliseLe',
+  createdAt: 'createdAt'
+} as const
+
+export type JetonEmailScalarFieldEnum = (typeof JetonEmailScalarFieldEnum)[keyof typeof JetonEmailScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3124,6 +3302,20 @@ export type EnumStatutPresenceFieldRefInput<$PrismaModel> = FieldRefInputType<$P
 export type ListEnumStatutPresenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPresence[]'>
     
 
+
+/**
+ * Reference to a field of type 'TypeJeton'
+ */
+export type EnumTypeJetonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeJeton'>
+    
+
+
+/**
+ * Reference to a field of type 'TypeJeton[]'
+ */
+export type ListEnumTypeJetonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TypeJeton[]'>
+    
+
 /**
  * Batch Payload for updateMany & deleteMany & createMany
  */
@@ -3293,6 +3485,7 @@ export type GlobalOmitConfig = {
   fraisScolarite?: Prisma.FraisScolariteOmit
   trancheFrais?: Prisma.TrancheFraisOmit
   paiementFrais?: Prisma.PaiementFraisOmit
+  compteurRecu?: Prisma.CompteurRecuOmit
   rappel?: Prisma.RappelOmit
   auditLog?: Prisma.AuditLogOmit
   inscriptionAnnuelle?: Prisma.InscriptionAnnuelleOmit
@@ -3300,6 +3493,7 @@ export type GlobalOmitConfig = {
   depenseRecurrente?: Prisma.DepenseRecurrenteOmit
   presence?: Prisma.PresenceOmit
   echecConnexion?: Prisma.EchecConnexionOmit
+  jetonEmail?: Prisma.JetonEmailOmit
 }
 
 /* Types for Logging */

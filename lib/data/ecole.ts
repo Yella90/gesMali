@@ -40,13 +40,14 @@ export const PORTEE: Record<string, Filtre> = {
   Presence: parClasse,
   BulletinLigne: (e) => ({ bulletin: { classe: { etablissementId: e } } }),
   TrancheFrais: (e) => ({ frais: { etablissementId: e } }),
-  PaiementFrais: parFrais,
+  PaiementFrais: direct,
+  CompteurRecu: direct,
   Rappel: parFrais,
   AuditLog: direct,
 };
 
 // Tables de la plateforme, communes a toutes les ecoles (jamais filtrees)
-export const HORS_ECOLE: string[] = ["EchecConnexion"];
+export const HORS_ECOLE: string[] = ["EchecConnexion", "JetonEmail"];
 
 // Tables portant directement la colonne etablissementId
 const DIRECTES = new Set(Object.entries(PORTEE).filter(([, f]) => f === direct).map(([m]) => m));
@@ -65,14 +66,14 @@ export const RELATIONS: Record<string, Record<string, Relation>> = {
     employe: r("Employe", "employeId"), etablissement: E("etablissementId"), notesSaisies: r("Note"), notesModifiees: r("Note"),
     bulletinsGeneres: r("Bulletin"), paiementsSaisis: r("Paiement"), paiementsAnnules: r("Paiement"), fraisSaisis: r("PaiementFrais"),
     rappelsSaisis: r("Rappel"), auditLogs: r("AuditLog"), mouvementsSaisis: r("MouvementTresorerie"), presencesSaisies: r("Presence"),
-    acces: r("Acces"),
+    acces: r("Acces"), jetons: r("JetonEmail"),
   },
   Acces: { user: r("User", "userId"), etablissement: E("etablissementId"), employe: r("Employe", "employeId") },
   Etablissement: {
     users: r("User"), employes: r("Employe"), anneesScolaires: r("AnneeScolaire"), matieres: r("Matiere"), classes: r("Classe"),
     eleves: r("Eleve"), paiements: r("Paiement"), fraisScolarite: r("FraisScolarite"), mouvements: r("MouvementTresorerie"),
     depensesRecurrentes: r("DepenseRecurrente"), parametres: r("ParametresEtablissement"), acces: r("Acces"),
-    auditLogs: r("AuditLog"),
+    auditLogs: r("AuditLog"), paiementsFrais: r("PaiementFrais"), compteursRecus: r("CompteurRecu"),
   },
   ParametresEtablissement: { etablissement: E("etablissementId") },
   AnneeScolaire: {
@@ -109,7 +110,8 @@ export const RELATIONS: Record<string, Record<string, Relation>> = {
     tranches: r("TrancheFrais"),
   },
   TrancheFrais: { frais: r("FraisScolarite", "fraisId"), paiements: r("PaiementFrais"), rappels: r("Rappel") },
-  PaiementFrais: { tranche: r("TrancheFrais", "trancheId"), saisiePar: r("User", "saisieParId") },
+  PaiementFrais: { etablissement: E("etablissementId"), tranche: r("TrancheFrais", "trancheId"), saisiePar: r("User", "saisieParId") },
+  CompteurRecu: { etablissement: E("etablissementId") },
   Rappel: { tranche: r("TrancheFrais", "trancheId"), saisiePar: r("User", "saisieParId") },
   AuditLog: { user: r("User", "userId"), etablissement: E("etablissementId") },
   InscriptionAnnuelle: { eleve: r("Eleve", "eleveId"), classe: r("Classe", "classeId"), anneeScolaire: r("AnneeScolaire", "anneeScolaireId") },

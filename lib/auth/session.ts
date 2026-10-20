@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import type { Role, Permission } from "./permissions";
 import { peut } from "./permissions";
 import { estAdministrateurPlateforme, etatEcole } from "@/lib/plateforme/etat";
-import { accesUtilisable, chargerCompte, choisirAcces, type CompteAvecAcces } from "./comptes";
+import { accesUtilisable, chargerCompte, choisirAcces, sessionValable, type CompteAvecAcces } from "./comptes";
 
 export { emailDejaUtilise } from "./comptes";
 
@@ -45,6 +45,8 @@ export const compteConnecte = cache(async (): Promise<(CompteAvecAcces & { admin
   if (!session?.user?.id) return null;
   const user = await chargerCompte({ id: session.user.id });
   if (!user || !user.actif) return null;
+  // Session ouverte avant le dernier changement de mot de passe
+  if (!sessionValable(user, (session as { connecteLe?: number }).connecteLe)) return null;
   return { ...user, administrateurPlateforme: estAdministrateurPlateforme(user.email) };
 });
 

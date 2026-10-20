@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import { QrCode, X } from "lucide-react";
+import Link from "next/link";
+import { CheckCircle2, QrCode, X } from "lucide-react";
 import { LoginForm } from "./LoginForm";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 
@@ -27,7 +28,19 @@ export function BoutonConnexion({ className = "", children = "Se connecter" }: {
   );
 }
 
-export function FenetreConnexion({ ouverte, retour }: { ouverte: boolean; retour: string }) {
+// message : retour d'un parcours (ecole creee, mot de passe modifie) ; motDePasseOublie : lien
+// vers la demande par e-mail (si l'envoi d'e-mails est configure)
+export function FenetreConnexion({
+  ouverte,
+  retour,
+  message,
+  motDePasseOublie,
+}: {
+  ouverte: boolean;
+  retour: string;
+  message?: string;
+  motDePasseOublie: boolean;
+}) {
   const ref = useRef<HTMLDialogElement>(null);
 
   const fermer = useCallback(() => ref.current?.close(), []);
@@ -70,10 +83,24 @@ export function FenetreConnexion({ ouverte, retour }: { ouverte: boolean; retour
         <p className="mb-7 mt-1.5 text-sm text-[var(--color-ink-muted)]">
           Utilisez l&apos;adresse e-mail fournie par votre établissement.
         </p>
+        {message && (
+          <p role="status" className="-mt-3 mb-5 flex gap-2 rounded-lg bg-[var(--color-accent-soft)] px-3 py-2.5 text-sm text-[var(--color-accent)]">
+            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+            <span>{message}</span>
+          </p>
+        )}
         <LoginForm retour={retour} />
-        <p className="mt-4 text-xs text-[var(--color-ink-muted)]">
-          Mot de passe oublié ? La direction de votre établissement peut le réinitialiser depuis votre fiche du personnel.
-        </p>
+        {motDePasseOublie ? (
+          <p className="mt-4 text-sm">
+            <Link href="/mot-de-passe/oublie" className="font-medium text-[var(--color-brand)] hover:underline">
+              Mot de passe oublié ?
+            </Link>
+          </p>
+        ) : (
+          <p className="mt-4 text-xs text-[var(--color-ink-muted)]">
+            Mot de passe oublié ? La direction de votre établissement peut le réinitialiser depuis votre fiche du personnel.
+          </p>
+        )}
         <div className="mt-5 flex gap-3 rounded-xl bg-[var(--color-gold-soft)] px-3.5 py-3 text-xs leading-relaxed text-[#5C4416]">
           <QrCode className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           <p>

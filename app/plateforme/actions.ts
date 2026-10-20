@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { capter } from "@/lib/actions/serveur";
-import { changerStatutEcole, motDePasseProvisoire, requireAdministrateur, type ActionStatut } from "@/lib/plateforme/admin";
+import { changerStatutEcole, motDePasseProvisoire, requireAdministrateur, supprimerEcole, type ActionStatut } from "@/lib/plateforme/admin";
 import { creerEcole, lireEcole } from "@/lib/plateforme/creation";
 
 const ACTIONS: ActionStatut[] = ["activer", "suspendre", "reactiver", "prolonger"];
@@ -13,6 +13,14 @@ async function changerStatutCorps(etablissementId: string, action: ActionStatut)
   await changerStatutEcole(etablissementId, action, admin.id);
   revalidatePath("/plateforme");
   return { ok: true };
+}
+
+// Suppression d'une ecole vide ; nomConfirme : le nom de l'ecole, retape par l'administrateur
+async function supprimerEcoleCorps(etablissementId: string, nomConfirme: string) {
+  const admin = await requireAdministrateur();
+  const r = await supprimerEcole(etablissementId, admin.id, String(nomConfirme ?? ""));
+  revalidatePath("/plateforme");
+  return r;
 }
 
 // Ecole creee par l'administration : statut choisi, mot de passe provisoire pour un nouveau
@@ -33,6 +41,9 @@ async function creerEcoleCorps(fd: FormData) {
 
 export async function changerStatut(...a: Parameters<typeof changerStatutCorps>) {
   return capter(() => changerStatutCorps(...a));
+}
+export async function supprimerEcoleAdmin(...a: Parameters<typeof supprimerEcoleCorps>) {
+  return capter(() => supprimerEcoleCorps(...a));
 }
 export async function creerEcoleAdmin(...a: Parameters<typeof creerEcoleCorps>) {
   return capter(() => creerEcoleCorps(...a));

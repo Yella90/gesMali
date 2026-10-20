@@ -266,7 +266,7 @@ export function GererCompte({
         <div className="space-y-1.5">
           <Label htmlFor="motDePasse">Mot de passe</Label>
           <Input id="motDePasse" name="motDePasse" type="text" minLength={6} className="font-mono" />
-          <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum. Si cette adresse a déjà un compte GES Mali dans une autre école, laissez le mot de passe vide : la personne recevra l'accès à votre école avec son mot de passe habituel.</p>
+          <p className="text-xs text-[var(--color-ink-muted)]">6 caractères minimum. Si cette adresse a déjà un compte GES Mali dans une autre école, laissez le mot de passe vide : la personne recevra l'accès à votre école avec son mot de passe habituel (son adresse doit être confirmée, depuis « Mon compte »).</p>
         </div>
         {erreur && <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</div>}
         <div className="flex gap-2">

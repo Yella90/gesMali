@@ -83,7 +83,7 @@ export default async function PlateformePage() {
               </dl>
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
                 <p className="text-xs text-[var(--color-ink-muted)]">Direction : {e.directeurs.join(", ") || "aucun compte"}</p>
-                <ActionsEcole id={e.id} nom={e.nom} statut={e.statut} />
+                <ActionsEcole id={e.id} nom={e.nom} statut={e.statut} vide={e.eleves === 0 && e.classes === 0} />
               </div>
             </li>
           ))}

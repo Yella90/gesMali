@@ -1,9 +1,16 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { compteConnecte } from "@/lib/auth/session";
+import { envoiDisponible } from "@/lib/email/file";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 import { BoutonConnexion, FenetreConnexion } from "./Connexion";
 import { Bogolan, Cycles, DocumentsDefilants, Fonctionnalites, Personnes, Scene } from "./vitrine/Vitrine";
+
+// Messages de retour (?connexion=...) apres un parcours par e-mail
+const MESSAGES: Record<string, string> = {
+  "ecole-creee": "Votre école est créée et votre adresse confirmée : connectez-vous avec le mot de passe choisi à l'inscription.",
+  "mot-de-passe": "Mot de passe modifié : connectez-vous avec le nouveau mot de passe.",
+};
 
 const boutonPrincipal =
   "inline-flex h-11 items-center justify-center rounded-lg bg-[#E2C17E] px-5 text-sm font-semibold text-[#152A47] hover:bg-[#EBCF95]";
@@ -85,7 +92,12 @@ export default async function LoginPage({
         </footer>
       </div>
 
-      <FenetreConnexion ouverte={ouverte} retour={retour} />
+      <FenetreConnexion
+        ouverte={ouverte}
+        retour={retour}
+        message={connexion && Object.hasOwn(MESSAGES, connexion) ? MESSAGES[connexion] : undefined}
+        motDePasseOublie={envoiDisponible()}
+      />
     </div>
   );
 }

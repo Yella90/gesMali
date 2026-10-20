@@ -49,7 +49,18 @@ describe("un compte dans plusieurs ecoles", () => {
     assert.ok(await bcrypt.compare("secret1", u.passwordHash));
   });
 
-  test("meme e-mail dans une autre ecole : le compte recoit l'acces et garde son mot de passe", async () => {
+  test("adresse non confirmee : le compte n'est pas rattache a une autre ecole", async () => {
+    const employe = await nouvelEmploye(b, "Usurpation");
+    await assert.rejects(
+      ouvrirAcces({ etablissementId: b.etablissementId, employeId: employe.id, email: "awa.traore@ecole.ml", motDePasse: null, role: "DIRECTEUR" }),
+      /pas encore confirmée/
+    );
+    assert.equal(await prisma.acces.count({ where: { userId } }), 1);
+    await prisma.employe.delete({ where: { id: employe.id } });
+  });
+
+  test("meme e-mail (confirme) dans une autre ecole : le compte recoit l'acces et garde son mot de passe", async () => {
+    await prisma.user.update({ where: { id: userId }, data: { emailVerifieLe: maintenant } });
     const employe = await nouvelEmploye(b, "Traore");
     const r = await ouvrirAcces({ etablissementId: b.etablissementId, employeId: employe.id, email: "awa.traore@ecole.ml", motDePasse: null, role: "DIRECTEUR" });
     assert.deepEqual(r, { userId, compteExistant: true });

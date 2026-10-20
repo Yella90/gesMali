@@ -227,12 +227,38 @@ describe("transactions", () => {
   });
 });
 
-describe("valeurs uniques sur toute la plateforme", () => {
-  test("le numero de recu compte les paiements de toutes les ecoles", async () => {
-    const total = await prisma.paiementFrais.count();
-    const attendu = "REC-" + new Date().getFullYear() + "-" + String(total + 1).padStart(5, "0");
-    assert.equal(await prochainNumeroRecu(), attendu);
-    assert.ok(total >= 2, "un paiement par ecole au moins");
+describe("numeros de recu propres a chaque ecole", () => {
+  const le = new Date("2031-03-01T10:00:00Z");
+
+  test("chaque ecole a sa suite, qui reprend apres ses recus deja emis", async () => {
+    await prisma.paiementFrais.create({
+      data: {
+        etablissementId: a.etablissementId, trancheId: a.ids.TrancheFrais, montant: 1, datePaiement: le, mode: "ESPECES",
+        recuNumero: "REC-2031-00041", saisieParId: a.ids.User,
+      },
+    });
+    assert.equal(await prochainNumeroRecu(prisma, a.etablissementId, le), "REC-2031-00042");
+    assert.equal(await prochainNumeroRecu(prisma, a.etablissementId, le), "REC-2031-00043");
+    assert.equal(await prochainNumeroRecu(prisma, b.etablissementId, le), "REC-2031-00001");
+  });
+
+  test("encaissements simultanes : numeros tous differents", async () => {
+    const numeros = await Promise.all(
+      Array.from({ length: 6 }, () => prisma.$transaction(async (tx) => prochainNumeroRecu(tx, b.etablissementId, le)))
+    );
+    assert.equal(new Set(numeros).size, 6);
+  });
+
+  test("transaction annulee : le numero n'est pas consomme", async () => {
+    const avant = await prochainNumeroRecu(prisma, b.etablissementId, le);
+    await assert.rejects(
+      prisma.$transaction(async (tx) => {
+        await prochainNumeroRecu(tx, b.etablissementId, le);
+        throw new Error("encaissement refuse");
+      })
+    );
+    const apres = await prochainNumeroRecu(prisma, b.etablissementId, le);
+    assert.equal(Number(apres.slice(-5)), Number(avant.slice(-5)) + 1);
   });
 });
 
@@ -263,7 +289,7 @@ describe("requetes SQL brutes : resultats de A inchanges par les donnees de B", 
       data: { fraisId: frais.id, libelle: "Septembre 2026", periode: "2026-09", ordre: 2, montant: 7000, dateEcheance: new Date("2026-09-05") },
     });
     await prisma.paiementFrais.create({
-      data: { trancheId: tranche.id, montant: 3000, datePaiement: new Date("2026-10-04"), mode: "MOBILE_MONEY", recuNumero: "R-B2", saisieParId: b.ids.User },
+      data: { etablissementId: b.etablissementId, trancheId: tranche.id, montant: 3000, datePaiement: new Date("2026-10-04"), mode: "MOBILE_MONEY", recuNumero: "R-B2", saisieParId: b.ids.User },
     });
     await prisma.rappel.create({ data: { trancheId: tranche.id, saisieParId: b.ids.User } });
     await prisma.mouvementTresorerie.create({

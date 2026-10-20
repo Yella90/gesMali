@@ -3,6 +3,7 @@ import { PrismaClient } from "../lib/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 
 // ═════════════════════════════════════════════
 // PRNG deterministe (pour reproductibilite)
@@ -111,7 +112,9 @@ async function main() {
   // 2. DIRECTEUR + USER
   // ─────────────────────────────────────────────
   const emailDir = "directeur@ecole.ml";
-  const passwordDir = "ChangeMoi123!";
+  // Mot de passe : SEED_MOT_DE_PASSE, sinon tire au hasard (affiche une fois, a la fin).
+  // Jamais de mot de passe ecrit dans le code : le depot peut etre public.
+  const passwordDir = process.env.SEED_MOT_DE_PASSE || randomBytes(9).toString("base64url");
   const employeDir = await prisma.employe.create({
     data: {
       etablissementId: etab.id, nom: "Maiga", prenom: "Ibrahim",
@@ -126,7 +129,7 @@ async function main() {
       roles: ["DIRECTEUR"], actif: true, employeId: employeDir.id, etablissementId: etab.id,
     },
   });
-  console.log("✓ Directeur :", emailDir, "/", passwordDir);
+  console.log("✓ Directeur :", emailDir);
 
   // ─────────────────────────────────────────────
   // 3. EMPLOYES NON-ENSEIGNANTS
