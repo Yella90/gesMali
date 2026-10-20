@@ -160,6 +160,8 @@ describe("inscription confirmee par e-mail", () => {
     const m = (await mails(email)).at(-1)!;
     assert.match(m.objet, /existe déjà/);
     assert.ok(m.message.includes(BASE + "/mot-de-passe/oublie"));
+    // Le bouton mene a la connexion, puis directement au formulaire de creation d'ecole
+    assert.ok(m.message.includes(BASE + "/login?callbackUrl=%2Finscription"));
     assert.equal(await prisma.jetonEmail.count({ where: { email, type: "INSCRIPTION" } }), liens);
   });
 

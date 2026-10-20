@@ -20,15 +20,15 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ connexion?: string; callbackUrl?: string }>;
 }) {
-  // Compte connecte et toujours valable (une session dont le compte a ete supprime ou
-  // desactive ne doit pas renvoyer vers le tableau de bord, qui renverrait ici)
-  if (await compteConnecte()) redirect("/dashboard");
-
-  // Arrivee depuis une page protegee : le formulaire s'ouvre directement
+  // Arrivee depuis une page protegee (ou un lien d'e-mail) : le formulaire s'ouvre directement
   const { connexion, callbackUrl } = await searchParams;
   const ouverte = connexion !== undefined || callbackUrl !== undefined;
   // Retour vers la page demandee : chemin interne seulement
   const retour = callbackUrl && /^\/(?!\/)/.test(callbackUrl) && !callbackUrl.startsWith("/login") ? callbackUrl : "/dashboard";
+
+  // Compte connecte et toujours valable (une session dont le compte a ete supprime ou
+  // desactive ne doit pas renvoyer vers le tableau de bord, qui renverrait ici) : page demandee
+  if (await compteConnecte()) redirect(retour);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[var(--color-brand)] text-white">

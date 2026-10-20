@@ -23,18 +23,19 @@ export function emailInscription(destinataire: string, p: { prenom: string; ecol
   });
 }
 
-// Inscription demandee avec une adresse qui a deja un compte : rien n'est cree
+// Inscription demandee avec une adresse qui a deja un compte : rien n'est cree. Le bouton
+// ouvre la connexion, puis le formulaire de creation d'ecole (l'ecole s'ajoute au compte).
 export function emailCompteExistant(destinataire: string, p: { ecole: string; lienConnexion: string; lienMotDePasse: string }): Email {
   return composer(destinataire, {
     objet: "Votre compte GES Mali existe déjà",
     titre: "Vous avez déjà un compte",
-    apercu: "Connectez-vous pour créer « " + p.ecole + " » depuis votre compte.",
+    apercu: "Connectez-vous : le formulaire de création de « " + p.ecole + " » s'ouvrira ensuite.",
     avant: [
       "Bonjour,",
-      "Une inscription de l'école « " + p.ecole + " » a été demandée avec cette adresse, qui a déjà un compte GES Mali.",
-      "Pour créer cette école, connectez-vous avec votre compte habituel, puis ouvrez « Mes écoles » et « Créer une nouvelle école ».",
+      "Vous avez demandé à inscrire l'école « " + p.ecole + " » avec cette adresse e-mail. Cette adresse a déjà un compte GES Mali : inutile d'en créer un second.",
+      "Connectez-vous avec votre mot de passe habituel : le formulaire de création de l'école s'ouvrira juste après, et la nouvelle école sera ajoutée à votre compte.",
     ],
-    bouton: { libelle: "Me connecter", lien: p.lienConnexion },
+    bouton: { libelle: "Me connecter et créer l'école", lien: p.lienConnexion },
     apres: [{ texte: "Mot de passe oublié ?", libelleLien: "Choisir un nouveau mot de passe", lien: p.lienMotDePasse }],
     note: "Si vous n'êtes pas à l'origine de cette demande, ignorez ce message : rien n'a été modifié.",
   });

@@ -38,7 +38,7 @@ export async function demanderInscription(d: DonneesEcole, motDePasse: string, b
   const existant = await prisma.user.count({ where: { email: d.directeurEmail } });
   if (existant) {
     await deposerEmail(
-      emailCompteExistant(d.directeurEmail, { ecole: d.nom, lienConnexion: base + "/login?connexion", lienMotDePasse: base + "/mot-de-passe/oublie" })
+      emailCompteExistant(d.directeurEmail, { ecole: d.nom, lienConnexion: base + "/login?callbackUrl=" + encodeURIComponent("/inscription"), lienMotDePasse: base + "/mot-de-passe/oublie" })
     );
     return;
   }
