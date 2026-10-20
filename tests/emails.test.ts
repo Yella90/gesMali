@@ -68,6 +68,22 @@ describe("file d'envoi", () => {
   });
 });
 
+describe("mise en forme des e-mails", () => {
+  test("version texte et version HTML : meme lien, caracteres speciaux echappes", async () => {
+    const email = "forme@ecole.test";
+    await demanderInscription(ecole(email, "École <Les \"Fromagers\"> & Cie"), "motdepasse8", BASE);
+    const [m] = await prisma.$queryRaw<{ message: string; message_html: string | null }[]>`
+      SELECT message, message_html FROM mail_sortant WHERE destinataire = ${email}`;
+    const lien = BASE + CHEMINS.INSCRIPTION + (await dernierLien(email, CHEMINS.INSCRIPTION));
+    assert.ok(m.message.includes("Créer mon école : " + lien), "texte : libelle du bouton et lien");
+    assert.ok(m.message_html, "version HTML deposee");
+    assert.ok(m.message_html.includes('href="' + lien + '"'), "HTML : lien du bouton");
+    assert.ok(m.message_html.includes("&lt;Les &quot;Fromagers&quot;&gt; &amp; Cie"), "HTML : nom de l'ecole echappe");
+    assert.ok(!m.message_html.includes("<Les"), "aucune balise venue des donnees");
+    assert.match(m.message_html, /<meta name="viewport"/);
+  });
+});
+
 describe("liens a usage unique", () => {
   test("seule l'empreinte est gardee ; le lien sert une fois", async () => {
     const jeton = await creerJeton("VERIFICATION", "jeton@ecole.test");

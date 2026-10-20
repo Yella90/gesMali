@@ -31,14 +31,16 @@ function pool(): Pool {
   return p;
 }
 
-export type Email = { destinataire: string; objet: string; titre: string; message: string };
+// message : version texte ; messageHtml : version mise en forme (sinon le script d'envoi
+// construit un HTML simple a partir du titre et du message)
+export type Email = { destinataire: string; objet: string; titre: string; message: string; messageHtml?: string };
 
 export async function deposerEmail(e: Email): Promise<void> {
   if (!envoiDisponible()) throw new Error("L'envoi d'e-mails n'est pas configuré");
   try {
     await pool().query(
-      "INSERT INTO mail_sortant (systeme, destinataire, objet, titre, message) VALUES ($1, $2, $3, $4, $5)",
-      [SYSTEME, e.destinataire, e.objet, e.titre, e.message]
+      "INSERT INTO mail_sortant (systeme, destinataire, objet, titre, message, message_html) VALUES ($1, $2, $3, $4, $5, $6)",
+      [SYSTEME, e.destinataire, e.objet, e.titre, e.message, e.messageHtml ?? null]
     );
   } catch (err) {
     // Base d'envoi injoignable : message clair pour l'utilisateur, detail dans les logs
