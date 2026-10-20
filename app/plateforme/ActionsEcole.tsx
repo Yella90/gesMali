@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { changerStatut as changerStatutAction, supprimerEcoleAdmin as supprimerEcoleAction } from "./actions";
 import { relever } from "@/lib/actions/resultat";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 const changerStatut = relever(changerStatutAction);
 const supprimerEcole = relever(supprimerEcoleAction);
@@ -30,6 +31,7 @@ export function ActionsEcole({
   vide: boolean;
 }) {
   const router = useRouter();
+  const confirmer = useConfirm();
   const [enCours, setEnCours] = useState<Action | "supprimer" | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -37,7 +39,17 @@ export function ActionsEcole({
     statut === "SUSPENDU" ? ["reactiver"] : statut === "ESSAI" ? ["activer", "prolonger", "suspendre"] : ["suspendre"];
 
   async function lancer(action: Action) {
-    if (action === "suspendre" && !window.confirm("Suspendre « " + nom + " » ? Son personnel ne pourra plus s'y connecter.")) return;
+    if (
+      action === "suspendre" &&
+      !(await confirmer({
+        title: "Suspendre « " + nom + " » ?",
+        message: "Son personnel ne pourra plus s'y connecter. Les données sont conservées : vous pourrez réactiver l'école à tout moment.",
+        confirmLabel: "Suspendre",
+        variant: "warning",
+      }))
+    ) {
+      return;
+    }
     setEnCours(action);
     setErreur(null);
     try {
@@ -52,15 +64,22 @@ export function ActionsEcole({
 
   // Le nom de l'ecole est retape : pas de suppression par erreur d'une ecole homonyme
   async function supprimer() {
-    const saisi = window.prompt(
-      "Supprimer définitivement « " + nom + " » ? Ses paramètres, son personnel et leurs accès seront effacés.\n\n" +
-        "Pour confirmer, tapez le nom de l'école :"
-    );
-    if (saisi === null) return;
+    const ok = await confirmer({
+      title: "Supprimer « " + nom + " » ?",
+      message:
+        "Suppression définitive : ses paramètres, ses matières, ses fiches du personnel et leurs accès seront effacés. " +
+        "Les comptes qui ne servent dans aucune autre école seront supprimés.",
+      confirmLabel: "Supprimer définitivement",
+      variant: "danger",
+      saisieLibelle: "Pour confirmer, tapez le nom de l'école :",
+      saisieAttendue: nom,
+    });
+    if (!ok) return;
     setEnCours("supprimer");
     setErreur(null);
     try {
-      await supprimerEcole(id, saisi);
+      // Le serveur verifie de nouveau le nom
+      await supprimerEcole(id, nom);
       router.refresh();
     } catch (e) {
       setErreur(e instanceof Error ? e.message : "Suppression impossible");

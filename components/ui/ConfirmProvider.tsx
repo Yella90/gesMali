@@ -14,9 +14,12 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     message: "",
   });
   const resolverRef = useRef<((value: boolean) => void) | null>(null);
+  // Nouvelle cle a chaque demande : la fenetre repart de zero (champ de saisie vide)
+  const [ouverture, setOuverture] = useState(0);
 
   const confirm = useCallback<ConfirmFn>((opts) => {
     setOptions(opts);
+    setOuverture((n) => n + 1);
     setOpen(true);
     return new Promise<boolean>((resolve) => {
       resolverRef.current = resolve;
@@ -43,6 +46,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     <ConfirmContext.Provider value={confirm}>
       {children}
       <ConfirmDialog
+        key={ouverture}
         open={open}
         options={options}
         onConfirm={handleConfirm}

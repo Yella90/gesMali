@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { compteConnecte } from "@/lib/auth/session";
 import { BoutonDeconnexion } from "@/components/layout/BoutonDeconnexion";
+import { ConfirmProvider } from "@/components/ui/ConfirmProvider";
 
 export const metadata = { title: "Plateforme · GES Mali" };
 
@@ -31,7 +32,9 @@ export default async function PlateformeLayout({ children }: { children: React.R
           </nav>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 py-8">
+        <ConfirmProvider>{children}</ConfirmProvider>
+      </main>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export type ConfirmVariant = "danger" | "warning" | "info" | "success";
 
@@ -10,6 +10,10 @@ export type ConfirmOptions = {
   confirmLabel?: string;
   cancelLabel?: string;
   variant?: ConfirmVariant;
+  // Confirmation renforcee : le bouton ne s'active qu'une fois ce texte retape (ex. le nom
+  // de l'ecole a supprimer)
+  saisieAttendue?: string;
+  saisieLibelle?: string;
 };
 
 const ICONES: Record<ConfirmVariant, string> = {
@@ -55,17 +59,21 @@ export function ConfirmDialog({
 }) {
   const variant = options.variant || "danger";
   const style = STYLES[variant];
+  const [saisie, setSaisie] = useState("");
+  const attendue = options.saisieAttendue;
+  // Champ vide a chaque ouverture : ConfirmProvider change la cle du composant
+  const valide = !attendue || saisie.trim() === attendue.trim();
 
   // Fermer avec Echap
   useEffect(() => {
     if (!open) return;
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onCancel();
-      if (e.key === "Enter") onConfirm();
+      if (e.key === "Enter" && valide) onConfirm();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onCancel, onConfirm]);
+  }, [open, onCancel, onConfirm, valide]);
 
   // Bloquer le scroll du body quand la modale est ouverte
   useEffect(() => {
@@ -131,6 +139,22 @@ export function ConfirmDialog({
                   {options.message}
                 </p>
               )}
+              {attendue && (
+                <label className="mt-4 block text-sm">
+                  <span className="text-[var(--color-ink)]">
+                    {options.saisieLibelle || "Pour confirmer, tapez"} <strong className="select-all">{attendue}</strong>
+                  </span>
+                  <input
+                    type="text"
+                    value={saisie}
+                    onChange={(e) => setSaisie(e.target.value)}
+                    autoFocus
+                    autoComplete="off"
+                    spellCheck={false}
+                    className="mt-1.5 h-10 w-full rounded-lg border border-[var(--color-border-strong)] bg-white px-3 text-sm"
+                  />
+                </label>
+              )}
             </div>
           </div>
         </div>
@@ -147,8 +171,9 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onConfirm}
-            autoFocus
-            className={"h-10 px-5 rounded-lg text-sm font-medium " + style.bouton}
+            autoFocus={!attendue}
+            disabled={!valide}
+            className={"h-10 px-5 rounded-lg text-sm font-medium disabled:cursor-not-allowed disabled:opacity-40 " + style.bouton}
           >
             {options.confirmLabel || "Confirmer"}
           </button>
