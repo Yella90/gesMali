@@ -6,7 +6,7 @@ import { fmtPeriode, periodeActuelle } from "@/lib/frais/periode";
 import { moisValide, optionsMois } from "@/lib/tableau-de-bord/finances";
 import { CATEGORIES_DEPENSE, journal, LIB_CAISSE, previsionMois, soldesCaisses } from "@/lib/tresorerie/tresorerie";
 import { AlertePrevision } from "@/components/tresorerie/AlertePrevision";
-import { BoutonAnnulerMouvement, BoutonBasculerRecurrente, FormulaireMouvement, NouvelleDepenseRecurrente } from "./Formulaires";
+import { BoutonAnnulerMouvement, BoutonBasculerRecurrente, FormulaireMouvement, FormulaireTransfert, NouvelleDepenseRecurrente } from "./Formulaires";
 
 const f = (n: number) => n.toLocaleString("fr-FR") + " F";
 
@@ -32,6 +32,7 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
   const peutCapital = peut(user.roles, "tresorerie.capital");
   const entrees = lignes.reduce((s, l) => s + l.entree, 0);
   const sorties = lignes.reduce((s, l) => s + l.sortie, 0);
+  const transferts = lignes.reduce((s, l) => s + (l.annule ? 0 : (l.transfert ?? 0)), 0);
   const moisCourant = mois === periodeActuelle();
 
   return (
@@ -43,6 +44,9 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
         </div>
         <div className="flex flex-wrap gap-2">
           {peutDepenser && <FormulaireMouvement type="DEPENSE" categories={CATEGORIES_DEPENSE} estDirecteur={estDirecteur} principal />}
+          {peutDepenser && (
+            <FormulaireTransfert soldes={Object.fromEntries(soldes.map((s) => [s.caisse, s.solde]))} estDirecteur={estDirecteur} />
+          )}
           {peutCapital && <FormulaireMouvement type="APPORT_CAPITAL" categories={[]} estDirecteur={estDirecteur} />}
           {peutCapital && <FormulaireMouvement type="RETRAIT_PROMOTEUR" categories={[]} estDirecteur={estDirecteur} />}
           <Link href="/tresorerie/rapport" className="inline-flex h-10 items-center rounded-lg border border-[var(--color-border-strong)] bg-white px-4 text-sm font-medium hover:bg-neutral-50">
@@ -67,6 +71,11 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
             <p className="mt-1 text-[11px] text-[var(--color-ink-muted)]">
               +{f(s.frais + s.apports)} / −{f(s.salaires + s.depenses + s.retraits)}
             </p>
+            {(s.transfertsRecus > 0 || s.transfertsEnvoyes > 0) && (
+              <p className="text-[11px] text-[var(--color-ink-muted)]">
+                Transferts : +{f(s.transfertsRecus)} / −{f(s.transfertsEnvoyes)}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -78,6 +87,7 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
             <h2 className="font-semibold">Mouvements de {fmtPeriode(mois).toLowerCase()}</h2>
             <p className="mt-0.5 text-xs text-[var(--color-ink-muted)]">
               Entrées {f(entrees)} · sorties {f(sorties)}
+              {transferts > 0 && " · transferts entre caisses " + f(transferts)}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -98,11 +108,21 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
                   <span className="font-medium">{l.nature}</span>
                   <span className="text-[var(--color-ink-muted)]"> · {l.libelle}</span>
                   {l.derogation && <span className="ml-2 rounded bg-amber-50 px-1.5 py-0.5 text-[11px] text-amber-800">dérogation</span>}
-                  <span className="block text-[11px] text-[var(--color-ink-faint)]">{LIB_CAISSE[l.caisse]}</span>
+                  <span className="block text-[11px] text-[var(--color-ink-faint)]">
+                    {LIB_CAISSE[l.caisse]}
+                    {l.caisseDestination && " → " + LIB_CAISSE[l.caisseDestination]}
+                  </span>
                 </span>
-                <span className={"font-semibold tnum " + (l.entree ? "text-[var(--color-accent)]" : "text-[var(--color-ink)]") + (l.annule ? " line-through" : "")}>
-                  {l.entree ? "+" + f(l.entree) : l.sortie ? "−" + f(l.sortie) : "0 F"}
-                </span>
+                {l.transfert !== undefined ? (
+                  // Transfert : l'argent change de caisse, le total de l'ecole ne bouge pas
+                  <span className={"font-semibold tnum text-[var(--color-ink-muted)]" + (l.annule ? " line-through" : "")}>
+                    ⇄ {f(l.transfert)}
+                  </span>
+                ) : (
+                  <span className={"font-semibold tnum " + (l.entree ? "text-[var(--color-accent)]" : "text-[var(--color-ink)]") + (l.annule ? " line-through" : "")}>
+                    {l.entree ? "+" + f(l.entree) : l.sortie ? "−" + f(l.sortie) : "0 F"}
+                  </span>
+                )}
                 {l.mouvementId && !l.annule && peutCapital && <BoutonAnnulerMouvement id={l.mouvementId} />}
               </li>
             ))}

@@ -744,6 +744,7 @@ enum TypeMouvement {
   APPORT_CAPITAL
   DEPENSE
   RETRAIT_PROMOTEUR
+  TRANSFERT // d'une caisse a une autre (caisse -> caisseDestination) : ni recette ni depense
 }
 
 model MouvementTresorerie {
@@ -753,7 +754,9 @@ model MouvementTresorerie {
   etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
 
   type      TypeMouvement
-  caisse    Caisse
+  caisse    Caisse // caisse du mouvement ; transfert : caisse de depart
+  // Transfert seulement : caisse d'arrivee (differente de caisse)
+  caisseDestination Caisse?
   date      DateTime
   montant   Float
   libelle   String

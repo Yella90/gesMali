@@ -1,7 +1,8 @@
 // Tresorerie : soldes par caisse et prevision du mois.
 // Le solde n'est jamais stocke : il est recalcule a partir des encaissements de
 // frais (PaiementFrais), des paiements du personnel (Paiement) et des mouvements
-// manuels (MouvementTresorerie : apports, depenses, retraits du promoteur).
+// manuels (MouvementTresorerie : apports, depenses, retraits du promoteur, transferts
+// d'une caisse a une autre).
 
 // SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
@@ -41,9 +42,11 @@ export type SoldeCaisse = {
   caisse: CaisseT;
   frais: number; // encaissements de scolarite
   apports: number;
+  transfertsRecus: number; // venus d'une autre caisse
   salaires: number;
   depenses: number;
   retraits: number;
+  transfertsEnvoyes: number; // partis vers une autre caisse
   solde: number;
 };
 
@@ -63,11 +66,18 @@ export async function soldesCaisses(etablissementId: string, jusquA?: Date): Pro
       FROM ${T("Paiement")} s
       WHERE s."etablissementId" = ${etablissementId} AND s.statut <> 'ANNULE' AND s."datePaiement" <= ${fin}
       GROUP BY s."modePaiement"`,
+    // Transfert : TRANSFERT sur la caisse de depart, TRANSFERT_RECU sur la caisse d'arrivee
     prisma.$queryRaw<{ caisse: CaisseT; type: string; total: number }[]>`
       SELECT m.caisse::text AS caisse, m.type::text AS type, COALESCE(SUM(m.montant), 0)::float8 AS total
       FROM ${T("MouvementTresorerie")} m
       WHERE m."etablissementId" = ${etablissementId} AND NOT m.annule AND m.date <= ${fin}
-      GROUP BY m.caisse, m.type`,
+      GROUP BY m.caisse, m.type
+      UNION ALL
+      SELECT m."caisseDestination"::text, 'TRANSFERT_RECU', COALESCE(SUM(m.montant), 0)::float8
+      FROM ${T("MouvementTresorerie")} m
+      WHERE m."etablissementId" = ${etablissementId} AND NOT m.annule AND m.date <= ${fin}
+        AND m."caisseDestination" IS NOT NULL
+      GROUP BY m."caisseDestination"`,
   ]);
 
   return CAISSES.map((caisse) => {
@@ -77,12 +87,74 @@ export async function soldesCaisses(etablissementId: string, jusquA?: Date): Pro
     const apports = m("APPORT_CAPITAL");
     const depenses = m("DEPENSE");
     const retraits = m("RETRAIT_PROMOTEUR");
-    return { caisse, frais: f, apports, salaires: sal, depenses, retraits, solde: f + apports - sal - depenses - retraits };
+    const transfertsRecus = m("TRANSFERT_RECU");
+    const transfertsEnvoyes = m("TRANSFERT");
+    return {
+      caisse,
+      frais: f,
+      apports,
+      transfertsRecus,
+      salaires: sal,
+      depenses,
+      retraits,
+      transfertsEnvoyes,
+      solde: f + apports + transfertsRecus - sal - depenses - retraits - transfertsEnvoyes,
+    };
   });
 }
 
 export async function soldeCaisse(etablissementId: string, caisse: CaisseT): Promise<number> {
   return (await soldesCaisses(etablissementId)).find((s) => s.caisse === caisse)?.solde ?? 0;
+}
+
+// Transfert d'une caisse a une autre : depot des especes a la banque, retrait au guichet,
+// recharge ou retrait Mobile Money... Le solde de la caisse de depart doit couvrir le
+// montant, sauf derogation (reservee au directeur par l'action, motif obligatoire).
+export async function enregistrerTransfert(
+  etablissementId: string,
+  p: {
+    de: CaisseT;
+    vers: CaisseT;
+    montant: number;
+    date: Date;
+    libelle?: string | null;
+    reference?: string | null;
+    motifDerogation?: string | null; // renseigne : la derogation est demandee
+    saisieParId: string;
+  }
+) {
+  if (!CAISSES.includes(p.de) || !CAISSES.includes(p.vers)) throw new Error("Caisse invalide");
+  if (p.de === p.vers) throw new Error("Choisissez deux caisses différentes");
+  if (!Number.isFinite(p.montant) || p.montant <= 0) throw new Error("Montant invalide");
+  if (Number.isNaN(p.date.getTime())) throw new Error("Date invalide");
+
+  let derogation = false;
+  let motifDerogation: string | null = null;
+  const disponible = await soldeCaisse(etablissementId, p.de);
+  if (p.montant > disponible + 0.01) {
+    if (p.motifDerogation === undefined || p.motifDerogation === null) {
+      throw new Error("Solde insuffisant en caisse " + LIB_CAISSE[p.de] + " : " + disponible.toLocaleString("fr-FR") + " F disponibles");
+    }
+    if (p.motifDerogation.trim().length < 5) throw new Error("Motif de dérogation obligatoire (5 caractères minimum)");
+    derogation = true;
+    motifDerogation = p.motifDerogation.trim();
+  }
+
+  return ecole(etablissementId).mouvementTresorerie.create({
+    data: {
+      etablissementId,
+      type: "TRANSFERT",
+      caisse: p.de,
+      caisseDestination: p.vers,
+      date: p.date,
+      montant: p.montant,
+      libelle: p.libelle?.trim() || "Transfert " + LIB_CAISSE[p.de] + " → " + LIB_CAISSE[p.vers],
+      reference: p.reference?.trim() || null,
+      derogation,
+      motifDerogation,
+      saisieParId: p.saisieParId,
+    },
+  });
 }
 
 export type Prevision = {
@@ -162,6 +234,7 @@ const LIB_MOUVEMENT: Record<string, string> = {
   APPORT_CAPITAL: "Apport de capital",
   DEPENSE: "Dépense",
   RETRAIT_PROMOTEUR: "Retrait du promoteur",
+  TRANSFERT: "Transfert",
 };
 
 export type LigneJournal = {
@@ -172,6 +245,9 @@ export type LigneJournal = {
   caisse: CaisseT;
   entree: number;
   sortie: number;
+  // Transfert : caisse d'arrivee et montant (ni entree ni sortie pour l'ecole)
+  caisseDestination?: CaisseT;
+  transfert?: number;
   mouvementId?: string; // mouvement manuel annulable
   annule?: boolean;
   derogation?: boolean;
@@ -226,6 +302,23 @@ export async function journal(etablissementId: string, debut: Date, fin: Date): 
     });
   }
   for (const m of mouvements) {
+    if (m.type === "TRANSFERT" && m.caisseDestination) {
+      lignes.push({
+        cle: "m-" + m.id,
+        date: m.date,
+        nature: LIB_MOUVEMENT.TRANSFERT,
+        libelle: m.libelle + (m.annule && m.motifAnnulation ? " (annulé : " + m.motifAnnulation + ")" : ""),
+        caisse: m.caisse,
+        caisseDestination: m.caisseDestination,
+        entree: 0,
+        sortie: 0,
+        transfert: m.montant,
+        mouvementId: m.id,
+        annule: m.annule,
+        derogation: m.derogation,
+      });
+      continue;
+    }
     const entree = m.type === "APPORT_CAPITAL";
     lignes.push({
       cle: "m-" + m.id,

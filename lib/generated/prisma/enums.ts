@@ -163,7 +163,8 @@ export type Caisse = (typeof Caisse)[keyof typeof Caisse]
 export const TypeMouvement = {
   APPORT_CAPITAL: 'APPORT_CAPITAL',
   DEPENSE: 'DEPENSE',
-  RETRAIT_PROMOTEUR: 'RETRAIT_PROMOTEUR'
+  RETRAIT_PROMOTEUR: 'RETRAIT_PROMOTEUR',
+  TRANSFERT: 'TRANSFERT'
 } as const
 
 export type TypeMouvement = (typeof TypeMouvement)[keyof typeof TypeMouvement]

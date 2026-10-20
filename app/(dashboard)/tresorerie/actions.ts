@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
-import { CAISSES, LIB_CAISSE, soldeCaisse, type CaisseT } from "@/lib/tresorerie/tresorerie";
+import { CAISSES, enregistrerTransfert, LIB_CAISSE, soldeCaisse, type CaisseT } from "@/lib/tresorerie/tresorerie";
 import { capter } from "@/lib/actions/serveur";
 
 const TYPES = ["APPORT_CAPITAL", "DEPENSE", "RETRAIT_PROMOTEUR"] as const;
@@ -79,6 +79,37 @@ async function creerMouvementCorps(formData: FormData) {
   return { id: m.id };
 }
 
+// Transfert entre caisses : direction et comptabilite (comme les depenses).
+// Derogation au solde insuffisant : directeur seul.
+async function creerTransfertCorps(formData: FormData) {
+  const user = await requirePermission("tresorerie.depense");
+  const de = caisseValide(formData.get("de"));
+  const vers = caisseValide(formData.get("vers"));
+  const dateTexte = String(formData.get("date") ?? "");
+  const demandeDerogation = formData.get("derogation") === "on" && user.roles.includes("DIRECTEUR");
+
+  const m = await enregistrerTransfert(user.etablissementId, {
+    de,
+    vers,
+    montant: Number(formData.get("montant")),
+    date: dateTexte ? new Date(dateTexte) : new Date(),
+    libelle: String(formData.get("libelle") ?? ""),
+    reference: String(formData.get("reference") ?? ""),
+    motifDerogation: demandeDerogation ? String(formData.get("motifDerogation") ?? "") : null,
+    saisieParId: user.id,
+  });
+  await enregistrerAudit({
+    userId: user.id,
+    action: "TRESORERIE_TRANSFERT",
+    entite: "MouvementTresorerie",
+    entiteId: m.id,
+    details: { de, vers, montant: m.montant, derogation: m.derogation },
+  });
+  revalidatePath("/tresorerie");
+  revalidatePath("/dashboard");
+  return { id: m.id };
+}
+
 async function annulerMouvementCorps(id: string, motif: string) {
   const user = await requirePermission("tresorerie.capital");
   const db = ecole(user);
@@ -123,6 +154,9 @@ async function basculerDepenseRecurrenteCorps(id: string) {
 // sinon Next la remplace par un message generique en production (voir lib/actions/serveur.ts)
 export async function creerMouvement(...a: Parameters<typeof creerMouvementCorps>) {
   return capter(() => creerMouvementCorps(...a));
+}
+export async function creerTransfert(...a: Parameters<typeof creerTransfertCorps>) {
+  return capter(() => creerTransfertCorps(...a));
 }
 export async function annulerMouvement(...a: Parameters<typeof annulerMouvementCorps>) {
   return capter(() => annulerMouvementCorps(...a));

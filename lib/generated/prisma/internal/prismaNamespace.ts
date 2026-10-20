@@ -2855,6 +2855,7 @@ export const MouvementTresorerieScalarFieldEnum = {
   etablissementId: 'etablissementId',
   type: 'type',
   caisse: 'caisse',
+  caisseDestination: 'caisseDestination',
   date: 'date',
   montant: 'montant',
   libelle: 'libelle',

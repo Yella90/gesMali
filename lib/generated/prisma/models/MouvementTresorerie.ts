@@ -39,6 +39,7 @@ export type MouvementTresorerieMinAggregateOutputType = {
   etablissementId: string | null
   type: $Enums.TypeMouvement | null
   caisse: $Enums.Caisse | null
+  caisseDestination: $Enums.Caisse | null
   date: Date | null
   montant: number | null
   libelle: string | null
@@ -57,6 +58,7 @@ export type MouvementTresorerieMaxAggregateOutputType = {
   etablissementId: string | null
   type: $Enums.TypeMouvement | null
   caisse: $Enums.Caisse | null
+  caisseDestination: $Enums.Caisse | null
   date: Date | null
   montant: number | null
   libelle: string | null
@@ -75,6 +77,7 @@ export type MouvementTresorerieCountAggregateOutputType = {
   etablissementId: number
   type: number
   caisse: number
+  caisseDestination: number
   date: number
   montant: number
   libelle: number
@@ -103,6 +106,7 @@ export type MouvementTresorerieMinAggregateInputType = {
   etablissementId?: true
   type?: true
   caisse?: true
+  caisseDestination?: true
   date?: true
   montant?: true
   libelle?: true
@@ -121,6 +125,7 @@ export type MouvementTresorerieMaxAggregateInputType = {
   etablissementId?: true
   type?: true
   caisse?: true
+  caisseDestination?: true
   date?: true
   montant?: true
   libelle?: true
@@ -139,6 +144,7 @@ export type MouvementTresorerieCountAggregateInputType = {
   etablissementId?: true
   type?: true
   caisse?: true
+  caisseDestination?: true
   date?: true
   montant?: true
   libelle?: true
@@ -244,6 +250,7 @@ export type MouvementTresorerieGroupByOutputType = {
   etablissementId: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination: $Enums.Caisse | null
   date: Date
   montant: number
   libelle: string
@@ -285,6 +292,7 @@ export type MouvementTresorerieWhereInput = {
   etablissementId?: Prisma.StringFilter<"MouvementTresorerie"> | string
   type?: Prisma.EnumTypeMouvementFilter<"MouvementTresorerie"> | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFilter<"MouvementTresorerie"> | $Enums.Caisse
+  caisseDestination?: Prisma.EnumCaisseNullableFilter<"MouvementTresorerie"> | $Enums.Caisse | null
   date?: Prisma.DateTimeFilter<"MouvementTresorerie"> | Date | string
   montant?: Prisma.FloatFilter<"MouvementTresorerie"> | number
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
@@ -305,6 +313,7 @@ export type MouvementTresorerieOrderByWithRelationInput = {
   etablissementId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   caisse?: Prisma.SortOrder
+  caisseDestination?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   libelle?: Prisma.SortOrder
@@ -328,6 +337,7 @@ export type MouvementTresorerieWhereUniqueInput = Prisma.AtLeast<{
   etablissementId?: Prisma.StringFilter<"MouvementTresorerie"> | string
   type?: Prisma.EnumTypeMouvementFilter<"MouvementTresorerie"> | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFilter<"MouvementTresorerie"> | $Enums.Caisse
+  caisseDestination?: Prisma.EnumCaisseNullableFilter<"MouvementTresorerie"> | $Enums.Caisse | null
   date?: Prisma.DateTimeFilter<"MouvementTresorerie"> | Date | string
   montant?: Prisma.FloatFilter<"MouvementTresorerie"> | number
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
@@ -348,6 +358,7 @@ export type MouvementTresorerieOrderByWithAggregationInput = {
   etablissementId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   caisse?: Prisma.SortOrder
+  caisseDestination?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   libelle?: Prisma.SortOrder
@@ -374,6 +385,7 @@ export type MouvementTresorerieScalarWhereWithAggregatesInput = {
   etablissementId?: Prisma.StringWithAggregatesFilter<"MouvementTresorerie"> | string
   type?: Prisma.EnumTypeMouvementWithAggregatesFilter<"MouvementTresorerie"> | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseWithAggregatesFilter<"MouvementTresorerie"> | $Enums.Caisse
+  caisseDestination?: Prisma.EnumCaisseNullableWithAggregatesFilter<"MouvementTresorerie"> | $Enums.Caisse | null
   date?: Prisma.DateTimeWithAggregatesFilter<"MouvementTresorerie"> | Date | string
   montant?: Prisma.FloatWithAggregatesFilter<"MouvementTresorerie"> | number
   libelle?: Prisma.StringWithAggregatesFilter<"MouvementTresorerie"> | string
@@ -391,6 +403,7 @@ export type MouvementTresorerieCreateInput = {
   id?: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -410,6 +423,7 @@ export type MouvementTresorerieUncheckedCreateInput = {
   etablissementId: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -427,6 +441,7 @@ export type MouvementTresorerieUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -446,6 +461,7 @@ export type MouvementTresorerieUncheckedUpdateInput = {
   etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -464,6 +480,7 @@ export type MouvementTresorerieCreateManyInput = {
   etablissementId: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -481,6 +498,7 @@ export type MouvementTresorerieUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -498,6 +516,7 @@ export type MouvementTresorerieUncheckedUpdateManyInput = {
   etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -526,6 +545,7 @@ export type MouvementTresorerieCountOrderByAggregateInput = {
   etablissementId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   caisse?: Prisma.SortOrder
+  caisseDestination?: Prisma.SortOrder
   date?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   libelle?: Prisma.SortOrder
@@ -548,6 +568,7 @@ export type MouvementTresorerieMaxOrderByAggregateInput = {
   etablissementId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   caisse?: Prisma.SortOrder
+  caisseDestination?: Prisma.SortOrder
   date?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   libelle?: Prisma.SortOrder
@@ -566,6 +587,7 @@ export type MouvementTresorerieMinOrderByAggregateInput = {
   etablissementId?: Prisma.SortOrder
   type?: Prisma.SortOrder
   caisse?: Prisma.SortOrder
+  caisseDestination?: Prisma.SortOrder
   date?: Prisma.SortOrder
   montant?: Prisma.SortOrder
   libelle?: Prisma.SortOrder
@@ -675,10 +697,15 @@ export type EnumCaisseFieldUpdateOperationsInput = {
   set?: $Enums.Caisse
 }
 
+export type NullableEnumCaisseFieldUpdateOperationsInput = {
+  set?: $Enums.Caisse | null
+}
+
 export type MouvementTresorerieCreateWithoutSaisieParInput = {
   id?: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -697,6 +724,7 @@ export type MouvementTresorerieUncheckedCreateWithoutSaisieParInput = {
   etablissementId: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -743,6 +771,7 @@ export type MouvementTresorerieScalarWhereInput = {
   etablissementId?: Prisma.StringFilter<"MouvementTresorerie"> | string
   type?: Prisma.EnumTypeMouvementFilter<"MouvementTresorerie"> | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFilter<"MouvementTresorerie"> | $Enums.Caisse
+  caisseDestination?: Prisma.EnumCaisseNullableFilter<"MouvementTresorerie"> | $Enums.Caisse | null
   date?: Prisma.DateTimeFilter<"MouvementTresorerie"> | Date | string
   montant?: Prisma.FloatFilter<"MouvementTresorerie"> | number
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
@@ -760,6 +789,7 @@ export type MouvementTresorerieCreateWithoutEtablissementInput = {
   id?: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -777,6 +807,7 @@ export type MouvementTresorerieUncheckedCreateWithoutEtablissementInput = {
   id?: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -821,6 +852,7 @@ export type MouvementTresorerieCreateManySaisieParInput = {
   etablissementId: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -837,6 +869,7 @@ export type MouvementTresorerieUpdateWithoutSaisieParInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -855,6 +888,7 @@ export type MouvementTresorerieUncheckedUpdateWithoutSaisieParInput = {
   etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -872,6 +906,7 @@ export type MouvementTresorerieUncheckedUpdateManyWithoutSaisieParInput = {
   etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -888,6 +923,7 @@ export type MouvementTresorerieCreateManyEtablissementInput = {
   id?: string
   type: $Enums.TypeMouvement
   caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
   date: Date | string
   montant: number
   libelle: string
@@ -905,6 +941,7 @@ export type MouvementTresorerieUpdateWithoutEtablissementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -922,6 +959,7 @@ export type MouvementTresorerieUncheckedUpdateWithoutEtablissementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -939,6 +977,7 @@ export type MouvementTresorerieUncheckedUpdateManyWithoutEtablissementInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
   caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   montant?: Prisma.FloatFieldUpdateOperationsInput | number
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
@@ -959,6 +998,7 @@ export type MouvementTresorerieSelect<ExtArgs extends runtime.Types.Extensions.I
   etablissementId?: boolean
   type?: boolean
   caisse?: boolean
+  caisseDestination?: boolean
   date?: boolean
   montant?: boolean
   libelle?: boolean
@@ -979,6 +1019,7 @@ export type MouvementTresorerieSelectCreateManyAndReturn<ExtArgs extends runtime
   etablissementId?: boolean
   type?: boolean
   caisse?: boolean
+  caisseDestination?: boolean
   date?: boolean
   montant?: boolean
   libelle?: boolean
@@ -999,6 +1040,7 @@ export type MouvementTresorerieSelectUpdateManyAndReturn<ExtArgs extends runtime
   etablissementId?: boolean
   type?: boolean
   caisse?: boolean
+  caisseDestination?: boolean
   date?: boolean
   montant?: boolean
   libelle?: boolean
@@ -1019,6 +1061,7 @@ export type MouvementTresorerieSelectScalar = {
   etablissementId?: boolean
   type?: boolean
   caisse?: boolean
+  caisseDestination?: boolean
   date?: boolean
   montant?: boolean
   libelle?: boolean
@@ -1032,7 +1075,7 @@ export type MouvementTresorerieSelectScalar = {
   createdAt?: boolean
 }
 
-export type MouvementTresorerieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "type" | "caisse" | "date" | "montant" | "libelle" | "categorie" | "reference" | "derogation" | "motifDerogation" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["mouvementTresorerie"]>
+export type MouvementTresorerieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "type" | "caisse" | "caisseDestination" | "date" | "montant" | "libelle" | "categorie" | "reference" | "derogation" | "motifDerogation" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["mouvementTresorerie"]>
 export type MouvementTresorerieInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1057,6 +1100,7 @@ export type $MouvementTresoreriePayload<ExtArgs extends runtime.Types.Extensions
     etablissementId: string
     type: $Enums.TypeMouvement
     caisse: $Enums.Caisse
+    caisseDestination: $Enums.Caisse | null
     date: Date
     montant: number
     libelle: string
@@ -1497,6 +1541,7 @@ export interface MouvementTresorerieFieldRefs {
   readonly etablissementId: Prisma.FieldRef<"MouvementTresorerie", 'String'>
   readonly type: Prisma.FieldRef<"MouvementTresorerie", 'TypeMouvement'>
   readonly caisse: Prisma.FieldRef<"MouvementTresorerie", 'Caisse'>
+  readonly caisseDestination: Prisma.FieldRef<"MouvementTresorerie", 'Caisse'>
   readonly date: Prisma.FieldRef<"MouvementTresorerie", 'DateTime'>
   readonly montant: Prisma.FieldRef<"MouvementTresorerie", 'Float'>
   readonly libelle: Prisma.FieldRef<"MouvementTresorerie", 'String'>
