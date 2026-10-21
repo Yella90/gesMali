@@ -63,6 +63,11 @@ Recommandé : définir aussi `DIRECT_URL` pour les migrations (voir le tableau).
 > (`eu-central-1`, Francfort). Le volume de données entre l'application et la base
 > est le facteur dominant ; depuis une connexion lointaine, les pages sont nettement plus lentes.
 
+### Sauvegardes
+
+Copie quotidienne de la base de production sur AlwaysData (03:00, 30 jours conservés), hors de
+chez Neon : voir `sauvegarde/README.md` (installation, vérification, restauration).
+
 ### Checklist sécurité
 
 - [ ] Changer le mot de passe du compte directeur créé par le seed (tiré au hasard, ou `SEED_MOT_DE_PASSE`), et de tout compte créé par une version antérieure du seed.
