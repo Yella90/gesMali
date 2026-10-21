@@ -92,7 +92,8 @@ export default function ConfidentialitePage() {
       <h2>5. Où sont les données ?</h2>
       <p>
         Les données sont hébergées par {LEGAL.hebergeurBase} ; l&apos;application par{" "}
-        {LEGAL.hebergeurApplication} ; les e-mails sont envoyés par {LEGAL.hebergeurEmails}. Les données sont
+        {LEGAL.hebergeurApplication}. Une copie de sauvegarde de la base est faite chaque nuit chez{" "}
+        {LEGAL.hebergeurSauvegardes}. Les e-mails passent par {LEGAL.hebergeurEmails}. Les données sont
         donc transférées hors du Mali : ce transfert est
         encadré conformément à la loi n° 2013-015 et aux exigences de l&apos;Autorité de Protection des
         Données à caractère Personnel (APDP).
@@ -104,14 +105,16 @@ export default function ConfidentialitePage() {
         <li>Données financières (frais, reçus, paiements) : durée imposée par les obligations comptables.</li>
         <li>Comptes du personnel : jusqu&apos;à la fin de la relation de travail, puis désactivation.</li>
         <li>Lien d&apos;accès parent : désactivé dès la radiation ou le transfert de l&apos;élève, ou à la demande du parent.</li>
-        <li>E-mails envoyés : supprimés 30 jours après leur envoi. Liens reçus par e-mail : valables 1 heure (mot de passe oublié) ou 48 heures, supprimés une semaine après leur expiration.</li>
+        <li>Sauvegardes de la base : {LEGAL.dureeSauvegardes}, puis supprimées automatiquement.</li>
+        <li>E-mails envoyés : supprimés de la file d&apos;envoi 30 jours après leur envoi. Liens reçus par e-mail : valables 1 heure (mot de passe oublié) ou 48 heures, supprimés une semaine après leur expiration.</li>
         <li>Inscription d&apos;une école non confirmée : rien n&apos;est créé ; la demande disparaît avec son lien.</li>
         <li>Cookies de session : 30 jours au plus (voir la <Link href="/cookies" className="text-[var(--color-brand)] underline">politique cookies</Link>).</li>
       </ul>
 
       <h2>7. Sécurité</h2>
       <ul>
-        <li>Connexions chiffrées (HTTPS) et base de données accessible uniquement par connexion chiffrée vérifiée.</li>
+        <li>Connexions chiffrées (HTTPS) ; base de données joignable uniquement par connexion chiffrée.</li>
+        <li>Sauvegarde quotidienne de la base chez un autre hébergeur, vérifiée à chaque copie, accessible au seul compte d&apos;administration.</li>
         <li>Mots de passe stockés sous forme chiffrée (bcrypt) ; tentatives de connexion répétées bloquées ; après un changement de mot de passe, les sessions ouvertes ailleurs sont fermées.</li>
         <li>Liens reçus par e-mail à usage unique et à durée limitée ; seule leur empreinte est conservée.</li>
         <li>Droits d&apos;accès par rôle, journal d&apos;audit des actions sensibles.</li>

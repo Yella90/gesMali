@@ -19,8 +19,10 @@ export default function ConditionsUtilisationPage() {
       <h2>2. Éditeur et hébergement</h2>
       <ul>
         <li>Éditeur : {LEGAL.editeur}, {LEGAL.adresse}, {LEGAL.email}, {LEGAL.telephone}.</li>
+        <li>Contact commercial (abonnements, démonstrations) : {LEGAL.commercial}.</li>
         <li>Application hébergée par : {LEGAL.hebergeurApplication}.</li>
         <li>Données hébergées par : {LEGAL.hebergeurBase}.</li>
+        <li>Sauvegardes quotidiennes de la base : {LEGAL.hebergeurSauvegardes}, conservées {LEGAL.dureeSauvegardes}.</li>
         <li>E-mails envoyés par : {LEGAL.hebergeurEmails}.</li>
       </ul>
 

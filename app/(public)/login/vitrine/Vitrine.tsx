@@ -315,7 +315,7 @@ const FONCTIONS = [
   { icone: FileText, titre: "Notes et bulletins", texte: "Moyennes, rangs et bulletins PDF calculés automatiquement." },
   { icone: ClipboardCheck, titre: "Présences", texte: "Appel du jour, retards, absences justifiées et fiche mensuelle." },
   { icone: Receipt, titre: "Frais de scolarité", texte: "Échéances mensuelles, reçus, impayés et rappels aux parents." },
-  { icone: Landmark, titre: "Trésorerie", texte: "Soldes par caisse, dépenses, apports et rapport financier." },
+  { icone: Landmark, titre: "Trésorerie", texte: "Soldes par caisse, dépenses, transferts entre caisses et rapport financier." },
   { icone: Users, titre: "Personnel et paie", texte: "Fiches du personnel, rôles et paiements des salaires." },
   { icone: CalendarClock, titre: "Emploi du temps", texte: "Cours et enseignants de chaque classe, jour par jour." },
   { icone: QrCode, titre: "Espace parent", texte: "Notes, bulletins et scolarité consultables par QR code." },
@@ -328,7 +328,7 @@ export function Fonctionnalites() {
         Tout l&apos;établissement au même endroit
       </h3>
       <p className="mt-1 text-xs text-white/60">
-        Démarrage rapide : les classes, les élèves et les notes de l&apos;ancien système se reprennent depuis un fichier Excel.
+        Démarrage rapide : les classes, les élèves et les notes de l&apos;ancien système se reprennent depuis Excel (fichier CSV ou copier-coller).
       </p>
       <ul className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
         {FONCTIONS.map((f) => (
