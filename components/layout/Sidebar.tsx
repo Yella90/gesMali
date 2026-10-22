@@ -10,7 +10,7 @@ import { LiensLegaux } from "@/components/legal/PageLegale";
 import { libRole } from "@/lib/libelles";
 import {
   ArrowLeftRight, ArrowRightLeft, Banknote, BookOpen, BriefcaseBusiness, CalendarClock, CalendarRange, FileText,
-  ClipboardCheck, GraduationCap, Landmark, LayoutDashboard, LogOut, Upload, PencilLine, School, ScrollText, Settings,
+  ClipboardCheck, GraduationCap, HandCoins, Landmark, LayoutDashboard, LogOut, Upload, PencilLine, School, ScrollText, Settings,
   ShieldCheck, UserRound, Wallet,
   type LucideIcon,
 } from "lucide-react";
@@ -34,6 +34,7 @@ const MENU: Item[] = [
   { href: "/frais", label: "Frais", permission: "frais.read", icon: Wallet, mobile: true },
   { href: "/paiements", label: "Paiements", permission: "paiement.read", icon: Banknote },
   { href: "/tresorerie", label: "Trésorerie", permission: "tresorerie.read", icon: Landmark },
+  { href: "/finance", label: "Finance", permission: "tresorerie.read", icon: HandCoins },
   { href: "/matieres", label: "Matières", permission: "matiere.read", icon: BookOpen },
   { href: "/trimestres", label: "Trimestres", permission: "trimestre.read", icon: CalendarRange },
   { href: "/personnel", label: "Personnel", permission: "personnel.read", icon: BriefcaseBusiness },

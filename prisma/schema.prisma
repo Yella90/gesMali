@@ -13,30 +13,30 @@ datasource db {
 
 // Employe = toute personne qui travaille a l'ecole (avec ou sans compte)
 model Employe {
-  id              String   @id @default(cuid())
+  id              String        @id @default(cuid())
   etablissementId String
   etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
 
-  nom             String
-  prenom          String
-  telephone       String?
-  poste           String   // "Directeur", "Enseignant", "Secretaire", "Comptable", "Surveillant", "Gardien", "Autre"
-  posteLibre      String?  // Si poste = "Autre", libelle precise
+  nom        String
+  prenom     String
+  telephone  String?
+  poste      String // "Directeur", "Enseignant", "Secretaire", "Comptable", "Surveillant", "Gardien", "Autre"
+  posteLibre String? // Si poste = "Autre", libelle precise
 
-  dateEmbauche    DateTime @default(now())
-  dateSortie      DateTime?
-  actif           Boolean  @default(true)
+  dateEmbauche DateTime  @default(now())
+  dateSortie   DateTime?
+  actif        Boolean   @default(true)
 
   salaireReference Float?
   typeRemuneration String? // "MENSUEL", "HORAIRE", null
 
-  user              User?           // compte dont c'est la fiche d'origine
-  acces             Acces?          // acces a l'application dans CETTE ecole
-  affectations      Affectation[]
-  paiements         Paiement[]
-  classesTitulaire  Classe[]        @relation("TitulaireClasse")
-  classesPrincipal  Classe[]        @relation("ProfesseurPrincipal")
-  lignesBulletin    BulletinLigne[]
+  user             User? // compte dont c'est la fiche d'origine
+  acces            Acces? // acces a l'application dans CETTE ecole
+  affectations     Affectation[]
+  paiements        Paiement[]
+  classesTitulaire Classe[]        @relation("TitulaireClasse")
+  classesPrincipal Classe[]        @relation("ProfesseurPrincipal")
+  lignesBulletin   BulletinLigne[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,11 +50,11 @@ model Employe {
 // employeId, etablissementId et roles : fiche, ecole et roles d'origine (premiere ecole) ;
 // vides pour un administrateur de la plateforme qui n'appartient a aucune ecole.
 model User {
-  id           String   @id @default(cuid())
-  email        String   @unique
+  id           String  @id @default(cuid())
+  email        String  @unique
   passwordHash String
   roles        Role[]
-  actif        Boolean  @default(true)
+  actif        Boolean @default(true)
 
   employeId String?  @unique
   employe   Employe? @relation(fields: [employeId], references: [id], onDelete: Restrict)
@@ -62,21 +62,22 @@ model User {
   etablissementId String?
   etablissement   Etablissement? @relation(fields: [etablissementId], references: [id], onDelete: Restrict)
 
-  notesSaisies     Note[]       @relation("NotesSaisies")
-  notesModifiees   Note[]       @relation("NotesModifiees")
-  bulletinsGeneres Bulletin[]   @relation("BulletinsGeneres")
-  paiementsSaisis  Paiement[]   @relation("PaiementsSaisis")
-  paiementsAnnules Paiement[]   @relation("PaiementsAnnules")
+  notesSaisies     Note[]                @relation("NotesSaisies")
+  notesModifiees   Note[]                @relation("NotesModifiees")
+  bulletinsGeneres Bulletin[]            @relation("BulletinsGeneres")
+  paiementsSaisis  Paiement[]            @relation("PaiementsSaisis")
+  paiementsAnnules Paiement[]            @relation("PaiementsAnnules")
   fraisSaisis      PaiementFrais[]
   rappelsSaisis    Rappel[]
   auditLogs        AuditLog[]
   mouvementsSaisis MouvementTresorerie[] @relation("MouvementsSaisis")
+  pretsSaisis      Pret[]                @relation("PretsSaisis")
   presencesSaisies Presence[]
   acces            Acces[]
   jetons           JetonEmail[]
 
   // Adresse e-mail confirmee par un lien recu (confirmation ou mot de passe oublie)
-  emailVerifieLe DateTime?
+  emailVerifieLe      DateTime?
   // Dernier changement de mot de passe : les sessions ouvertes avant sont fermees
   motDePasseModifieLe DateTime?
 
@@ -118,34 +119,35 @@ enum Role {
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 
 model Etablissement {
-  id        String   @id @default(cuid())
+  id        String            @id @default(cuid())
   nom       String
   type      TypeEtablissement
   adresse   String?
   telephone String?
   email     String?
   logo      String?
-  actif     Boolean  @default(true) // remplace par statut
+  actif     Boolean           @default(true) // remplace par statut
 
   // Plateforme : essai a l'inscription, puis active ; suspendue = plus d'acces du personnel
   statut   StatutEtablissement @default(ACTIF)
   finEssai DateTime?
 
-  users           User[]
-  acces           Acces[]
-  auditLogs       AuditLog[]
-  paiementsFrais  PaiementFrais[]
-  compteursRecus  CompteurRecu[]
-  employes        Employe[]
-  anneesScolaires AnneeScolaire[]
-  matieres        Matiere[]
-  classes         Classe[]
-  eleves          Eleve[]
-  paiements       Paiement[]
-  fraisScolarite  FraisScolarite[]
+  users               User[]
+  acces               Acces[]
+  auditLogs           AuditLog[]
+  paiementsFrais      PaiementFrais[]
+  compteursRecus      CompteurRecu[]
+  employes            Employe[]
+  anneesScolaires     AnneeScolaire[]
+  matieres            Matiere[]
+  classes             Classe[]
+  eleves              Eleve[]
+  paiements           Paiement[]
+  fraisScolarite      FraisScolarite[]
   mouvements          MouvementTresorerie[]
   depensesRecurrentes DepenseRecurrente[]
-  parametres      ParametresEtablissement?
+  prets               Pret[]
+  parametres          ParametresEtablissement?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -208,9 +210,9 @@ model AnneeScolaire {
   archiveeLe      DateTime?
   notesSupprimees Boolean   @default(false)
 
-  trimestres  Trimestre[]
-  classes     Classe[]
-  frais       FraisScolarite[]
+  trimestres   Trimestre[]
+  classes      Classe[]
+  frais        FraisScolarite[]
   inscriptions InscriptionAnnuelle[]
 
   @@unique([etablissementId, libelle])
@@ -245,7 +247,7 @@ model Matiere {
   nom         String
   code        String?
   cycle       Cycle
-  coefficient Int    @default(1)
+  coefficient Int     @default(1)
 
   affectations   Affectation[]
   notes          Note[]
@@ -400,14 +402,14 @@ model Note {
   type   TypeNote
   numero Int
   valeur Float?
-  sur    Float @default(20)
+  sur    Float    @default(20)
 
   statut StatutNote @default(BROUILLON)
 
   saisieParId   String
-  saisiePar     User    @relation("NotesSaisies", fields: [saisieParId], references: [id])
+  saisiePar     User      @relation("NotesSaisies", fields: [saisieParId], references: [id])
   modifieeParId String?
-  modifieePar   User?   @relation("NotesModifiees", fields: [modifieeParId], references: [id])
+  modifieePar   User?     @relation("NotesModifiees", fields: [modifieeParId], references: [id])
   modifieeLe    DateTime?
 
   createdAt DateTime @default(now())
@@ -532,7 +534,7 @@ model Paiement {
   statut       StatutPaiement @default(PAYE)
 
   saisieParId String
-  saisiePar   User    @relation("PaiementsSaisis", fields: [saisieParId], references: [id])
+  saisiePar   User   @relation("PaiementsSaisis", fields: [saisieParId], references: [id])
 
   annuleParId     String?
   annulePar       User?   @relation("PaiementsAnnules", fields: [annuleParId], references: [id])
@@ -634,7 +636,7 @@ model PaiementFrais {
   motifAnnulation String?
 
   saisieParId String
-  saisiePar   User    @relation(fields: [saisieParId], references: [id])
+  saisiePar   User   @relation(fields: [saisieParId], references: [id])
 
   createdAt DateTime @default(now())
 
@@ -664,7 +666,7 @@ model Rappel {
   contenu    String?
 
   saisieParId String
-  saisiePar   User    @relation(fields: [saisieParId], references: [id])
+  saisiePar   User   @relation(fields: [saisieParId], references: [id])
 
   @@index([trancheId])
 }
@@ -728,6 +730,7 @@ enum DecisionEleve {
   DIPLOME
   TRANSFERE
 }
+
 // ═════════════════════════════════════════════
 // TRESORERIE
 // Encaissements de frais (PaiementFrais) et paiements du personnel (Paiement)
@@ -745,6 +748,13 @@ enum TypeMouvement {
   DEPENSE
   RETRAIT_PROMOTEUR
   TRANSFERT // d'une caisse a une autre (caisse -> caisseDestination) : ni recette ni depense
+  REMBOURSEMENT_PRET // sortie : remboursement d'un pret (pretId)
+}
+
+// Origine d'un apport de capital : argent du promoteur ou pret (dette a rembourser)
+enum OrigineApport {
+  FONDS_PROPRES
+  PRET
 }
 
 model MouvementTresorerie {
@@ -753,15 +763,21 @@ model MouvementTresorerie {
   etablissementId String
   etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
 
-  type      TypeMouvement
-  caisse    Caisse // caisse du mouvement ; transfert : caisse de depart
+  type              TypeMouvement
+  caisse            Caisse // caisse du mouvement ; transfert : caisse de depart
   // Transfert seulement : caisse d'arrivee (differente de caisse)
   caisseDestination Caisse?
-  date      DateTime
-  montant   Float
-  libelle   String
-  categorie String? // depenses : Loyer, Electricite, Fournitures...
-  reference String?
+  date              DateTime
+  montant           Float
+  libelle           String
+  categorie         String? // depenses : Loyer, Electricite, Fournitures...
+  reference         String?
+
+  // Apport de capital : fonds propres ou pret (null : apport saisi avant ce choix = fonds propres)
+  origineApport OrigineApport?
+  // Apport issu d'un pret, ou remboursement de ce pret
+  pretId        String?
+  pret          Pret?          @relation(fields: [pretId], references: [id])
 
   // Sortie acceptee malgre un solde insuffisant (directeur, motif obligatoire)
   derogation      Boolean @default(false)
@@ -776,6 +792,54 @@ model MouvementTresorerie {
   createdAt DateTime @default(now())
 
   @@index([etablissementId, date])
+  @@index([pretId])
+}
+
+// Pret obtenu par l'ecole (banque, microfinance, particulier...). L'argent recu est un
+// mouvement APPORT_CAPITAL (origineApport PRET) ; les remboursements sont des mouvements
+// REMBOURSEMENT_PRET. Ce qui reste du se calcule : echeances - remboursements.
+model Pret {
+  id String @id @default(cuid())
+
+  etablissementId String
+  etablissement   Etablissement @relation(fields: [etablissementId], references: [id])
+
+  preteur          String
+  montant          Float // capital emprunte
+  tauxAnnuel       Float    @default(0) // en %, 0 : sans interets
+  dureeMois        Int
+  dateObtention    DateTime
+  premiereEcheance DateTime
+  notes            String?
+
+  annule          Boolean @default(false)
+  motifAnnulation String?
+
+  saisieParId String
+  saisiePar   User   @relation("PretsSaisis", fields: [saisieParId], references: [id])
+
+  echeances  EcheancePret[]
+  mouvements MouvementTresorerie[]
+
+  createdAt DateTime @default(now())
+
+  @@index([etablissementId])
+}
+
+// Echeancier d'un pret : mensualites constantes (capital + interets)
+model EcheancePret {
+  id String @id @default(cuid())
+
+  pretId String
+  pret   Pret   @relation(fields: [pretId], references: [id], onDelete: Cascade)
+
+  ordre        Int
+  dateEcheance DateTime
+  capital      Float
+  interet      Float
+  montant      Float // capital + interet
+
+  @@unique([pretId, ordre])
 }
 
 // Depenses qui reviennent chaque mois (loyer, electricite...) : alerte de tresorerie
@@ -816,9 +880,9 @@ model Presence {
   classeId String
   classe   Classe @relation(fields: [classeId], references: [id])
 
-  date         DateTime @db.Date
+  date         DateTime       @db.Date
   statut       StatutPresence
-  justifie     Boolean  @default(false)
+  justifie     Boolean        @default(false)
   motif        String?
   dureeMinutes Int?
 

@@ -48,13 +48,15 @@ export async function GET(req: NextRequest) {
             { titre: "Recettes de l'école", colonnes: deux, lignes: r.recettes.map((x) => [x.libelle, montantPdf(x.montant)]), total: ["Total des recettes", montantPdf(r.totalRecettes)] },
             { titre: "Charges de l'école", colonnes: deux, lignes: r.charges.map((x) => [x.libelle, montantPdf(x.montant)]), total: ["Total des charges", montantPdf(r.totalCharges)], vide: "Aucune charge sur la période." },
             {
-              titre: "Promoteur (hors recettes et charges)",
+              titre: "Financement (hors recettes et charges)",
               colonnes: deux,
               lignes: [
-                ["Apports de capital", montantPdf(r.apports)],
+                ["Apports en fonds propres", montantPdf(r.apports)],
                 ["Retraits du promoteur", montantPdf(r.retraits)],
+                ["Prêts reçus", montantPdf(r.pretsRecus)],
+                ["Remboursements de prêts", montantPdf(r.remboursements)],
               ],
-              total: ["Apport net", montantPdf(r.apports - r.retraits)],
+              total: ["Financement net", montantPdf(r.apports - r.retraits + r.pretsRecus - r.remboursements)],
             },
             {
               titre: "Soldes des caisses",

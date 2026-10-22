@@ -1,13 +1,14 @@
 // Tresorerie : soldes par caisse et prevision du mois.
 // Le solde n'est jamais stocke : il est recalcule a partir des encaissements de
 // frais (PaiementFrais), des paiements du personnel (Paiement) et des mouvements
-// manuels (MouvementTresorerie : apports, depenses, retraits du promoteur, transferts
-// d'une caisse a une autre).
+// manuels (MouvementTresorerie : apports, depenses, retraits du promoteur, remboursements
+// de prets, transferts d'une caisse a une autre).
 
 // SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
 import { ecole } from "@/lib/data/ecole";
 import { Prisma } from "@/lib/generated/prisma/client";
+import { pretsARembourser } from "@/lib/tresorerie/prets";
 
 export const CAISSES = ["ESPECES", "BANQUE", "MOBILE_MONEY"] as const;
 export type CaisseT = (typeof CAISSES)[number];
@@ -46,6 +47,7 @@ export type SoldeCaisse = {
   salaires: number;
   depenses: number;
   retraits: number;
+  remboursements: number; // remboursements de prets
   transfertsEnvoyes: number; // partis vers une autre caisse
   solde: number;
 };
@@ -87,6 +89,7 @@ export async function soldesCaisses(etablissementId: string, jusquA?: Date): Pro
     const apports = m("APPORT_CAPITAL");
     const depenses = m("DEPENSE");
     const retraits = m("RETRAIT_PROMOTEUR");
+    const remboursements = m("REMBOURSEMENT_PRET");
     const transfertsRecus = m("TRANSFERT_RECU");
     const transfertsEnvoyes = m("TRANSFERT");
     return {
@@ -97,8 +100,9 @@ export async function soldesCaisses(etablissementId: string, jusquA?: Date): Pro
       salaires: sal,
       depenses,
       retraits,
+      remboursements,
       transfertsEnvoyes,
-      solde: f + apports + transfertsRecus - sal - depenses - retraits - transfertsEnvoyes,
+      solde: f + apports + transfertsRecus - sal - depenses - retraits - remboursements - transfertsEnvoyes,
     };
   });
 }
@@ -161,6 +165,7 @@ export type Prevision = {
   soldeTotal: number;
   salairesRestants: number; // salaires mensuels pas encore verses ce mois
   depensesRestantes: number; // depenses recurrentes dont l'echeance n'est pas passee
+  pretsRestants: number; // echeances de prets d'ici la fin du mois, retards compris
   sortiesPrevues: number;
   fraisAttendus: number; // echeances du mois encore impayees
   manque: number; // > 0 : le solde ne couvre pas les sorties prevues
@@ -171,7 +176,8 @@ export type Prevision = {
 // Le solde couvre-t-il les sorties prevues d'ici la fin du mois ?
 export async function previsionMois(etablissementId: string, maintenant = new Date()): Promise<Prevision> {
   const periode = maintenant.getFullYear() + "-" + String(maintenant.getMonth() + 1).padStart(2, "0");
-  const [soldes, employes, dejaPayes, recurrentes, attendus] = await Promise.all([
+  const finMois = new Date(maintenant.getFullYear(), maintenant.getMonth() + 1, 0, 23, 59, 59);
+  const [soldes, employes, dejaPayes, recurrentes, attendus, pretsRestants] = await Promise.all([
     soldesCaisses(etablissementId),
     ecole(etablissementId).employe.findMany({
       where: { etablissementId, actif: true, salaireReference: { gt: 0 } },
@@ -193,6 +199,7 @@ export async function previsionMois(etablissementId: string, maintenant = new Da
       JOIN ${T("FraisScolarite")} f ON f.id = t."fraisId"
       LEFT JOIN payes p ON p."trancheId" = t.id
       WHERE f."etablissementId" = ${etablissementId} AND t.periode = ${periode}`,
+    pretsARembourser(etablissementId, finMois),
   ]);
 
   const payes = new Map(dejaPayes.map((d) => [d.employeId, d._sum.montant ?? 0]));
@@ -206,7 +213,7 @@ export async function previsionMois(etablissementId: string, maintenant = new Da
     salairesRestants += Math.max(0, (e.salaireReference ?? 0) - (payes.get(e.id) ?? 0));
   }
   const depensesRestantes = recurrentes.reduce((s, d) => s + d.montant, 0);
-  const sortiesPrevues = salairesRestants + depensesRestantes;
+  const sortiesPrevues = salairesRestants + depensesRestantes + pretsRestants;
   const soldeTotal = soldes.reduce((s, c) => s + c.solde, 0);
   const manque = Math.max(0, sortiesPrevues - soldeTotal);
   const niveau = manque > 0 ? "insuffisant" : soldeTotal < sortiesPrevues * 1.1 ? "juste" : "ok";
@@ -215,6 +222,7 @@ export async function previsionMois(etablissementId: string, maintenant = new Da
     soldeTotal,
     salairesRestants,
     depensesRestantes,
+    pretsRestants,
     sortiesPrevues,
     fraisAttendus: attendus[0]?.reste ?? 0,
     manque,
@@ -235,7 +243,14 @@ const LIB_MOUVEMENT: Record<string, string> = {
   DEPENSE: "Dépense",
   RETRAIT_PROMOTEUR: "Retrait du promoteur",
   TRANSFERT: "Transfert",
+  REMBOURSEMENT_PRET: "Remboursement de prêt",
 };
+
+// Nature affichee d'un mouvement : l'apport precise fonds propres ou pret
+export function natureMouvement(m: { type: string; categorie: string | null; origineApport: string | null }): string {
+  if (m.type === "APPORT_CAPITAL") return "Apport de capital : " + (m.origineApport === "PRET" ? "prêt" : "fonds propres");
+  return (LIB_MOUVEMENT[m.type] ?? m.type) + (m.categorie ? " : " + m.categorie : "");
+}
 
 export type LigneJournal = {
   cle: string;
@@ -323,7 +338,7 @@ export async function journal(etablissementId: string, debut: Date, fin: Date): 
     lignes.push({
       cle: "m-" + m.id,
       date: m.date,
-      nature: LIB_MOUVEMENT[m.type] + (m.categorie ? " : " + m.categorie : ""),
+      nature: natureMouvement(m),
       libelle: m.libelle + (m.annule && m.motifAnnulation ? " (annulé : " + m.motifAnnulation + ")" : ""),
       caisse: m.caisse,
       entree: entree && !m.annule ? m.montant : 0,

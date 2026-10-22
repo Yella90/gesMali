@@ -74,6 +74,8 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
+  Pret: 'Pret',
+  EcheancePret: 'EcheancePret',
   DepenseRecurrente: 'DepenseRecurrente',
   Presence: 'Presence',
   EchecConnexion: 'EchecConnexion',
@@ -477,6 +479,8 @@ export const MouvementTresorerieScalarFieldEnum = {
   libelle: 'libelle',
   categorie: 'categorie',
   reference: 'reference',
+  origineApport: 'origineApport',
+  pretId: 'pretId',
   derogation: 'derogation',
   motifDerogation: 'motifDerogation',
   annule: 'annule',
@@ -486,6 +490,38 @@ export const MouvementTresorerieScalarFieldEnum = {
 } as const
 
 export type MouvementTresorerieScalarFieldEnum = (typeof MouvementTresorerieScalarFieldEnum)[keyof typeof MouvementTresorerieScalarFieldEnum]
+
+
+export const PretScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  preteur: 'preteur',
+  montant: 'montant',
+  tauxAnnuel: 'tauxAnnuel',
+  dureeMois: 'dureeMois',
+  dateObtention: 'dateObtention',
+  premiereEcheance: 'premiereEcheance',
+  notes: 'notes',
+  annule: 'annule',
+  motifAnnulation: 'motifAnnulation',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt'
+} as const
+
+export type PretScalarFieldEnum = (typeof PretScalarFieldEnum)[keyof typeof PretScalarFieldEnum]
+
+
+export const EcheancePretScalarFieldEnum = {
+  id: 'id',
+  pretId: 'pretId',
+  ordre: 'ordre',
+  dateEcheance: 'dateEcheance',
+  capital: 'capital',
+  interet: 'interet',
+  montant: 'montant'
+} as const
+
+export type EcheancePretScalarFieldEnum = (typeof EcheancePretScalarFieldEnum)[keyof typeof EcheancePretScalarFieldEnum]
 
 
 export const DepenseRecurrenteScalarFieldEnum = {

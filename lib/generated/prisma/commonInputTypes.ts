@@ -566,6 +566,13 @@ export type EnumCaisseNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel> | $Enums.Caisse | null
 }
 
+export type EnumOrigineApportNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.OrigineApport | Prisma.EnumOrigineApportFieldRefInput<$PrismaModel> | null
+  in?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel> | $Enums.OrigineApport | null
+}
+
 export type EnumTypeMouvementWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
   in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
@@ -594,6 +601,16 @@ export type EnumCaisseNullableWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel>
+}
+
+export type EnumOrigineApportNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OrigineApport | Prisma.EnumOrigineApportFieldRefInput<$PrismaModel> | null
+  in?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumOrigineApportNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrigineApport | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel>
 }
 
 export type EnumStatutPresenceFilter<$PrismaModel = never> = {
@@ -1146,6 +1163,13 @@ export type NestedEnumCaisseNullableFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel> | $Enums.Caisse | null
 }
 
+export type NestedEnumOrigineApportNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.OrigineApport | Prisma.EnumOrigineApportFieldRefInput<$PrismaModel> | null
+  in?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel> | $Enums.OrigineApport | null
+}
+
 export type NestedEnumTypeMouvementWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.TypeMouvement | Prisma.EnumTypeMouvementFieldRefInput<$PrismaModel>
   in?: $Enums.TypeMouvement[] | Prisma.ListEnumTypeMouvementFieldRefInput<$PrismaModel>
@@ -1174,6 +1198,16 @@ export type NestedEnumCaisseNullableWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCaisseNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumOrigineApportNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.OrigineApport | Prisma.EnumOrigineApportFieldRefInput<$PrismaModel> | null
+  in?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.OrigineApport[] | Prisma.ListEnumOrigineApportFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumOrigineApportNullableWithAggregatesFilter<$PrismaModel> | $Enums.OrigineApport | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumOrigineApportNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumStatutPresenceFilter<$PrismaModel = never> = {

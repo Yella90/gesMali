@@ -237,6 +237,7 @@ export type UserWhereInput = {
   rappelsSaisis?: Prisma.RappelListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   mouvementsSaisis?: Prisma.MouvementTresorerieListRelationFilter
+  pretsSaisis?: Prisma.PretListRelationFilter
   presencesSaisies?: Prisma.PresenceListRelationFilter
   acces?: Prisma.AccesListRelationFilter
   jetons?: Prisma.JetonEmailListRelationFilter
@@ -265,6 +266,7 @@ export type UserOrderByWithRelationInput = {
   rappelsSaisis?: Prisma.RappelOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   mouvementsSaisis?: Prisma.MouvementTresorerieOrderByRelationAggregateInput
+  pretsSaisis?: Prisma.PretOrderByRelationAggregateInput
   presencesSaisies?: Prisma.PresenceOrderByRelationAggregateInput
   acces?: Prisma.AccesOrderByRelationAggregateInput
   jetons?: Prisma.JetonEmailOrderByRelationAggregateInput
@@ -296,6 +298,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   rappelsSaisis?: Prisma.RappelListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
   mouvementsSaisis?: Prisma.MouvementTresorerieListRelationFilter
+  pretsSaisis?: Prisma.PretListRelationFilter
   presencesSaisies?: Prisma.PresenceListRelationFilter
   acces?: Prisma.AccesListRelationFilter
   jetons?: Prisma.JetonEmailListRelationFilter
@@ -356,6 +359,7 @@ export type UserCreateInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -382,6 +386,7 @@ export type UserUncheckedCreateInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -408,6 +413,7 @@ export type UserUpdateInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -434,6 +440,7 @@ export type UserUncheckedUpdateInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -774,6 +781,20 @@ export type UserUpdateOneRequiredWithoutMouvementsSaisisNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMouvementsSaisisInput, Prisma.UserUpdateWithoutMouvementsSaisisInput>, Prisma.UserUncheckedUpdateWithoutMouvementsSaisisInput>
 }
 
+export type UserCreateNestedOneWithoutPretsSaisisInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPretsSaisisInput, Prisma.UserUncheckedCreateWithoutPretsSaisisInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPretsSaisisInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPretsSaisisNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPretsSaisisInput, Prisma.UserUncheckedCreateWithoutPretsSaisisInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPretsSaisisInput
+  upsert?: Prisma.UserUpsertWithoutPretsSaisisInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPretsSaisisInput, Prisma.UserUpdateWithoutPretsSaisisInput>, Prisma.UserUncheckedUpdateWithoutPretsSaisisInput>
+}
+
 export type UserCreateNestedOneWithoutPresencesSaisiesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPresencesSaisiesInput, Prisma.UserUncheckedCreateWithoutPresencesSaisiesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPresencesSaisiesInput
@@ -824,6 +845,7 @@ export type UserCreateWithoutEmployeInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -849,6 +871,7 @@ export type UserUncheckedCreateWithoutEmployeInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -890,6 +913,7 @@ export type UserUpdateWithoutEmployeInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -915,6 +939,7 @@ export type UserUncheckedUpdateWithoutEmployeInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -941,6 +966,7 @@ export type UserCreateWithoutAccesInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
@@ -966,6 +992,7 @@ export type UserUncheckedCreateWithoutAccesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
@@ -1007,6 +1034,7 @@ export type UserUpdateWithoutAccesInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
@@ -1032,6 +1060,7 @@ export type UserUncheckedUpdateWithoutAccesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -1056,6 +1085,7 @@ export type UserCreateWithoutEtablissementInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1081,6 +1111,7 @@ export type UserUncheckedCreateWithoutEtablissementInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1149,6 +1180,7 @@ export type UserCreateWithoutNotesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1174,6 +1206,7 @@ export type UserUncheckedCreateWithoutNotesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1204,6 +1237,7 @@ export type UserCreateWithoutNotesModifieesInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1229,6 +1263,7 @@ export type UserUncheckedCreateWithoutNotesModifieesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1270,6 +1305,7 @@ export type UserUpdateWithoutNotesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1295,6 +1331,7 @@ export type UserUncheckedUpdateWithoutNotesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1331,6 +1368,7 @@ export type UserUpdateWithoutNotesModifieesInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1356,6 +1394,7 @@ export type UserUncheckedUpdateWithoutNotesModifieesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1381,6 +1420,7 @@ export type UserCreateWithoutBulletinsGeneresInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1406,6 +1446,7 @@ export type UserUncheckedCreateWithoutBulletinsGeneresInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1447,6 +1488,7 @@ export type UserUpdateWithoutBulletinsGeneresInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1472,6 +1514,7 @@ export type UserUncheckedUpdateWithoutBulletinsGeneresInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1497,6 +1540,7 @@ export type UserCreateWithoutPaiementsSaisisInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1522,6 +1566,7 @@ export type UserUncheckedCreateWithoutPaiementsSaisisInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1552,6 +1597,7 @@ export type UserCreateWithoutPaiementsAnnulesInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1577,6 +1623,7 @@ export type UserUncheckedCreateWithoutPaiementsAnnulesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1618,6 +1665,7 @@ export type UserUpdateWithoutPaiementsSaisisInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1643,6 +1691,7 @@ export type UserUncheckedUpdateWithoutPaiementsSaisisInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1679,6 +1728,7 @@ export type UserUpdateWithoutPaiementsAnnulesInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1704,6 +1754,7 @@ export type UserUncheckedUpdateWithoutPaiementsAnnulesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1729,6 +1780,7 @@ export type UserCreateWithoutFraisSaisisInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1754,6 +1806,7 @@ export type UserUncheckedCreateWithoutFraisSaisisInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1795,6 +1848,7 @@ export type UserUpdateWithoutFraisSaisisInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1820,6 +1874,7 @@ export type UserUncheckedUpdateWithoutFraisSaisisInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1845,6 +1900,7 @@ export type UserCreateWithoutRappelsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1870,6 +1926,7 @@ export type UserUncheckedCreateWithoutRappelsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -1911,6 +1968,7 @@ export type UserUpdateWithoutRappelsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -1936,6 +1994,7 @@ export type UserUncheckedUpdateWithoutRappelsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -1961,6 +2020,7 @@ export type UserCreateWithoutAuditLogsInput = {
   fraisSaisis?: Prisma.PaiementFraisCreateNestedManyWithoutSaisieParInput
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -1986,6 +2046,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutSaisieParInput
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -2027,6 +2088,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   fraisSaisis?: Prisma.PaiementFraisUpdateManyWithoutSaisieParNestedInput
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -2052,6 +2114,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -2077,6 +2140,7 @@ export type UserCreateWithoutMouvementsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisCreateNestedManyWithoutSaisieParInput
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
@@ -2102,6 +2166,7 @@ export type UserUncheckedCreateWithoutMouvementsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutSaisieParInput
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
@@ -2143,6 +2208,7 @@ export type UserUpdateWithoutMouvementsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUpdateManyWithoutSaisieParNestedInput
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -2168,6 +2234,127 @@ export type UserUncheckedUpdateWithoutMouvementsSaisisInput = {
   fraisSaisis?: Prisma.PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
+  presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
+  acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPretsSaisisInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  actif?: boolean
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  employe?: Prisma.EmployeCreateNestedOneWithoutUserInput
+  etablissement?: Prisma.EtablissementCreateNestedOneWithoutUsersInput
+  notesSaisies?: Prisma.NoteCreateNestedManyWithoutSaisieParInput
+  notesModifiees?: Prisma.NoteCreateNestedManyWithoutModifieeParInput
+  bulletinsGeneres?: Prisma.BulletinCreateNestedManyWithoutGenereParInput
+  paiementsSaisis?: Prisma.PaiementCreateNestedManyWithoutSaisieParInput
+  paiementsAnnules?: Prisma.PaiementCreateNestedManyWithoutAnnuleParInput
+  fraisSaisis?: Prisma.PaiementFraisCreateNestedManyWithoutSaisieParInput
+  rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
+  acces?: Prisma.AccesCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPretsSaisisInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  roles?: Prisma.UserCreaterolesInput | $Enums.Role[]
+  actif?: boolean
+  employeId?: string | null
+  etablissementId?: string | null
+  emailVerifieLe?: Date | string | null
+  motDePasseModifieLe?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notesSaisies?: Prisma.NoteUncheckedCreateNestedManyWithoutSaisieParInput
+  notesModifiees?: Prisma.NoteUncheckedCreateNestedManyWithoutModifieeParInput
+  bulletinsGeneres?: Prisma.BulletinUncheckedCreateNestedManyWithoutGenereParInput
+  paiementsSaisis?: Prisma.PaiementUncheckedCreateNestedManyWithoutSaisieParInput
+  paiementsAnnules?: Prisma.PaiementUncheckedCreateNestedManyWithoutAnnuleParInput
+  fraisSaisis?: Prisma.PaiementFraisUncheckedCreateNestedManyWithoutSaisieParInput
+  rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
+  acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
+  jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPretsSaisisInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPretsSaisisInput, Prisma.UserUncheckedCreateWithoutPretsSaisisInput>
+}
+
+export type UserUpsertWithoutPretsSaisisInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPretsSaisisInput, Prisma.UserUncheckedUpdateWithoutPretsSaisisInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPretsSaisisInput, Prisma.UserUncheckedCreateWithoutPretsSaisisInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPretsSaisisInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPretsSaisisInput, Prisma.UserUncheckedUpdateWithoutPretsSaisisInput>
+}
+
+export type UserUpdateWithoutPretsSaisisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  employe?: Prisma.EmployeUpdateOneWithoutUserNestedInput
+  etablissement?: Prisma.EtablissementUpdateOneWithoutUsersNestedInput
+  notesSaisies?: Prisma.NoteUpdateManyWithoutSaisieParNestedInput
+  notesModifiees?: Prisma.NoteUpdateManyWithoutModifieeParNestedInput
+  bulletinsGeneres?: Prisma.BulletinUpdateManyWithoutGenereParNestedInput
+  paiementsSaisis?: Prisma.PaiementUpdateManyWithoutSaisieParNestedInput
+  paiementsAnnules?: Prisma.PaiementUpdateManyWithoutAnnuleParNestedInput
+  fraisSaisis?: Prisma.PaiementFraisUpdateManyWithoutSaisieParNestedInput
+  rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
+  acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
+  jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPretsSaisisInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  roles?: Prisma.UserUpdaterolesInput | $Enums.Role[]
+  actif?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  employeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  etablissementId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  motDePasseModifieLe?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notesSaisies?: Prisma.NoteUncheckedUpdateManyWithoutSaisieParNestedInput
+  notesModifiees?: Prisma.NoteUncheckedUpdateManyWithoutModifieeParNestedInput
+  bulletinsGeneres?: Prisma.BulletinUncheckedUpdateManyWithoutGenereParNestedInput
+  paiementsSaisis?: Prisma.PaiementUncheckedUpdateManyWithoutSaisieParNestedInput
+  paiementsAnnules?: Prisma.PaiementUncheckedUpdateManyWithoutAnnuleParNestedInput
+  fraisSaisis?: Prisma.PaiementFraisUncheckedUpdateManyWithoutSaisieParNestedInput
+  rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -2194,6 +2381,7 @@ export type UserCreateWithoutPresencesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailCreateNestedManyWithoutUserInput
 }
@@ -2219,6 +2407,7 @@ export type UserUncheckedCreateWithoutPresencesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
   jetons?: Prisma.JetonEmailUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2260,6 +2449,7 @@ export type UserUpdateWithoutPresencesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
 }
@@ -2285,6 +2475,7 @@ export type UserUncheckedUpdateWithoutPresencesSaisiesInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2310,6 +2501,7 @@ export type UserCreateWithoutJetonsInput = {
   rappelsSaisis?: Prisma.RappelCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesCreateNestedManyWithoutUserInput
 }
@@ -2335,6 +2527,7 @@ export type UserUncheckedCreateWithoutJetonsInput = {
   rappelsSaisis?: Prisma.RappelUncheckedCreateNestedManyWithoutSaisieParInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedCreateNestedManyWithoutSaisieParInput
+  pretsSaisis?: Prisma.PretUncheckedCreateNestedManyWithoutSaisieParInput
   presencesSaisies?: Prisma.PresenceUncheckedCreateNestedManyWithoutSaisieParInput
   acces?: Prisma.AccesUncheckedCreateNestedManyWithoutUserInput
 }
@@ -2376,6 +2569,7 @@ export type UserUpdateWithoutJetonsInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
 }
@@ -2401,6 +2595,7 @@ export type UserUncheckedUpdateWithoutJetonsInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -2438,6 +2633,7 @@ export type UserUpdateWithoutEtablissementInput = {
   rappelsSaisis?: Prisma.RappelUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUpdateManyWithoutUserNestedInput
@@ -2463,6 +2659,7 @@ export type UserUncheckedUpdateWithoutEtablissementInput = {
   rappelsSaisis?: Prisma.RappelUncheckedUpdateManyWithoutSaisieParNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
   mouvementsSaisis?: Prisma.MouvementTresorerieUncheckedUpdateManyWithoutSaisieParNestedInput
+  pretsSaisis?: Prisma.PretUncheckedUpdateManyWithoutSaisieParNestedInput
   presencesSaisies?: Prisma.PresenceUncheckedUpdateManyWithoutSaisieParNestedInput
   acces?: Prisma.AccesUncheckedUpdateManyWithoutUserNestedInput
   jetons?: Prisma.JetonEmailUncheckedUpdateManyWithoutUserNestedInput
@@ -2496,6 +2693,7 @@ export type UserCountOutputType = {
   rappelsSaisis: number
   auditLogs: number
   mouvementsSaisis: number
+  pretsSaisis: number
   presencesSaisies: number
   acces: number
   jetons: number
@@ -2511,6 +2709,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   rappelsSaisis?: boolean | UserCountOutputTypeCountRappelsSaisisArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   mouvementsSaisis?: boolean | UserCountOutputTypeCountMouvementsSaisisArgs
+  pretsSaisis?: boolean | UserCountOutputTypeCountPretsSaisisArgs
   presencesSaisies?: boolean | UserCountOutputTypeCountPresencesSaisiesArgs
   acces?: boolean | UserCountOutputTypeCountAccesArgs
   jetons?: boolean | UserCountOutputTypeCountJetonsArgs
@@ -2592,6 +2791,13 @@ export type UserCountOutputTypeCountMouvementsSaisisArgs<ExtArgs extends runtime
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountPretsSaisisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PretWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPresencesSaisiesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PresenceWhereInput
 }
@@ -2634,6 +2840,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   rappelsSaisis?: boolean | Prisma.User$rappelsSaisisArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   mouvementsSaisis?: boolean | Prisma.User$mouvementsSaisisArgs<ExtArgs>
+  pretsSaisis?: boolean | Prisma.User$pretsSaisisArgs<ExtArgs>
   presencesSaisies?: boolean | Prisma.User$presencesSaisiesArgs<ExtArgs>
   acces?: boolean | Prisma.User$accesArgs<ExtArgs>
   jetons?: boolean | Prisma.User$jetonsArgs<ExtArgs>
@@ -2699,6 +2906,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   rappelsSaisis?: boolean | Prisma.User$rappelsSaisisArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   mouvementsSaisis?: boolean | Prisma.User$mouvementsSaisisArgs<ExtArgs>
+  pretsSaisis?: boolean | Prisma.User$pretsSaisisArgs<ExtArgs>
   presencesSaisies?: boolean | Prisma.User$presencesSaisiesArgs<ExtArgs>
   acces?: boolean | Prisma.User$accesArgs<ExtArgs>
   jetons?: boolean | Prisma.User$jetonsArgs<ExtArgs>
@@ -2727,6 +2935,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     rappelsSaisis: Prisma.$RappelPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     mouvementsSaisis: Prisma.$MouvementTresoreriePayload<ExtArgs>[]
+    pretsSaisis: Prisma.$PretPayload<ExtArgs>[]
     presencesSaisies: Prisma.$PresencePayload<ExtArgs>[]
     acces: Prisma.$AccesPayload<ExtArgs>[]
     jetons: Prisma.$JetonEmailPayload<ExtArgs>[]
@@ -3148,6 +3357,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   rappelsSaisis<T extends Prisma.User$rappelsSaisisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rappelsSaisisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RappelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mouvementsSaisis<T extends Prisma.User$mouvementsSaisisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mouvementsSaisisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MouvementTresoreriePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  pretsSaisis<T extends Prisma.User$pretsSaisisArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pretsSaisisArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PretPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   presencesSaisies<T extends Prisma.User$presencesSaisiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$presencesSaisiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PresencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   acces<T extends Prisma.User$accesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   jetons<T extends Prisma.User$jetonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jetonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JetonEmailPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3843,6 +4053,30 @@ export type User$mouvementsSaisisArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.MouvementTresorerieScalarFieldEnum | Prisma.MouvementTresorerieScalarFieldEnum[]
+}
+
+/**
+ * User.pretsSaisis
+ */
+export type User$pretsSaisisArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pret
+   */
+  select?: Prisma.PretSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pret
+   */
+  omit?: Prisma.PretOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PretInclude<ExtArgs> | null
+  where?: Prisma.PretWhereInput
+  orderBy?: Prisma.PretOrderByWithRelationInput | Prisma.PretOrderByWithRelationInput[]
+  cursor?: Prisma.PretWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PretScalarFieldEnum | Prisma.PretScalarFieldEnum[]
 }
 
 /**

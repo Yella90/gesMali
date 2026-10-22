@@ -70,12 +70,14 @@ export default async function RapportFinancierPage({
 
       <div className="grid gap-4 md:grid-cols-2">
         <section className="rounded-xl border border-[var(--color-border)] bg-white p-5">
-          <h2 className="font-semibold">Promoteur</h2>
-          <p className="mt-0.5 text-xs text-[var(--color-ink-muted)]">Hors recettes et charges de l&apos;école.</p>
+          <h2 className="font-semibold">Financement</h2>
+          <p className="mt-0.5 text-xs text-[var(--color-ink-muted)]">Fonds propres et prêts : hors recettes et charges de l&apos;école.</p>
           <dl className="mt-3 space-y-2 text-sm">
-            <Ligne libelle="Apports de capital" montant={r.apports} />
+            <Ligne libelle="Apports en fonds propres" montant={r.apports} />
             <Ligne libelle="Retraits du promoteur" montant={r.retraits} />
-            <Ligne libelle="Apport net" montant={r.apports - r.retraits} fort />
+            <Ligne libelle="Prêts reçus" montant={r.pretsRecus} />
+            <Ligne libelle="Remboursements de prêts" montant={r.remboursements} />
+            <Ligne libelle="Financement net" montant={r.apports - r.retraits + r.pretsRecus - r.remboursements} fort />
           </dl>
         </section>
         <section className="rounded-xl border border-[var(--color-border)] bg-white p-5">

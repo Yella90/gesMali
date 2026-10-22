@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import {
@@ -11,6 +11,7 @@ import {
   creerTransfert as creerTransfertAction,
 } from "./actions";
 import { relever } from "@/lib/actions/resultat";
+import { calculerEcheancier } from "@/lib/tresorerie/echeancier";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +31,7 @@ const CAISSES = [
 
 const TITRES = {
   DEPENSE: { bouton: "Nouvelle dépense", titre: "Nouvelle dépense", aide: "Sortie d'argent pour le fonctionnement de l'école." },
-  APPORT_CAPITAL: { bouton: "Apport de capital", titre: "Apport de capital", aide: "Argent injecté par le promoteur : au démarrage ou pour renflouer la trésorerie." },
+  APPORT_CAPITAL: { bouton: "Apport de capital", titre: "Apport de capital", aide: "Argent qui entre dans la trésorerie : fonds propres du promoteur, ou prêt à rembourser." },
   RETRAIT_PROMOTEUR: { bouton: "Retrait du promoteur", titre: "Retrait du promoteur", aide: "Argent retiré de la trésorerie par le promoteur." },
 } as const;
 
@@ -39,26 +40,49 @@ export function FormulaireMouvement({
   categories,
   estDirecteur,
   principal = false,
+  origineInitiale = "FONDS_PROPRES",
+  libelleBouton,
 }: {
   type: keyof typeof TITRES;
   categories: string[];
   estDirecteur: boolean;
   principal?: boolean;
+  // Apport de capital : choix pre-selectionne (page Finance : « Nouveau prêt »)
+  origineInitiale?: "FONDS_PROPRES" | "PRET";
+  libelleBouton?: string;
 }) {
   const router = useRouter();
   const ref = useRef<HTMLDialogElement>(null);
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
+  const [origine, setOrigine] = useState(origineInitiale);
+  const [pret, setPret] = useState({ montant: "", duree: "12", taux: "0", premiere: "" });
   const t = TITRES[type];
+  // Plusieurs formulaires du meme type sur une page (Finance) : identifiants uniques
+  const uid = useId();
+  const estPret = type === "APPORT_CAPITAL" && origine === "PRET";
+
+  // Apercu de l'echeancier pendant la saisie
+  const apercu = useMemo(() => {
+    const montant = Number(pret.montant);
+    const duree = Number(pret.duree);
+    const taux = Number(pret.taux.replace(",", ".") || 0);
+    if (!estPret || !(montant > 0) || !Number.isInteger(duree) || duree < 1 || duree > 360 || !(taux >= 0)) return null;
+    const e = calculerEcheancier(montant, taux, duree, pret.premiere ? new Date(pret.premiere) : new Date());
+    return { mensualite: e[0].montant, total: e.reduce((s, x) => s + x.montant, 0) };
+  }, [estPret, pret]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const form = e.currentTarget;
     setEnCours(true);
     setErreur(null);
     try {
-      await creerMouvement(new FormData(e.currentTarget));
+      await creerMouvement(new FormData(form));
       ref.current?.close();
-      e.currentTarget.reset();
+      form.reset();
+      setOrigine(origineInitiale);
+      setPret({ montant: "", duree: "12", taux: "0", premiere: "" });
       router.refresh();
     } catch (err) {
       setErreur(err instanceof Error ? err.message : "Enregistrement impossible");
@@ -82,17 +106,17 @@ export function FormulaireMouvement({
             : "border border-[var(--color-border-strong)] bg-white hover:bg-neutral-50")
         }
       >
-        {t.bouton}
+        {libelleBouton ?? t.bouton}
       </button>
       <dialog
         ref={ref}
-        aria-labelledby={"titre-" + type}
+        aria-labelledby={"titre-" + uid}
         className="m-auto w-[min(30rem,calc(100vw-2rem))] rounded-2xl bg-white p-0 text-[var(--color-ink)] shadow-[0_30px_80px_-20px_rgba(4,14,30,0.5)] backdrop:bg-[#0B1D33]/60"
       >
         <form onSubmit={onSubmit} className="space-y-4 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <h2 id={"titre-" + type} className="text-lg font-semibold">{t.titre}</h2>
+              <h2 id={"titre-" + uid} className="text-lg font-semibold">{t.titre}</h2>
               <p className="mt-0.5 text-xs text-[var(--color-ink-muted)]">{t.aide}</p>
             </div>
             <button type="button" aria-label="Fermer" onClick={() => ref.current?.close()} className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--color-ink-muted)] hover:bg-[var(--color-surface)]">
@@ -100,37 +124,102 @@ export function FormulaireMouvement({
             </button>
           </div>
           <input type="hidden" name="type" value={type} />
+          {type === "APPORT_CAPITAL" && (
+            <fieldset className="grid grid-cols-2 gap-2">
+              <legend className="sr-only">Origine de l&apos;argent</legend>
+              {([
+                ["FONDS_PROPRES", "Fonds propres", "Argent du promoteur, sans remboursement"],
+                ["PRET", "Prêt", "Dette à rembourser selon un échéancier"],
+              ] as const).map(([valeur, titre, aide]) => (
+                <label
+                  key={valeur}
+                  className={
+                    "cursor-pointer rounded-lg border p-3 text-sm has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-[var(--color-brand)] " +
+                    (origine === valeur ? "border-[var(--color-brand)] bg-[var(--color-brand-soft)]" : "border-[var(--color-border-strong)] hover:bg-neutral-50")
+                  }
+                >
+                  <input type="radio" name="origineApport" value={valeur} checked={origine === valeur} onChange={() => setOrigine(valeur)} className="sr-only" />
+                  <span className="block font-medium">{titre}</span>
+                  <span className="block text-xs text-[var(--color-ink-muted)]">{aide}</span>
+                </label>
+              ))}
+            </fieldset>
+          )}
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <Label htmlFor={type + "-montant"}>Montant (F CFA)</Label>
-              <Input id={type + "-montant"} name="montant" type="number" min={1} step={1} required inputMode="numeric" className="tnum" />
+              <Label htmlFor={uid + "-montant"}>{estPret ? "Montant emprunté (F CFA)" : "Montant (F CFA)"}</Label>
+              <Input
+                id={uid + "-montant"} name="montant" type="number" min={1} step={1} required inputMode="numeric" className="tnum"
+                onChange={(e) => setPret((p) => ({ ...p, montant: e.target.value }))}
+              />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor={type + "-caisse"}>Caisse</Label>
-              <select id={type + "-caisse"} name="caisse" className={champ} defaultValue="ESPECES">
+              <Label htmlFor={uid + "-caisse"}>Caisse</Label>
+              <select id={uid + "-caisse"} name="caisse" className={champ} defaultValue="ESPECES">
                 {CAISSES.map((c) => <option key={c.valeur} value={c.valeur}>{c.libelle}</option>)}
               </select>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor={type + "-date"}>Date</Label>
-              <Input id={type + "-date"} name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} required />
+              <Label htmlFor={uid + "-date"}>Date</Label>
+              <Input id={uid + "-date"} name="date" type="date" defaultValue={new Date().toISOString().slice(0, 10)} required />
             </div>
             {type === "DEPENSE" && (
               <div className="space-y-1.5">
-                <Label htmlFor={type + "-categorie"}>Catégorie</Label>
-                <select id={type + "-categorie"} name="categorie" className={champ}>
+                <Label htmlFor={uid + "-categorie"}>Catégorie</Label>
+                <select id={uid + "-categorie"} name="categorie" className={champ}>
                   {categories.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
             )}
           </div>
+          {estPret && (
+            <div className="space-y-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-3">
+              <div className="space-y-1.5">
+                <Label htmlFor={uid + "-preteur"}>Prêteur</Label>
+                <Input id={uid + "-preteur"} name="preteur" required minLength={2} placeholder="Ex : banque, microfinance, M. Diallo…" />
+              </div>
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="space-y-1.5">
+                  <Label htmlFor={uid + "-duree"}>Durée (mois)</Label>
+                  <Input
+                    id={uid + "-duree"} name="dureeMois" type="number" min={1} max={360} step={1} required className="tnum"
+                    value={pret.duree} onChange={(e) => setPret((p) => ({ ...p, duree: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor={uid + "-taux"}>Taux annuel (%)</Label>
+                  <Input
+                    id={uid + "-taux"} name="tauxAnnuel" type="number" min={0} max={100} step="0.01" className="tnum"
+                    value={pret.taux} onChange={(e) => setPret((p) => ({ ...p, taux: e.target.value }))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor={uid + "-premiere"}>1re échéance</Label>
+                  <Input
+                    id={uid + "-premiere"} name="premiereEcheance" type="date"
+                    value={pret.premiere} onChange={(e) => setPret((p) => ({ ...p, premiere: e.target.value }))}
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-[var(--color-ink-muted)]">
+                {apercu
+                  ? "Mensualité : " + apercu.mensualite.toLocaleString("fr-FR") + " F · total à rembourser : " + apercu.total.toLocaleString("fr-FR") + " F."
+                  : "Indiquez le montant, la durée et le taux pour voir la mensualité."}
+                {" "}Sans date, la première échéance tombe un mois après le prêt.
+              </p>
+              <Input name="notesPret" aria-label="Notes sur le prêt" placeholder="Conditions, garanties… (facultatif)" />
+            </div>
+          )}
           <div className="space-y-1.5">
-            <Label htmlFor={type + "-libelle"}>Libellé</Label>
-            <Input id={type + "-libelle"} name="libelle" required minLength={3} placeholder={type === "DEPENSE" ? "Ex : facture EDM d'octobre" : "Ex : renflouement avant la paie"} />
+            <Label htmlFor={uid + "-libelle"}>{estPret ? "Libellé (facultatif)" : "Libellé"}</Label>
+            <Input
+              id={uid + "-libelle"} name="libelle" required={!estPret} minLength={3}
+              placeholder={type === "DEPENSE" ? "Ex : facture EDM d'octobre" : estPret ? "Par défaut : Prêt de [prêteur]" : "Ex : renflouement avant la paie"}
+            />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor={type + "-ref"}>Référence (facultatif)</Label>
-            <Input id={type + "-ref"} name="reference" placeholder="N° de facture, bordereau, transaction…" />
+            <Label htmlFor={uid + "-ref"}>Référence (facultatif)</Label>
+            <Input id={uid + "-ref"} name="reference" placeholder="N° de facture, bordereau, transaction…" />
           </div>
           {erreur && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</p>}
           {estDirecteur && erreur?.startsWith("Solde insuffisant") && (

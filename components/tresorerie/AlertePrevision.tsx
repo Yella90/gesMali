@@ -33,6 +33,7 @@ export function AlertePrevision({
         <p className={"font-medium " + styles.texte}>{titre}</p>
         <p className="mt-0.5 text-xs text-[var(--color-ink-muted)]">
           Solde {f(p.soldeTotal)} · salaires restants {f(p.salairesRestants)} · dépenses récurrentes {f(p.depensesRestantes)}
+          {p.pretsRestants > 0 && " · prêts à rembourser " + f(p.pretsRestants)}
           {p.fraisAttendus > 0 && " · " + f(p.fraisAttendus) + " de frais encore attendus ce mois"}
           {p.employesHoraires > 0 && " · " + p.employesHoraires + " employé(s) payé(s) à l'heure non compté(s)"}
         </p>

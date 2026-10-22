@@ -45,6 +45,8 @@ export type MouvementTresorerieMinAggregateOutputType = {
   libelle: string | null
   categorie: string | null
   reference: string | null
+  origineApport: $Enums.OrigineApport | null
+  pretId: string | null
   derogation: boolean | null
   motifDerogation: string | null
   annule: boolean | null
@@ -64,6 +66,8 @@ export type MouvementTresorerieMaxAggregateOutputType = {
   libelle: string | null
   categorie: string | null
   reference: string | null
+  origineApport: $Enums.OrigineApport | null
+  pretId: string | null
   derogation: boolean | null
   motifDerogation: string | null
   annule: boolean | null
@@ -83,6 +87,8 @@ export type MouvementTresorerieCountAggregateOutputType = {
   libelle: number
   categorie: number
   reference: number
+  origineApport: number
+  pretId: number
   derogation: number
   motifDerogation: number
   annule: number
@@ -112,6 +118,8 @@ export type MouvementTresorerieMinAggregateInputType = {
   libelle?: true
   categorie?: true
   reference?: true
+  origineApport?: true
+  pretId?: true
   derogation?: true
   motifDerogation?: true
   annule?: true
@@ -131,6 +139,8 @@ export type MouvementTresorerieMaxAggregateInputType = {
   libelle?: true
   categorie?: true
   reference?: true
+  origineApport?: true
+  pretId?: true
   derogation?: true
   motifDerogation?: true
   annule?: true
@@ -150,6 +160,8 @@ export type MouvementTresorerieCountAggregateInputType = {
   libelle?: true
   categorie?: true
   reference?: true
+  origineApport?: true
+  pretId?: true
   derogation?: true
   motifDerogation?: true
   annule?: true
@@ -256,6 +268,8 @@ export type MouvementTresorerieGroupByOutputType = {
   libelle: string
   categorie: string | null
   reference: string | null
+  origineApport: $Enums.OrigineApport | null
+  pretId: string | null
   derogation: boolean
   motifDerogation: string | null
   annule: boolean
@@ -298,6 +312,8 @@ export type MouvementTresorerieWhereInput = {
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
   categorie?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   reference?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
+  origineApport?: Prisma.EnumOrigineApportNullableFilter<"MouvementTresorerie"> | $Enums.OrigineApport | null
+  pretId?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   derogation?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
   motifDerogation?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   annule?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
@@ -305,6 +321,7 @@ export type MouvementTresorerieWhereInput = {
   saisieParId?: Prisma.StringFilter<"MouvementTresorerie"> | string
   createdAt?: Prisma.DateTimeFilter<"MouvementTresorerie"> | Date | string
   etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
+  pret?: Prisma.XOR<Prisma.PretNullableScalarRelationFilter, Prisma.PretWhereInput> | null
   saisiePar?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -319,6 +336,8 @@ export type MouvementTresorerieOrderByWithRelationInput = {
   libelle?: Prisma.SortOrder
   categorie?: Prisma.SortOrderInput | Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  origineApport?: Prisma.SortOrderInput | Prisma.SortOrder
+  pretId?: Prisma.SortOrderInput | Prisma.SortOrder
   derogation?: Prisma.SortOrder
   motifDerogation?: Prisma.SortOrderInput | Prisma.SortOrder
   annule?: Prisma.SortOrder
@@ -326,6 +345,7 @@ export type MouvementTresorerieOrderByWithRelationInput = {
   saisieParId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   etablissement?: Prisma.EtablissementOrderByWithRelationInput
+  pret?: Prisma.PretOrderByWithRelationInput
   saisiePar?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -343,6 +363,8 @@ export type MouvementTresorerieWhereUniqueInput = Prisma.AtLeast<{
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
   categorie?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   reference?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
+  origineApport?: Prisma.EnumOrigineApportNullableFilter<"MouvementTresorerie"> | $Enums.OrigineApport | null
+  pretId?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   derogation?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
   motifDerogation?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   annule?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
@@ -350,6 +372,7 @@ export type MouvementTresorerieWhereUniqueInput = Prisma.AtLeast<{
   saisieParId?: Prisma.StringFilter<"MouvementTresorerie"> | string
   createdAt?: Prisma.DateTimeFilter<"MouvementTresorerie"> | Date | string
   etablissement?: Prisma.XOR<Prisma.EtablissementScalarRelationFilter, Prisma.EtablissementWhereInput>
+  pret?: Prisma.XOR<Prisma.PretNullableScalarRelationFilter, Prisma.PretWhereInput> | null
   saisiePar?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
@@ -364,6 +387,8 @@ export type MouvementTresorerieOrderByWithAggregationInput = {
   libelle?: Prisma.SortOrder
   categorie?: Prisma.SortOrderInput | Prisma.SortOrder
   reference?: Prisma.SortOrderInput | Prisma.SortOrder
+  origineApport?: Prisma.SortOrderInput | Prisma.SortOrder
+  pretId?: Prisma.SortOrderInput | Prisma.SortOrder
   derogation?: Prisma.SortOrder
   motifDerogation?: Prisma.SortOrderInput | Prisma.SortOrder
   annule?: Prisma.SortOrder
@@ -391,6 +416,8 @@ export type MouvementTresorerieScalarWhereWithAggregatesInput = {
   libelle?: Prisma.StringWithAggregatesFilter<"MouvementTresorerie"> | string
   categorie?: Prisma.StringNullableWithAggregatesFilter<"MouvementTresorerie"> | string | null
   reference?: Prisma.StringNullableWithAggregatesFilter<"MouvementTresorerie"> | string | null
+  origineApport?: Prisma.EnumOrigineApportNullableWithAggregatesFilter<"MouvementTresorerie"> | $Enums.OrigineApport | null
+  pretId?: Prisma.StringNullableWithAggregatesFilter<"MouvementTresorerie"> | string | null
   derogation?: Prisma.BoolWithAggregatesFilter<"MouvementTresorerie"> | boolean
   motifDerogation?: Prisma.StringNullableWithAggregatesFilter<"MouvementTresorerie"> | string | null
   annule?: Prisma.BoolWithAggregatesFilter<"MouvementTresorerie"> | boolean
@@ -409,12 +436,14 @@ export type MouvementTresorerieCreateInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutMouvementsInput
+  pret?: Prisma.PretCreateNestedOneWithoutMouvementsInput
   saisiePar: Prisma.UserCreateNestedOneWithoutMouvementsSaisisInput
 }
 
@@ -429,6 +458,8 @@ export type MouvementTresorerieUncheckedCreateInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -447,12 +478,14 @@ export type MouvementTresorerieUpdateInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutMouvementsNestedInput
+  pret?: Prisma.PretUpdateOneWithoutMouvementsNestedInput
   saisiePar?: Prisma.UserUpdateOneRequiredWithoutMouvementsSaisisNestedInput
 }
 
@@ -467,6 +500,8 @@ export type MouvementTresorerieUncheckedUpdateInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -486,6 +521,8 @@ export type MouvementTresorerieCreateManyInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -504,6 +541,7 @@ export type MouvementTresorerieUpdateManyMutationInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -522,6 +560,8 @@ export type MouvementTresorerieUncheckedUpdateManyInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -551,6 +591,8 @@ export type MouvementTresorerieCountOrderByAggregateInput = {
   libelle?: Prisma.SortOrder
   categorie?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  origineApport?: Prisma.SortOrder
+  pretId?: Prisma.SortOrder
   derogation?: Prisma.SortOrder
   motifDerogation?: Prisma.SortOrder
   annule?: Prisma.SortOrder
@@ -574,6 +616,8 @@ export type MouvementTresorerieMaxOrderByAggregateInput = {
   libelle?: Prisma.SortOrder
   categorie?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  origineApport?: Prisma.SortOrder
+  pretId?: Prisma.SortOrder
   derogation?: Prisma.SortOrder
   motifDerogation?: Prisma.SortOrder
   annule?: Prisma.SortOrder
@@ -593,6 +637,8 @@ export type MouvementTresorerieMinOrderByAggregateInput = {
   libelle?: Prisma.SortOrder
   categorie?: Prisma.SortOrder
   reference?: Prisma.SortOrder
+  origineApport?: Prisma.SortOrder
+  pretId?: Prisma.SortOrder
   derogation?: Prisma.SortOrder
   motifDerogation?: Prisma.SortOrder
   annule?: Prisma.SortOrder
@@ -701,6 +747,52 @@ export type NullableEnumCaisseFieldUpdateOperationsInput = {
   set?: $Enums.Caisse | null
 }
 
+export type NullableEnumOrigineApportFieldUpdateOperationsInput = {
+  set?: $Enums.OrigineApport | null
+}
+
+export type MouvementTresorerieCreateNestedManyWithoutPretInput = {
+  create?: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput> | Prisma.MouvementTresorerieCreateWithoutPretInput[] | Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput[]
+  connectOrCreate?: Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput | Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput[]
+  createMany?: Prisma.MouvementTresorerieCreateManyPretInputEnvelope
+  connect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+}
+
+export type MouvementTresorerieUncheckedCreateNestedManyWithoutPretInput = {
+  create?: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput> | Prisma.MouvementTresorerieCreateWithoutPretInput[] | Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput[]
+  connectOrCreate?: Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput | Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput[]
+  createMany?: Prisma.MouvementTresorerieCreateManyPretInputEnvelope
+  connect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+}
+
+export type MouvementTresorerieUpdateManyWithoutPretNestedInput = {
+  create?: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput> | Prisma.MouvementTresorerieCreateWithoutPretInput[] | Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput[]
+  connectOrCreate?: Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput | Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput[]
+  upsert?: Prisma.MouvementTresorerieUpsertWithWhereUniqueWithoutPretInput | Prisma.MouvementTresorerieUpsertWithWhereUniqueWithoutPretInput[]
+  createMany?: Prisma.MouvementTresorerieCreateManyPretInputEnvelope
+  set?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  disconnect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  delete?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  connect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  update?: Prisma.MouvementTresorerieUpdateWithWhereUniqueWithoutPretInput | Prisma.MouvementTresorerieUpdateWithWhereUniqueWithoutPretInput[]
+  updateMany?: Prisma.MouvementTresorerieUpdateManyWithWhereWithoutPretInput | Prisma.MouvementTresorerieUpdateManyWithWhereWithoutPretInput[]
+  deleteMany?: Prisma.MouvementTresorerieScalarWhereInput | Prisma.MouvementTresorerieScalarWhereInput[]
+}
+
+export type MouvementTresorerieUncheckedUpdateManyWithoutPretNestedInput = {
+  create?: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput> | Prisma.MouvementTresorerieCreateWithoutPretInput[] | Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput[]
+  connectOrCreate?: Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput | Prisma.MouvementTresorerieCreateOrConnectWithoutPretInput[]
+  upsert?: Prisma.MouvementTresorerieUpsertWithWhereUniqueWithoutPretInput | Prisma.MouvementTresorerieUpsertWithWhereUniqueWithoutPretInput[]
+  createMany?: Prisma.MouvementTresorerieCreateManyPretInputEnvelope
+  set?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  disconnect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  delete?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  connect?: Prisma.MouvementTresorerieWhereUniqueInput | Prisma.MouvementTresorerieWhereUniqueInput[]
+  update?: Prisma.MouvementTresorerieUpdateWithWhereUniqueWithoutPretInput | Prisma.MouvementTresorerieUpdateWithWhereUniqueWithoutPretInput[]
+  updateMany?: Prisma.MouvementTresorerieUpdateManyWithWhereWithoutPretInput | Prisma.MouvementTresorerieUpdateManyWithWhereWithoutPretInput[]
+  deleteMany?: Prisma.MouvementTresorerieScalarWhereInput | Prisma.MouvementTresorerieScalarWhereInput[]
+}
+
 export type MouvementTresorerieCreateWithoutSaisieParInput = {
   id?: string
   type: $Enums.TypeMouvement
@@ -711,12 +803,14 @@ export type MouvementTresorerieCreateWithoutSaisieParInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
   etablissement: Prisma.EtablissementCreateNestedOneWithoutMouvementsInput
+  pret?: Prisma.PretCreateNestedOneWithoutMouvementsInput
 }
 
 export type MouvementTresorerieUncheckedCreateWithoutSaisieParInput = {
@@ -730,6 +824,8 @@ export type MouvementTresorerieUncheckedCreateWithoutSaisieParInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -777,6 +873,8 @@ export type MouvementTresorerieScalarWhereInput = {
   libelle?: Prisma.StringFilter<"MouvementTresorerie"> | string
   categorie?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   reference?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
+  origineApport?: Prisma.EnumOrigineApportNullableFilter<"MouvementTresorerie"> | $Enums.OrigineApport | null
+  pretId?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   derogation?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
   motifDerogation?: Prisma.StringNullableFilter<"MouvementTresorerie"> | string | null
   annule?: Prisma.BoolFilter<"MouvementTresorerie"> | boolean
@@ -795,11 +893,13 @@ export type MouvementTresorerieCreateWithoutEtablissementInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
   motifAnnulation?: string | null
   createdAt?: Date | string
+  pret?: Prisma.PretCreateNestedOneWithoutMouvementsInput
   saisiePar: Prisma.UserCreateNestedOneWithoutMouvementsSaisisInput
 }
 
@@ -813,6 +913,8 @@ export type MouvementTresorerieUncheckedCreateWithoutEtablissementInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -847,6 +949,72 @@ export type MouvementTresorerieUpdateManyWithWhereWithoutEtablissementInput = {
   data: Prisma.XOR<Prisma.MouvementTresorerieUpdateManyMutationInput, Prisma.MouvementTresorerieUncheckedUpdateManyWithoutEtablissementInput>
 }
 
+export type MouvementTresorerieCreateWithoutPretInput = {
+  id?: string
+  type: $Enums.TypeMouvement
+  caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
+  date: Date | string
+  montant: number
+  libelle: string
+  categorie?: string | null
+  reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  derogation?: boolean
+  motifDerogation?: string | null
+  annule?: boolean
+  motifAnnulation?: string | null
+  createdAt?: Date | string
+  etablissement: Prisma.EtablissementCreateNestedOneWithoutMouvementsInput
+  saisiePar: Prisma.UserCreateNestedOneWithoutMouvementsSaisisInput
+}
+
+export type MouvementTresorerieUncheckedCreateWithoutPretInput = {
+  id?: string
+  etablissementId: string
+  type: $Enums.TypeMouvement
+  caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
+  date: Date | string
+  montant: number
+  libelle: string
+  categorie?: string | null
+  reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  derogation?: boolean
+  motifDerogation?: string | null
+  annule?: boolean
+  motifAnnulation?: string | null
+  saisieParId: string
+  createdAt?: Date | string
+}
+
+export type MouvementTresorerieCreateOrConnectWithoutPretInput = {
+  where: Prisma.MouvementTresorerieWhereUniqueInput
+  create: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput>
+}
+
+export type MouvementTresorerieCreateManyPretInputEnvelope = {
+  data: Prisma.MouvementTresorerieCreateManyPretInput | Prisma.MouvementTresorerieCreateManyPretInput[]
+  skipDuplicates?: boolean
+}
+
+export type MouvementTresorerieUpsertWithWhereUniqueWithoutPretInput = {
+  where: Prisma.MouvementTresorerieWhereUniqueInput
+  update: Prisma.XOR<Prisma.MouvementTresorerieUpdateWithoutPretInput, Prisma.MouvementTresorerieUncheckedUpdateWithoutPretInput>
+  create: Prisma.XOR<Prisma.MouvementTresorerieCreateWithoutPretInput, Prisma.MouvementTresorerieUncheckedCreateWithoutPretInput>
+}
+
+export type MouvementTresorerieUpdateWithWhereUniqueWithoutPretInput = {
+  where: Prisma.MouvementTresorerieWhereUniqueInput
+  data: Prisma.XOR<Prisma.MouvementTresorerieUpdateWithoutPretInput, Prisma.MouvementTresorerieUncheckedUpdateWithoutPretInput>
+}
+
+export type MouvementTresorerieUpdateManyWithWhereWithoutPretInput = {
+  where: Prisma.MouvementTresorerieScalarWhereInput
+  data: Prisma.XOR<Prisma.MouvementTresorerieUpdateManyMutationInput, Prisma.MouvementTresorerieUncheckedUpdateManyWithoutPretInput>
+}
+
 export type MouvementTresorerieCreateManySaisieParInput = {
   id?: string
   etablissementId: string
@@ -858,6 +1026,8 @@ export type MouvementTresorerieCreateManySaisieParInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -875,12 +1045,14 @@ export type MouvementTresorerieUpdateWithoutSaisieParInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutMouvementsNestedInput
+  pret?: Prisma.PretUpdateOneWithoutMouvementsNestedInput
 }
 
 export type MouvementTresorerieUncheckedUpdateWithoutSaisieParInput = {
@@ -894,6 +1066,8 @@ export type MouvementTresorerieUncheckedUpdateWithoutSaisieParInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -912,6 +1086,8 @@ export type MouvementTresorerieUncheckedUpdateManyWithoutSaisieParInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -929,6 +1105,8 @@ export type MouvementTresorerieCreateManyEtablissementInput = {
   libelle: string
   categorie?: string | null
   reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  pretId?: string | null
   derogation?: boolean
   motifDerogation?: string | null
   annule?: boolean
@@ -947,11 +1125,13 @@ export type MouvementTresorerieUpdateWithoutEtablissementInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  pret?: Prisma.PretUpdateOneWithoutMouvementsNestedInput
   saisiePar?: Prisma.UserUpdateOneRequiredWithoutMouvementsSaisisNestedInput
 }
 
@@ -965,6 +1145,8 @@ export type MouvementTresorerieUncheckedUpdateWithoutEtablissementInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -983,6 +1165,88 @@ export type MouvementTresorerieUncheckedUpdateManyWithoutEtablissementInput = {
   libelle?: Prisma.StringFieldUpdateOperationsInput | string
   categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  pretId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saisieParId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MouvementTresorerieCreateManyPretInput = {
+  id?: string
+  etablissementId: string
+  type: $Enums.TypeMouvement
+  caisse: $Enums.Caisse
+  caisseDestination?: $Enums.Caisse | null
+  date: Date | string
+  montant: number
+  libelle: string
+  categorie?: string | null
+  reference?: string | null
+  origineApport?: $Enums.OrigineApport | null
+  derogation?: boolean
+  motifDerogation?: string | null
+  annule?: boolean
+  motifAnnulation?: string | null
+  saisieParId: string
+  createdAt?: Date | string
+}
+
+export type MouvementTresorerieUpdateWithoutPretInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
+  caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  etablissement?: Prisma.EtablissementUpdateOneRequiredWithoutMouvementsNestedInput
+  saisiePar?: Prisma.UserUpdateOneRequiredWithoutMouvementsSaisisNestedInput
+}
+
+export type MouvementTresorerieUncheckedUpdateWithoutPretInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
+  caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
+  derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  motifAnnulation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  saisieParId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type MouvementTresorerieUncheckedUpdateManyWithoutPretInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  etablissementId?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTypeMouvementFieldUpdateOperationsInput | $Enums.TypeMouvement
+  caisse?: Prisma.EnumCaisseFieldUpdateOperationsInput | $Enums.Caisse
+  caisseDestination?: Prisma.NullableEnumCaisseFieldUpdateOperationsInput | $Enums.Caisse | null
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  montant?: Prisma.FloatFieldUpdateOperationsInput | number
+  libelle?: Prisma.StringFieldUpdateOperationsInput | string
+  categorie?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  origineApport?: Prisma.NullableEnumOrigineApportFieldUpdateOperationsInput | $Enums.OrigineApport | null
   derogation?: Prisma.BoolFieldUpdateOperationsInput | boolean
   motifDerogation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   annule?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1004,6 +1268,8 @@ export type MouvementTresorerieSelect<ExtArgs extends runtime.Types.Extensions.I
   libelle?: boolean
   categorie?: boolean
   reference?: boolean
+  origineApport?: boolean
+  pretId?: boolean
   derogation?: boolean
   motifDerogation?: boolean
   annule?: boolean
@@ -1011,6 +1277,7 @@ export type MouvementTresorerieSelect<ExtArgs extends runtime.Types.Extensions.I
   saisieParId?: boolean
   createdAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mouvementTresorerie"]>
 
@@ -1025,6 +1292,8 @@ export type MouvementTresorerieSelectCreateManyAndReturn<ExtArgs extends runtime
   libelle?: boolean
   categorie?: boolean
   reference?: boolean
+  origineApport?: boolean
+  pretId?: boolean
   derogation?: boolean
   motifDerogation?: boolean
   annule?: boolean
@@ -1032,6 +1301,7 @@ export type MouvementTresorerieSelectCreateManyAndReturn<ExtArgs extends runtime
   saisieParId?: boolean
   createdAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mouvementTresorerie"]>
 
@@ -1046,6 +1316,8 @@ export type MouvementTresorerieSelectUpdateManyAndReturn<ExtArgs extends runtime
   libelle?: boolean
   categorie?: boolean
   reference?: boolean
+  origineApport?: boolean
+  pretId?: boolean
   derogation?: boolean
   motifDerogation?: boolean
   annule?: boolean
@@ -1053,6 +1325,7 @@ export type MouvementTresorerieSelectUpdateManyAndReturn<ExtArgs extends runtime
   saisieParId?: boolean
   createdAt?: boolean
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mouvementTresorerie"]>
 
@@ -1067,6 +1340,8 @@ export type MouvementTresorerieSelectScalar = {
   libelle?: boolean
   categorie?: boolean
   reference?: boolean
+  origineApport?: boolean
+  pretId?: boolean
   derogation?: boolean
   motifDerogation?: boolean
   annule?: boolean
@@ -1075,17 +1350,20 @@ export type MouvementTresorerieSelectScalar = {
   createdAt?: boolean
 }
 
-export type MouvementTresorerieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "type" | "caisse" | "caisseDestination" | "date" | "montant" | "libelle" | "categorie" | "reference" | "derogation" | "motifDerogation" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["mouvementTresorerie"]>
+export type MouvementTresorerieOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "etablissementId" | "type" | "caisse" | "caisseDestination" | "date" | "montant" | "libelle" | "categorie" | "reference" | "origineApport" | "pretId" | "derogation" | "motifDerogation" | "annule" | "motifAnnulation" | "saisieParId" | "createdAt", ExtArgs["result"]["mouvementTresorerie"]>
 export type MouvementTresorerieInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type MouvementTresorerieIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type MouvementTresorerieIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   etablissement?: boolean | Prisma.EtablissementDefaultArgs<ExtArgs>
+  pret?: boolean | Prisma.MouvementTresorerie$pretArgs<ExtArgs>
   saisiePar?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
@@ -1093,6 +1371,7 @@ export type $MouvementTresoreriePayload<ExtArgs extends runtime.Types.Extensions
   name: "MouvementTresorerie"
   objects: {
     etablissement: Prisma.$EtablissementPayload<ExtArgs>
+    pret: Prisma.$PretPayload<ExtArgs> | null
     saisiePar: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1106,6 +1385,8 @@ export type $MouvementTresoreriePayload<ExtArgs extends runtime.Types.Extensions
     libelle: string
     categorie: string | null
     reference: string | null
+    origineApport: $Enums.OrigineApport | null
+    pretId: string | null
     derogation: boolean
     motifDerogation: string | null
     annule: boolean
@@ -1507,6 +1788,7 @@ readonly fields: MouvementTresorerieFieldRefs;
 export interface Prisma__MouvementTresorerieClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   etablissement<T extends Prisma.EtablissementDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EtablissementDefaultArgs<ExtArgs>>): Prisma.Prisma__EtablissementClient<runtime.Types.Result.GetResult<Prisma.$EtablissementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  pret<T extends Prisma.MouvementTresorerie$pretArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MouvementTresorerie$pretArgs<ExtArgs>>): Prisma.Prisma__PretClient<runtime.Types.Result.GetResult<Prisma.$PretPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   saisiePar<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1547,6 +1829,8 @@ export interface MouvementTresorerieFieldRefs {
   readonly libelle: Prisma.FieldRef<"MouvementTresorerie", 'String'>
   readonly categorie: Prisma.FieldRef<"MouvementTresorerie", 'String'>
   readonly reference: Prisma.FieldRef<"MouvementTresorerie", 'String'>
+  readonly origineApport: Prisma.FieldRef<"MouvementTresorerie", 'OrigineApport'>
+  readonly pretId: Prisma.FieldRef<"MouvementTresorerie", 'String'>
   readonly derogation: Prisma.FieldRef<"MouvementTresorerie", 'Boolean'>
   readonly motifDerogation: Prisma.FieldRef<"MouvementTresorerie", 'String'>
   readonly annule: Prisma.FieldRef<"MouvementTresorerie", 'Boolean'>
@@ -1951,6 +2235,25 @@ export type MouvementTresorerieDeleteManyArgs<ExtArgs extends runtime.Types.Exte
    * Limit how many MouvementTresoreries to delete.
    */
   limit?: number
+}
+
+/**
+ * MouvementTresorerie.pret
+ */
+export type MouvementTresorerie$pretArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Pret
+   */
+  select?: Prisma.PretSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Pret
+   */
+  omit?: Prisma.PretOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PretInclude<ExtArgs> | null
+  where?: Prisma.PretWhereInput
 }
 
 /**

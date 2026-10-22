@@ -6,6 +6,8 @@ import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { CAISSES, enregistrerTransfert, LIB_CAISSE, soldeCaisse, type CaisseT } from "@/lib/tresorerie/tresorerie";
 import { capter } from "@/lib/actions/serveur";
+import { calculerEcheancier } from "@/lib/tresorerie/echeancier";
+import { listerPrets } from "@/lib/tresorerie/prets";
 
 const TYPES = ["APPORT_CAPITAL", "DEPENSE", "RETRAIT_PROMOTEUR"] as const;
 type TypeM = (typeof TYPES)[number];
@@ -25,7 +27,11 @@ async function creerMouvementCorps(formData: FormData) {
 
   const caisse = caisseValide(formData.get("caisse"));
   const montant = Number(formData.get("montant"));
-  const libelle = String(formData.get("libelle") ?? "").trim();
+  const origineApport: "PRET" | "FONDS_PROPRES" | null =
+    type === "APPORT_CAPITAL" ? (formData.get("origineApport") === "PRET" ? "PRET" : "FONDS_PROPRES") : null;
+  const preteur = String(formData.get("preteur") ?? "").trim();
+  const libelleSaisi = String(formData.get("libelle") ?? "").trim();
+  const libelle = origineApport === "PRET" && !libelleSaisi ? "Prêt de " + preteur : libelleSaisi;
   const categorie = type === "DEPENSE" ? String(formData.get("categorie") ?? "").trim() || "Autre" : null;
   const reference = String(formData.get("reference") ?? "").trim() || null;
   const dateTexte = String(formData.get("date") ?? "");
@@ -52,16 +58,108 @@ async function creerMouvementCorps(formData: FormData) {
     }
   }
 
+  const donnees = {
+    etablissementId: user.etablissementId,
+    type,
+    caisse,
+    date,
+    montant,
+    libelle,
+    categorie,
+    reference,
+    origineApport,
+    derogation,
+    motifDerogation,
+    saisieParId: user.id,
+  };
+
+  // Pret : le pret, son echeancier et l'entree d'argent sont enregistres ensemble
+  let pretId: string | null = null;
+  const m =
+    origineApport === "PRET"
+      ? await db.$transaction(async (tx) => {
+          const p = lirePret(formData, preteur, montant, date);
+          const pret = await tx.pret.create({
+            data: {
+              etablissementId: user.etablissementId,
+              ...p,
+              saisieParId: user.id,
+              echeances: { create: calculerEcheancier(montant, p.tauxAnnuel, p.dureeMois, p.premiereEcheance) },
+            },
+          });
+          pretId = pret.id;
+          return tx.mouvementTresorerie.create({ data: { ...donnees, pretId: pret.id } });
+        })
+      : await db.mouvementTresorerie.create({ data: donnees });
+
+  await enregistrerAudit({
+    userId: user.id,
+    action: "TRESORERIE_" + type,
+    entite: "MouvementTresorerie",
+    entiteId: m.id,
+    details: { caisse, montant, libelle, derogation, origineApport, pretId },
+  });
+  revalidatePath("/tresorerie");
+  revalidatePath("/finance");
+  revalidatePath("/dashboard");
+  return { id: m.id };
+}
+
+// Conditions d'un pret saisies avec l'apport
+function lirePret(formData: FormData, preteur: string, montant: number, dateObtention: Date) {
+  const dureeMois = Number(formData.get("dureeMois"));
+  const tauxAnnuel = Number(String(formData.get("tauxAnnuel") ?? "0").replace(",", ".") || 0);
+  const premiere = String(formData.get("premiereEcheance") ?? "");
+  const premiereEcheance = premiere ? new Date(premiere) : new Date(dateObtention.getFullYear(), dateObtention.getMonth() + 1, dateObtention.getDate());
+  const notes = String(formData.get("notesPret") ?? "").trim() || null;
+  if (preteur.length < 2) throw new Error("Indiquez le prêteur (banque, microfinance, personne…)");
+  if (!Number.isInteger(dureeMois) || dureeMois < 1 || dureeMois > 360) throw new Error("Durée du prêt entre 1 et 360 mois");
+  if (!Number.isFinite(tauxAnnuel) || tauxAnnuel < 0 || tauxAnnuel > 100) throw new Error("Taux d'intérêt annuel invalide");
+  if (Number.isNaN(premiereEcheance.getTime())) throw new Error("Date de première échéance invalide");
+  if (premiereEcheance < dateObtention) throw new Error("La première échéance doit suivre la date du prêt");
+  return { preteur, montant, tauxAnnuel, dureeMois, dateObtention, premiereEcheance, notes };
+}
+
+// Remboursement d'un pret : sortie de caisse, plafonnee au reste du.
+// Solde insuffisant : derogation du directeur, comme les autres sorties.
+async function rembourserPretCorps(formData: FormData) {
+  const user = await requirePermission("tresorerie.capital");
+  const db = ecole(user);
+  const pretId = String(formData.get("pretId") ?? "");
+  const caisse = caisseValide(formData.get("caisse"));
+  const montant = Number(formData.get("montant"));
+  const reference = String(formData.get("reference") ?? "").trim() || null;
+  const dateTexte = String(formData.get("date") ?? "");
+  const date = dateTexte ? new Date(dateTexte) : new Date();
+  if (!Number.isFinite(montant) || montant <= 0) throw new Error("Montant invalide");
+  if (Number.isNaN(date.getTime())) throw new Error("Date invalide");
+
+  const pret = (await listerPrets(user.etablissementId)).find((p) => p.id === pretId);
+  if (!pret) throw new Error("Prêt introuvable");
+  if (montant > pret.resteDu + 0.5) throw new Error("Le montant dépasse le reste dû : " + pret.resteDu.toLocaleString("fr-FR") + " F");
+
+  let derogation = false;
+  let motifDerogation: string | null = null;
+  const disponible = await soldeCaisse(user.etablissementId, caisse);
+  if (montant > disponible + 0.01) {
+    motifDerogation = String(formData.get("motifDerogation") ?? "").trim() || null;
+    if (formData.get("derogation") !== "on" || !user.roles.includes("DIRECTEUR")) {
+      throw new Error("Solde insuffisant en caisse " + LIB_CAISSE[caisse] + " : " + disponible.toLocaleString("fr-FR") + " F disponibles");
+    }
+    if (!motifDerogation || motifDerogation.length < 5) throw new Error("Motif de dérogation obligatoire (5 caractères minimum)");
+    derogation = true;
+  }
+
   const m = await db.mouvementTresorerie.create({
     data: {
       etablissementId: user.etablissementId,
-      type,
+      type: "REMBOURSEMENT_PRET",
       caisse,
       date,
       montant,
-      libelle,
-      categorie,
+      libelle: "Remboursement du prêt de " + pret.preteur,
       reference,
+      pretId: pret.id,
       derogation,
       motifDerogation,
       saisieParId: user.id,
@@ -69,12 +167,13 @@ async function creerMouvementCorps(formData: FormData) {
   });
   await enregistrerAudit({
     userId: user.id,
-    action: "TRESORERIE_" + type,
+    action: "TRESORERIE_REMBOURSEMENT_PRET",
     entite: "MouvementTresorerie",
     entiteId: m.id,
-    details: { caisse, montant, libelle, derogation },
+    details: { pretId: pret.id, caisse, montant, derogation },
   });
   revalidatePath("/tresorerie");
+  revalidatePath("/finance");
   revalidatePath("/dashboard");
   return { id: m.id };
 }
@@ -117,9 +216,26 @@ async function annulerMouvementCorps(id: string, motif: string) {
   const m = await db.mouvementTresorerie.findUnique({ where: { id } });
   if (!m || m.etablissementId !== user.etablissementId) throw new Error("Mouvement introuvable");
   if (m.annule) throw new Error("Déjà annulé");
-  await db.mouvementTresorerie.update({ where: { id }, data: { annule: true, motifAnnulation: motif.trim() } });
-  await enregistrerAudit({ userId: user.id, action: "TRESORERIE_ANNULATION", entite: "MouvementTresorerie", entiteId: id, details: { motif } });
+
+  // Annuler l'argent recu d'un pret annule le pret, s'il n'a encore aucun remboursement
+  const annulePret = m.type === "APPORT_CAPITAL" && m.pretId;
+  if (annulePret) {
+    const remboursements = await db.mouvementTresorerie.count({ where: { pretId: m.pretId, type: "REMBOURSEMENT_PRET", annule: false } });
+    if (remboursements > 0) throw new Error("Ce prêt a des remboursements : annulez-les d'abord");
+  }
+  await db.$transaction(async (tx) => {
+    await tx.mouvementTresorerie.update({ where: { id }, data: { annule: true, motifAnnulation: motif.trim() } });
+    if (annulePret) await tx.pret.update({ where: { id: m.pretId! }, data: { annule: true, motifAnnulation: motif.trim() } });
+  });
+  await enregistrerAudit({
+    userId: user.id,
+    action: "TRESORERIE_ANNULATION",
+    entite: "MouvementTresorerie",
+    entiteId: id,
+    details: { motif, pretAnnule: annulePret ? m.pretId : null },
+  });
   revalidatePath("/tresorerie");
+  revalidatePath("/finance");
   revalidatePath("/dashboard");
 }
 
@@ -157,6 +273,9 @@ export async function creerMouvement(...a: Parameters<typeof creerMouvementCorps
 }
 export async function creerTransfert(...a: Parameters<typeof creerTransfertCorps>) {
   return capter(() => creerTransfertCorps(...a));
+}
+export async function rembourserPret(...a: Parameters<typeof rembourserPretCorps>) {
+  return capter(() => rembourserPretCorps(...a));
 }
 export async function annulerMouvement(...a: Parameters<typeof annulerMouvementCorps>) {
   return capter(() => annulerMouvementCorps(...a));

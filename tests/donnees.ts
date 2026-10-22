@@ -101,6 +101,14 @@ export async function creerEcole(nom: string) {
   const depense = await prisma.depenseRecurrente.create({
     data: { etablissementId, libelle: "Loyer", categorie: "Loyer", montant: 100000, jourEcheance: 5, caisse: "BANQUE" },
   });
+  const pret = await prisma.pret.create({
+    data: {
+      etablissementId, preteur: "Banque test", montant: 1000000, dureeMois: 10, dateObtention: new Date("2026-10-01"),
+      premiereEcheance: new Date("2026-11-05"), saisieParId: user.id,
+      echeances: { create: [{ ordre: 1, dateEcheance: new Date("2026-11-05"), capital: 100000, interet: 0, montant: 100000 }] },
+    },
+    include: { echeances: true },
+  });
   const audit = await prisma.auditLog.create({ data: { userId: user.id, etablissementId, action: "TEST", entite: "Test", entiteId: s } });
 
   // Un identifiant par table : la base des tests d'isolation
@@ -132,6 +140,8 @@ export async function creerEcole(nom: string) {
       Presence: presence.id,
       MouvementTresorerie: mouvement.id,
       DepenseRecurrente: depense.id,
+      Pret: pret.id,
+      EcheancePret: pret.echeances[0].id,
       AuditLog: audit.id,
     } as Record<string, string>,
   };

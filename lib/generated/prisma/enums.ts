@@ -164,10 +164,19 @@ export const TypeMouvement = {
   APPORT_CAPITAL: 'APPORT_CAPITAL',
   DEPENSE: 'DEPENSE',
   RETRAIT_PROMOTEUR: 'RETRAIT_PROMOTEUR',
-  TRANSFERT: 'TRANSFERT'
+  TRANSFERT: 'TRANSFERT',
+  REMBOURSEMENT_PRET: 'REMBOURSEMENT_PRET'
 } as const
 
 export type TypeMouvement = (typeof TypeMouvement)[keyof typeof TypeMouvement]
+
+
+export const OrigineApport = {
+  FONDS_PROPRES: 'FONDS_PROPRES',
+  PRET: 'PRET'
+} as const
+
+export type OrigineApport = (typeof OrigineApport)[keyof typeof OrigineApport]
 
 
 export const StatutPresence = {

@@ -49,6 +49,9 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
           )}
           {peutCapital && <FormulaireMouvement type="APPORT_CAPITAL" categories={[]} estDirecteur={estDirecteur} />}
           {peutCapital && <FormulaireMouvement type="RETRAIT_PROMOTEUR" categories={[]} estDirecteur={estDirecteur} />}
+          <Link href="/finance" className="inline-flex h-10 items-center rounded-lg border border-[var(--color-border-strong)] bg-white px-4 text-sm font-medium hover:bg-neutral-50">
+            Capital et prêts
+          </Link>
           <Link href="/tresorerie/rapport" className="inline-flex h-10 items-center rounded-lg border border-[var(--color-border-strong)] bg-white px-4 text-sm font-medium hover:bg-neutral-50">
             Rapport financier
           </Link>
@@ -69,7 +72,7 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
             <p className="text-xs text-[var(--color-ink-muted)]">{LIB_CAISSE[s.caisse]}</p>
             <p className={"mt-1 text-xl font-semibold " + (s.solde < 0 ? "text-red-700" : "")}>{f(s.solde)}</p>
             <p className="mt-1 text-[11px] text-[var(--color-ink-muted)]">
-              +{f(s.frais + s.apports)} / −{f(s.salaires + s.depenses + s.retraits)}
+              +{f(s.frais + s.apports)} / −{f(s.salaires + s.depenses + s.retraits + s.remboursements)}
             </p>
             {(s.transfertsRecus > 0 || s.transfertsEnvoyes > 0) && (
               <p className="text-[11px] text-[var(--color-ink-muted)]">

@@ -420,6 +420,8 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   InscriptionAnnuelle: 'InscriptionAnnuelle',
   MouvementTresorerie: 'MouvementTresorerie',
+  Pret: 'Pret',
+  EcheancePret: 'EcheancePret',
   DepenseRecurrente: 'DepenseRecurrente',
   Presence: 'Presence',
   EchecConnexion: 'EchecConnexion',
@@ -439,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "employe" | "user" | "acces" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "compteurRecu" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "depenseRecurrente" | "presence" | "echecConnexion" | "jetonEmail"
+    modelProps: "employe" | "user" | "acces" | "etablissement" | "parametresEtablissement" | "anneeScolaire" | "trimestre" | "matiere" | "classe" | "eleve" | "affectation" | "note" | "bulletin" | "bulletinLigne" | "paiement" | "fraisScolarite" | "trancheFrais" | "paiementFrais" | "compteurRecu" | "rappel" | "auditLog" | "inscriptionAnnuelle" | "mouvementTresorerie" | "pret" | "echeancePret" | "depenseRecurrente" | "presence" | "echecConnexion" | "jetonEmail"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2145,6 +2147,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Pret: {
+      payload: Prisma.$PretPayload<ExtArgs>
+      fields: Prisma.PretFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PretFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PretFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        findFirst: {
+          args: Prisma.PretFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PretFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        findMany: {
+          args: Prisma.PretFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>[]
+        }
+        create: {
+          args: Prisma.PretCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        createMany: {
+          args: Prisma.PretCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PretCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>[]
+        }
+        delete: {
+          args: Prisma.PretDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        update: {
+          args: Prisma.PretUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        deleteMany: {
+          args: Prisma.PretDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PretUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PretUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>[]
+        }
+        upsert: {
+          args: Prisma.PretUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PretPayload>
+        }
+        aggregate: {
+          args: Prisma.PretAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePret>
+        }
+        groupBy: {
+          args: Prisma.PretGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PretGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PretCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PretCountAggregateOutputType> | number
+        }
+      }
+    }
+    EcheancePret: {
+      payload: Prisma.$EcheancePretPayload<ExtArgs>
+      fields: Prisma.EcheancePretFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EcheancePretFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EcheancePretFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        findFirst: {
+          args: Prisma.EcheancePretFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EcheancePretFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        findMany: {
+          args: Prisma.EcheancePretFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>[]
+        }
+        create: {
+          args: Prisma.EcheancePretCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        createMany: {
+          args: Prisma.EcheancePretCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EcheancePretCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>[]
+        }
+        delete: {
+          args: Prisma.EcheancePretDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        update: {
+          args: Prisma.EcheancePretUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        deleteMany: {
+          args: Prisma.EcheancePretDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EcheancePretUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EcheancePretUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>[]
+        }
+        upsert: {
+          args: Prisma.EcheancePretUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EcheancePretPayload>
+        }
+        aggregate: {
+          args: Prisma.EcheancePretAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEcheancePret>
+        }
+        groupBy: {
+          args: Prisma.EcheancePretGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EcheancePretGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EcheancePretCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EcheancePretCountAggregateOutputType> | number
+        }
+      }
+    }
     DepenseRecurrente: {
       payload: Prisma.$DepenseRecurrentePayload<ExtArgs>
       fields: Prisma.DepenseRecurrenteFieldRefs
@@ -2861,6 +3011,8 @@ export const MouvementTresorerieScalarFieldEnum = {
   libelle: 'libelle',
   categorie: 'categorie',
   reference: 'reference',
+  origineApport: 'origineApport',
+  pretId: 'pretId',
   derogation: 'derogation',
   motifDerogation: 'motifDerogation',
   annule: 'annule',
@@ -2870,6 +3022,38 @@ export const MouvementTresorerieScalarFieldEnum = {
 } as const
 
 export type MouvementTresorerieScalarFieldEnum = (typeof MouvementTresorerieScalarFieldEnum)[keyof typeof MouvementTresorerieScalarFieldEnum]
+
+
+export const PretScalarFieldEnum = {
+  id: 'id',
+  etablissementId: 'etablissementId',
+  preteur: 'preteur',
+  montant: 'montant',
+  tauxAnnuel: 'tauxAnnuel',
+  dureeMois: 'dureeMois',
+  dateObtention: 'dateObtention',
+  premiereEcheance: 'premiereEcheance',
+  notes: 'notes',
+  annule: 'annule',
+  motifAnnulation: 'motifAnnulation',
+  saisieParId: 'saisieParId',
+  createdAt: 'createdAt'
+} as const
+
+export type PretScalarFieldEnum = (typeof PretScalarFieldEnum)[keyof typeof PretScalarFieldEnum]
+
+
+export const EcheancePretScalarFieldEnum = {
+  id: 'id',
+  pretId: 'pretId',
+  ordre: 'ordre',
+  dateEcheance: 'dateEcheance',
+  capital: 'capital',
+  interet: 'interet',
+  montant: 'montant'
+} as const
+
+export type EcheancePretScalarFieldEnum = (typeof EcheancePretScalarFieldEnum)[keyof typeof EcheancePretScalarFieldEnum]
 
 
 export const DepenseRecurrenteScalarFieldEnum = {
@@ -3291,6 +3475,20 @@ export type ListEnumCaisseFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
 
 
 /**
+ * Reference to a field of type 'OrigineApport'
+ */
+export type EnumOrigineApportFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrigineApport'>
+    
+
+
+/**
+ * Reference to a field of type 'OrigineApport[]'
+ */
+export type ListEnumOrigineApportFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrigineApport[]'>
+    
+
+
+/**
  * Reference to a field of type 'StatutPresence'
  */
 export type EnumStatutPresenceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StatutPresence'>
@@ -3491,6 +3689,8 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   inscriptionAnnuelle?: Prisma.InscriptionAnnuelleOmit
   mouvementTresorerie?: Prisma.MouvementTresorerieOmit
+  pret?: Prisma.PretOmit
+  echeancePret?: Prisma.EcheancePretOmit
   depenseRecurrente?: Prisma.DepenseRecurrenteOmit
   presence?: Prisma.PresenceOmit
   echecConnexion?: Prisma.EchecConnexionOmit

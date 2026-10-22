@@ -1,6 +1,6 @@
 // Rapport financier d'une periode [debut, fin[ : meme calcul pour la page et le PDF.
-// Les apports et retraits du promoteur sont presentes a part : ce ne sont ni des
-// recettes ni des depenses de l'ecole.
+// Le financement (apports et retraits du promoteur, prets recus et remboursements) est
+// presente a part : ce ne sont ni des recettes ni des depenses de l'ecole.
 
 // SQL brut : filtre explicite par etablissementId ; requetes Prisma : ecole(etablissementId)
 import { prisma, DB_SCHEMA } from "@/lib/db";
@@ -26,8 +26,10 @@ export type Rapport = {
   charges: { libelle: string; montant: number }[];
   totalCharges: number;
   resultat: number;
-  apports: number;
+  apports: number; // fonds propres
   retraits: number;
+  pretsRecus: number;
+  remboursements: number; // remboursements de prets (capital et interets)
   soldesDebut: SoldeCaisse[];
   soldesFin: SoldeCaisse[];
   impayes: number;
@@ -39,6 +41,8 @@ export function periodeRapport(debutMois: string, finMois: string) {
   const [a2, m2] = finMois.split("-").map(Number);
   return { debut: new Date(a1, m1 - 1, 1), fin: new Date(a2, m2, 1) };
 }
+
+const somme = (l: { _sum: { montant: number | null } }[]) => l.reduce((s, c) => s + (c._sum.montant ?? 0), 0);
 
 export async function rapportFinancier(etablissementId: string, debut: Date, fin: Date): Promise<Rapport> {
   const avant = new Date(debut.getTime() - 1);
@@ -63,8 +67,13 @@ export async function rapportFinancier(etablissementId: string, debut: Date, fin
       _sum: { montant: true },
     }),
     ecole(etablissementId).mouvementTresorerie.groupBy({
-      by: ["type"],
-      where: { etablissementId, type: { in: ["APPORT_CAPITAL", "RETRAIT_PROMOTEUR"] }, annule: false, date: { gte: debut, lt: fin } },
+      by: ["type", "origineApport"],
+      where: {
+        etablissementId,
+        type: { in: ["APPORT_CAPITAL", "RETRAIT_PROMOTEUR", "REMBOURSEMENT_PRET"] },
+        annule: false,
+        date: { gte: debut, lt: fin },
+      },
       _sum: { montant: true },
     }),
     soldesCaisses(etablissementId, avant),
@@ -97,8 +106,11 @@ export async function rapportFinancier(etablissementId: string, debut: Date, fin
     charges,
     totalCharges,
     resultat: totalRecettes - totalCharges,
-    apports: capital.find((c) => c.type === "APPORT_CAPITAL")?._sum.montant ?? 0,
-    retraits: capital.find((c) => c.type === "RETRAIT_PROMOTEUR")?._sum.montant ?? 0,
+    // Apport saisi avant le choix fonds propres / pret (origineApport vide) : fonds propres
+    apports: somme(capital.filter((c) => c.type === "APPORT_CAPITAL" && c.origineApport !== "PRET")),
+    retraits: somme(capital.filter((c) => c.type === "RETRAIT_PROMOTEUR")),
+    pretsRecus: somme(capital.filter((c) => c.type === "APPORT_CAPITAL" && c.origineApport === "PRET")),
+    remboursements: somme(capital.filter((c) => c.type === "REMBOURSEMENT_PRET")),
     soldesDebut,
     soldesFin,
     impayes: impayes[0]?.reste ?? 0,

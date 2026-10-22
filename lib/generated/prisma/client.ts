@@ -157,6 +157,16 @@ export type InscriptionAnnuelle = Prisma.InscriptionAnnuelleModel
  */
 export type MouvementTresorerie = Prisma.MouvementTresorerieModel
 /**
+ * Model Pret
+ * 
+ */
+export type Pret = Prisma.PretModel
+/**
+ * Model EcheancePret
+ * 
+ */
+export type EcheancePret = Prisma.EcheancePretModel
+/**
  * Model DepenseRecurrente
  * 
  */
