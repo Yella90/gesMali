@@ -35,9 +35,26 @@ export async function genererMatricule(etablissementId: string): Promise<string>
 
 type Tranche = { libelle: string; periode: string; ordre: number; montant: number; dateEcheance: Date };
 
-// Echeancier : inscription (si > 0) puis une mensualite par mois de l'annee scolaire
-export function tranchesAnnee(fraisInscription: number, fraisMensuel: number, dateDebutAnnee: Date, dateFinAnnee: Date): Tranche[] {
+// Debut de l'echeancier : le debut de l'annee scolaire, ou le 1er du mois d'arrivee
+// pour un eleve inscrit en cours d'annee (les mois deja passes ne lui sont pas dus)
+export function debutEcheancier(dateDebutAnnee: Date, dateArrivee?: Date): Date {
   const debut = new Date(dateDebutAnnee);
+  if (!dateArrivee) return debut;
+  const moisArrivee = new Date(dateArrivee.getFullYear(), dateArrivee.getMonth(), 1);
+  const moisDebut = new Date(debut.getFullYear(), debut.getMonth(), 1);
+  return moisArrivee > moisDebut ? moisArrivee : debut;
+}
+
+// Echeancier : inscription (si > 0) puis une mensualite par mois, du debut de l'echeancier
+// a la fin de l'annee scolaire. dateArrivee : voir debutEcheancier.
+export function tranchesAnnee(
+  fraisInscription: number,
+  fraisMensuel: number,
+  dateDebutAnnee: Date,
+  dateFinAnnee: Date,
+  dateArrivee?: Date
+): Tranche[] {
+  const debut = debutEcheancier(dateDebutAnnee, dateArrivee);
   const fin = new Date(dateFinAnnee);
   const nombreMois = (fin.getFullYear() - debut.getFullYear()) * 12 + (fin.getMonth() - debut.getMonth()) + 1;
   const tranches: Tranche[] = [];
@@ -75,7 +92,8 @@ export async function genererFraisPourEleve(
   fraisMensuel: number,
   dateDebutAnnee: Date,
   dateFinAnnee: Date,
-  etablissementId: string
+  etablissementId: string,
+  dateArrivee?: Date
 ): Promise<{ trancheInscriptionId: string | null; fraisId: string }> {
   const db = ecole(etablissementId);
   const frais = await db.fraisScolarite.create({
@@ -86,8 +104,8 @@ export async function genererFraisPourEleve(
       fraisInscription,
       fraisScolariteMensuel: fraisMensuel,
       reduction: 0,
-      dateDebut: new Date(dateDebutAnnee),
-      tranches: { create: tranchesAnnee(fraisInscription, fraisMensuel, dateDebutAnnee, dateFinAnnee) },
+      dateDebut: debutEcheancier(dateDebutAnnee, dateArrivee),
+      tranches: { create: tranchesAnnee(fraisInscription, fraisMensuel, dateDebutAnnee, dateFinAnnee, dateArrivee) },
     },
     include: { tranches: true },
   });

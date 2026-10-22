@@ -33,7 +33,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
   const pondCompo = params?.ponderationCompo ?? 0.667;
   const validationObligatoire = params?.validationObligatoire ?? false;
 
-  const eleves = await db.eleve.findMany({
+  const inscrits = await db.eleve.findMany({
     where: { classeId, statut: "INSCRIT" },
     include: {
       notes: {
@@ -42,7 +42,13 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
       },
     },
   });
-  if (eleves.length === 0) throw new Error("Aucun eleve inscrit");
+  if (inscrits.length === 0) throw new Error("Aucun eleve inscrit");
+
+  // Eleve sans aucune note dans le trimestre (arrive en cours d'annee...) : pas de bulletin,
+  // et il ne compte ni dans le rang, ni dans l'effectif, ni dans les moyennes de la classe
+  const eleves = inscrits.filter((e) => e.notes.some((n) => n.valeur != null));
+  const sansNote = inscrits.length - eleves.length;
+  if (eleves.length === 0) throw new Error("Aucune note saisie pour ce trimestre");
 
   // Verifier validation obligatoire
   if (validationObligatoire) {
@@ -161,6 +167,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     entiteId: classeId + "-" + trimestreId,
     details: {
       effectif,
+      sansNote,
       moyenneClasse: Number(moyenneClasse.toFixed(2)),
       pondDevoirs,
       pondCompo,
@@ -172,6 +179,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
   return {
     success: true,
     effectif,
+    sansNote,
     moyenneClasse: Number(moyenneClasse.toFixed(2)),
     pondDevoirs,
     pondCompo,

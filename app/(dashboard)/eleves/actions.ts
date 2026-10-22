@@ -78,7 +78,9 @@ async function creerEleveCorps(formData: FormData) {
         classe.fraisScolariteMensuel,
         classe.anneeScolaire.dateDebut,
         classe.anneeScolaire.dateFin,
-        user.etablissementId
+        user.etablissementId,
+        // Inscription en cours d'annee : mensualites a partir du mois d'arrivee
+        new Date()
       );
 
       // Si l'inscription est marquee payee ET qu'une tranche inscription existe
