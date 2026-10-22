@@ -37,8 +37,8 @@ export function NotesForm({
       await modifierParametresNotes(fd);
       setMessage("Paramètres enregistrés.");
       router.refresh();
-    } catch (e: any) {
-      setErreur(e.message);
+    } catch (err: any) {
+      setErreur(err.message);
     } finally {
       setLoading(false);
     }
@@ -97,7 +97,7 @@ export function NotesForm({
           <div className="space-y-1.5">
             <Label htmlFor="ponderationDevoirs">Devoirs (%)</Label>
             <Input
-              id="ponderationDevoirs" name="ponderationDevoirs" type="number" min={0} max={100}
+              id="ponderationDevoirs" name="ponderationDevoirs" type="number" min={0} max={100} step={1}
               value={pondDevoirs}
               onChange={(e) => setPondDevoirs(e.target.value)}
               className="tnum"
@@ -106,7 +106,7 @@ export function NotesForm({
           <div className="space-y-1.5">
             <Label htmlFor="ponderationCompo">Compositions (%)</Label>
             <Input
-              id="ponderationCompo" name="ponderationCompo" type="number" min={0} max={100}
+              id="ponderationCompo" name="ponderationCompo" type="number" min={0} max={100} step={1}
               value={pondCompo}
               onChange={(e) => setPondCompo(e.target.value)}
               className="tnum"

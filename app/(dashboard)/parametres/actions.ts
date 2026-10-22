@@ -41,16 +41,22 @@ async function modifierParametresNotesCorps(formData: FormData) {
 
   const modeSaisieNotes = formData.get("modeSaisieNotes") as "DECENTRALISEE" | "CENTRALISEE" | "MIXTE";
   const validationObligatoire = formData.get("validationObligatoire") === "on";
-  const ponderationDevoirs = Number(formData.get("ponderationDevoirs"));
-  const ponderationCompo = Number(formData.get("ponderationCompo"));
+  // Le formulaire envoie des pourcentages (0 a 100), la base stocke des fractions (0 a 1)
+  const pourcentDevoirs = Number(formData.get("ponderationDevoirs"));
+  const pourcentCompo = Number(formData.get("ponderationCompo"));
 
   if (!["DECENTRALISEE", "CENTRALISEE", "MIXTE"].includes(modeSaisieNotes)) {
     throw new Error("Mode de saisie invalide");
   }
-  if (ponderationDevoirs < 0 || ponderationCompo < 0) throw new Error("Ponderations invalides");
+  if (!Number.isFinite(pourcentDevoirs) || !Number.isFinite(pourcentCompo) || pourcentDevoirs < 0 || pourcentCompo < 0) {
+    throw new Error("Ponderations invalides");
+  }
 
-  const somme = ponderationDevoirs + ponderationCompo;
-  if (Math.abs(somme - 1) > 0.01) throw new Error("La somme des ponderations doit etre egale a 1 (actuel : " + somme.toFixed(2) + ")");
+  const somme = pourcentDevoirs + pourcentCompo;
+  if (Math.abs(somme - 100) > 1) throw new Error("La somme des ponderations doit etre egale a 100 % (actuel : " + somme + " %)");
+
+  const ponderationDevoirs = pourcentDevoirs / 100;
+  const ponderationCompo = pourcentCompo / 100;
 
   await db.parametresEtablissement.update({
     where: { etablissementId: user.etablissementId },
