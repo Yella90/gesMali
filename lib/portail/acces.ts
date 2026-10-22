@@ -62,3 +62,9 @@ export function qrCodeSvg(texte: string): Promise<string> {
 export function qrCodeDataUrl(texte: string): Promise<string> {
   return QRCode.toDataURL(texte, { margin: 1, width: 300, errorCorrectionLevel: "M" });
 }
+
+// Lien et QR code de l'espace parent, pour les documents PDF (fiche, bulletin)
+export async function accesParentPdf(etablissementId: string, eleveId: string): Promise<{ url: string; qr: string }> {
+  const url = await urlPortailParent(await assurerCodeParent(etablissementId, eleveId));
+  return { url, qr: await qrCodeDataUrl(url) };
+}

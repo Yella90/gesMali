@@ -1,6 +1,7 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 import { ecole } from "@/lib/data/ecole";
 import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
+import { accesParentPdf } from "@/lib/portail/acces";
 
 // Bulletin PDF d'un eleve pour un trimestre (null si non genere).
 // Le controle d'acces est fait par l'appelant (etablissementId renvoye).
@@ -34,6 +35,7 @@ export async function rendreBulletinEleve(etablissementId: string, eleveId: stri
       trimestre: bulletin.trimestre,
       anneeScolaire: bulletin.classe.anneeScolaire,
       bulletins: [bulletin],
+      accesParent: { [bulletin.eleveId]: await accesParentPdf(etablissementId, bulletin.eleveId) },
     })
   );
 

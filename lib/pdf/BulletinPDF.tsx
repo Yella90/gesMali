@@ -12,7 +12,8 @@ const C = {
 };
 
 const styles = StyleSheet.create({
-  page: { padding: 28, fontSize: 9, fontFamily: "Helvetica", color: C.ink },
+  // paddingBottom : place du pied de page, fixe en bas de page
+  page: { padding: 28, paddingBottom: 40, fontSize: 9, fontFamily: "Helvetica", color: C.ink },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -93,6 +94,24 @@ const styles = StyleSheet.create({
   appreciationLabel: { fontSize: 7, color: C.inkMuted, textTransform: "uppercase", marginBottom: 3 },
   appreciationText: { fontSize: 10 },
 
+  // Appreciation et espace parent cote a cote : le bulletin tient sur une page
+  appreciationEtAcces: { flexDirection: "row", gap: 8, marginBottom: 12 },
+  acces: {
+    width: "48%",
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 0.5,
+    borderColor: C.brand,
+    borderRadius: 8,
+    backgroundColor: "#F8FAFC",
+    padding: 5,
+  },
+  accesQr: { width: 50, height: 50 },
+  accesTexte: { flex: 1, marginLeft: 8 },
+  accesTitre: { fontSize: 9, fontWeight: "bold", color: C.brand },
+  accesAide: { fontSize: 7.5, color: C.inkMuted, marginTop: 2, lineHeight: 1.35 },
+  accesUrl: { fontSize: 7.5, color: "#0F766E", marginTop: 3 },
+
   signatures: { flexDirection: "row", gap: 24, marginTop: 8 },
   signature: {
     flex: 1,
@@ -104,6 +123,10 @@ const styles = StyleSheet.create({
   signatureText: { fontSize: 8, color: C.inkMuted },
 
   footer: {
+    position: "absolute",
+    left: 28,
+    right: 28,
+    bottom: 18,
     flexDirection: "row",
     justifyContent: "space-between",
     fontSize: 7,
@@ -111,7 +134,6 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderTopColor: C.border,
     paddingTop: 5,
-    marginTop: 8,
   },
 });
 
@@ -143,17 +165,21 @@ export function BulletinPDF({
   trimestre,
   anneeScolaire,
   bulletins,
+  accesParent,
 }: {
   etablissement: any;
   classe: any;
   trimestre: any;
   anneeScolaire: any;
   bulletins: any[];
+  // Lien et QR code de l'espace parent, par eleveId
+  accesParent?: Record<string, { url: string; qr: string }>;
 }) {
   return (
     <Document>
       {bulletins.map((b) => {
         const lignes = b.lignes ?? [];
+        const acces = accesParent?.[b.eleveId];
         return (
           <Page key={b.id} size="A4" style={styles.page}>
             {/* En-tete */}
@@ -313,12 +339,27 @@ export function BulletinPDF({
               </View>
             </View>
 
-            {/* Appreciation */}
-            <View style={styles.appreciation}>
-              <Text style={styles.appreciationLabel}>Appreciation du conseil de classe</Text>
-              <Text style={styles.appreciationText}>
-                {b.appreciation || "________________________________________"}
-              </Text>
+            {/* Appreciation et espace parent */}
+            <View style={acces ? styles.appreciationEtAcces : undefined} wrap={false}>
+              <View style={acces ? [styles.appreciation, { flex: 1, marginBottom: 0 }] : styles.appreciation}>
+                <Text style={styles.appreciationLabel}>Appreciation du conseil de classe</Text>
+                <Text style={styles.appreciationText}>
+                  {b.appreciation || "________________________________________"}
+                </Text>
+              </View>
+              {acces && (
+                <View style={styles.acces}>
+                  {/* eslint-disable-next-line jsx-a11y/alt-text -- Image react-pdf, pas une balise HTML */}
+                  <Image src={acces.qr} style={styles.accesQr} />
+                  <View style={styles.accesTexte}>
+                    <Text style={styles.accesTitre}>Espace parent</Text>
+                    <Text style={styles.accesAide}>
+                      Scannez ce QR code pour suivre les notes et les bulletins de {b.eleve.prenom}. Lien personnel : ne le partagez pas.
+                    </Text>
+                    <Text style={styles.accesUrl}>{acces.url}</Text>
+                  </View>
+                </View>
+              )}
             </View>
 
             {/* Signatures */}
@@ -332,7 +373,7 @@ export function BulletinPDF({
             </View>
 
             {/* Pied de page */}
-            <View style={styles.footer}>
+            <View style={styles.footer} fixed>
               <Text>
                 Genere le {fmtDate(b.genereLe)} - Version {b.version}
               </Text>

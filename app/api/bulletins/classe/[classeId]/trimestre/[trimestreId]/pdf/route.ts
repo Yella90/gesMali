@@ -4,6 +4,7 @@ import { ecole } from "@/lib/data/ecole";
 import { BulletinPDF } from "@/lib/pdf/BulletinPDF";
 import { getUtilisateurCourant } from "@/lib/auth/session";
 import { classeVisible } from "@/lib/data/guard";
+import { accesParentPdf } from "@/lib/portail/acces";
 
 export async function GET(
   _: NextRequest,
@@ -55,6 +56,12 @@ export async function GET(
   const profPrincipal = classe.professeurPrincipal ?? classe.titulaire;
   const classeAvecProf = { ...classe, professeurPrincipal: profPrincipal };
 
+  const accesParent = Object.fromEntries(
+    await Promise.all(
+      bulletins.map(async (b) => [b.eleveId, await accesParentPdf(classe.etablissementId, b.eleveId)] as const)
+    )
+  );
+
   const buffer = await renderToBuffer(
     BulletinPDF({
       etablissement: classe.etablissement,
@@ -62,6 +69,7 @@ export async function GET(
       trimestre,
       anneeScolaire: classe.anneeScolaire,
       bulletins,
+      accesParent,
     })
   );
 
