@@ -111,6 +111,7 @@ export default async function TresoreriePage({ searchParams }: { searchParams: P
                   <span className="block text-[11px] text-[var(--color-ink-faint)]">
                     {LIB_CAISSE[l.caisse]}
                     {l.caisseDestination && " → " + LIB_CAISSE[l.caisseDestination]}
+                    {l.reference && " · Réf. " + l.reference}
                   </span>
                 </span>
                 {l.transfert !== undefined ? (

@@ -49,19 +49,25 @@ export function FormulaireMouvement({
   const ref = useRef<HTMLDialogElement>(null);
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
+  // Solde insuffisant : le directeur peut forcer (affiche jusqu'a la prochaine ouverture)
+  const [derogationProposee, setDerogationProposee] = useState(false);
   const t = TITRES[type];
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    // React remet e.currentTarget a null apres le premier await
+    const form = e.currentTarget;
     setEnCours(true);
     setErreur(null);
     try {
-      await creerMouvement(new FormData(e.currentTarget));
+      await creerMouvement(new FormData(form));
       ref.current?.close();
-      e.currentTarget.reset();
+      form.reset();
       router.refresh();
     } catch (err) {
-      setErreur(err instanceof Error ? err.message : "Enregistrement impossible");
+      const message = err instanceof Error ? err.message : "Enregistrement impossible";
+      setErreur(message);
+      if (message.startsWith("Solde insuffisant")) setDerogationProposee(true);
     } finally {
       setEnCours(false);
     }
@@ -73,6 +79,7 @@ export function FormulaireMouvement({
         type="button"
         onClick={() => {
           setErreur(null);
+          setDerogationProposee(false);
           ref.current?.showModal();
         }}
         className={
@@ -133,7 +140,7 @@ export function FormulaireMouvement({
             <Input id={type + "-ref"} name="reference" placeholder="N° de facture, bordereau, transaction…" />
           </div>
           {erreur && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</p>}
-          {estDirecteur && erreur?.startsWith("Solde insuffisant") && (
+          {estDirecteur && derogationProposee && (
             <div className="space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
               <label className="flex items-start gap-2">
                 <input type="checkbox" name="derogation" className="mt-0.5 h-4 w-4" />
@@ -162,6 +169,8 @@ export function FormulaireTransfert({ soldes, estDirecteur }: { soldes: Record<s
   const [erreur, setErreur] = useState<string | null>(null);
   const [de, setDe] = useState("ESPECES");
   const [vers, setVers] = useState("BANQUE");
+  // Solde insuffisant : le directeur peut forcer (affiche jusqu'a la prochaine ouverture)
+  const [derogationProposee, setDerogationProposee] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -174,7 +183,9 @@ export function FormulaireTransfert({ soldes, estDirecteur }: { soldes: Record<s
       form.reset();
       router.refresh();
     } catch (err) {
-      setErreur(err instanceof Error ? err.message : "Enregistrement impossible");
+      const message = err instanceof Error ? err.message : "Enregistrement impossible";
+      setErreur(message);
+      if (message.startsWith("Solde insuffisant")) setDerogationProposee(true);
     } finally {
       setEnCours(false);
     }
@@ -192,6 +203,7 @@ export function FormulaireTransfert({ soldes, estDirecteur }: { soldes: Record<s
         type="button"
         onClick={() => {
           setErreur(null);
+          setDerogationProposee(false);
           ref.current?.showModal();
         }}
         className="inline-flex h-10 items-center rounded-lg border border-[var(--color-border-strong)] bg-white px-4 text-sm font-medium hover:bg-neutral-50"
@@ -248,7 +260,7 @@ export function FormulaireTransfert({ soldes, estDirecteur }: { soldes: Record<s
             <Input id="transfert-ref" name="reference" placeholder="N° de bordereau, de transaction…" />
           </div>
           {erreur && <p role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">{erreur}</p>}
-          {estDirecteur && erreur?.startsWith("Solde insuffisant") && (
+          {estDirecteur && derogationProposee && (
             <div className="space-y-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
               <label className="flex items-start gap-2">
                 <input type="checkbox" name="derogation" className="mt-0.5 h-4 w-4" />

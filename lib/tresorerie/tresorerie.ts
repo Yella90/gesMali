@@ -248,6 +248,7 @@ export type LigneJournal = {
   // Transfert : caisse d'arrivee et montant (ni entree ni sortie pour l'ecole)
   caisseDestination?: CaisseT;
   transfert?: number;
+  reference?: string | null; // n° de facture, de bordereau...
   mouvementId?: string; // mouvement manuel annulable
   annule?: boolean;
   derogation?: boolean;
@@ -313,6 +314,7 @@ export async function journal(etablissementId: string, debut: Date, fin: Date): 
         entree: 0,
         sortie: 0,
         transfert: m.montant,
+        reference: m.reference,
         mouvementId: m.id,
         annule: m.annule,
         derogation: m.derogation,
@@ -328,6 +330,7 @@ export async function journal(etablissementId: string, debut: Date, fin: Date): 
       caisse: m.caisse,
       entree: entree && !m.annule ? m.montant : 0,
       sortie: !entree && !m.annule ? m.montant : 0,
+      reference: m.reference,
       mouvementId: m.id,
       annule: m.annule,
       derogation: m.derogation,

@@ -61,6 +61,12 @@ function labelAction(action: string): string {
     CLOTURER_TRIMESTRE: "Clôture trimestre",
     UPDATE_ETABLISSEMENT: "Modification établissement",
     UPDATE_PARAMETRES_NOTES: "Modification paramètres",
+    TRESORERIE_DEPENSE: "Dépense",
+    TRESORERIE_APPORT_CAPITAL: "Apport de capital",
+    TRESORERIE_RETRAIT_PROMOTEUR: "Retrait du promoteur",
+    TRESORERIE_TRANSFERT: "Transfert entre caisses",
+    TRESORERIE_ANNULATION: "Annulation mouvement de trésorerie",
+    DEPENSE_RECURRENTE_CREEE: "Dépense récurrente créée",
   };
   return labels[action] || action.replace(/_/g, " ");
 }

@@ -419,6 +419,7 @@ async function main() {
     for (let i = 0; i <= moisPayes && i < tranches.length; i++) {
       const t = tranches[i];
       paiementFraisData.push({
+        etablissementId: etab.id,
         trancheId: t.id,
         montant: t.montant,
         datePaiement: new Date(t.dateEcheance.getTime() + (rng() * 5) * 86400000),

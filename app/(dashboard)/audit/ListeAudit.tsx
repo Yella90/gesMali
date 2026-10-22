@@ -30,7 +30,7 @@ function categorieAction(action: string): FiltreCategorie {
   if (action.startsWith("UPDATE_") || action.startsWith("SOUMETTRE_") || action.startsWith("MARQUER_")) return "MODIFICATION";
   if (action.startsWith("DELETE_") || action.startsWith("RADIER_") || action.startsWith("ANNULER_") || action.startsWith("SUPPRIMER_")) return "SUPPRESSION";
   if (action.startsWith("VALIDER_") || action.startsWith("CLOTURER_") || action.startsWith("ACTIVER_")) return "VALIDATION";
-  if (action.startsWith("ENCAISSER_") || action.includes("PAIEMENT") || action.includes("FRAIS")) return "PAIEMENT";
+  if (action.startsWith("ENCAISSER_") || action.includes("PAIEMENT") || action.includes("FRAIS") || action.startsWith("TRESORERIE_")) return "PAIEMENT";
   return "TOUS";
 }
 
@@ -84,6 +84,12 @@ function labelAction(action: string): string {
     DELETE_AFFECTATION: "Affectation supprimée",
     UPDATE_ETABLISSEMENT: "Modification établissement",
     UPDATE_PARAMETRES_NOTES: "Modification paramètres notes",
+    TRESORERIE_DEPENSE: "Dépense",
+    TRESORERIE_APPORT_CAPITAL: "Apport de capital",
+    TRESORERIE_RETRAIT_PROMOTEUR: "Retrait du promoteur",
+    TRESORERIE_TRANSFERT: "Transfert entre caisses",
+    TRESORERIE_ANNULATION: "Annulation mouvement de trésorerie",
+    DEPENSE_RECURRENTE_CREEE: "Dépense récurrente créée",
   };
   return labels[action] || action.replace(/_/g, " ");
 }

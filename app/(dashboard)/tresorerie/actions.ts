@@ -72,7 +72,7 @@ async function creerMouvementCorps(formData: FormData) {
     action: "TRESORERIE_" + type,
     entite: "MouvementTresorerie",
     entiteId: m.id,
-    details: { caisse, montant, libelle, derogation },
+    details: { caisse, montant, libelle, derogation, ...(derogation ? { motifDerogation } : {}) },
   });
   revalidatePath("/tresorerie");
   revalidatePath("/dashboard");
@@ -103,7 +103,7 @@ async function creerTransfertCorps(formData: FormData) {
     action: "TRESORERIE_TRANSFERT",
     entite: "MouvementTresorerie",
     entiteId: m.id,
-    details: { de, vers, montant: m.montant, derogation: m.derogation },
+    details: { de, vers, montant: m.montant, derogation: m.derogation, ...(m.derogation ? { motifDerogation: m.motifDerogation } : {}) },
   });
   revalidatePath("/tresorerie");
   revalidatePath("/dashboard");

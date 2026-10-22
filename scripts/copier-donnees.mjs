@@ -23,7 +23,9 @@ const TABLES = [
   "Etablissement", "ParametresEtablissement", "Employe", "User", "AnneeScolaire", "Trimestre",
   "Matiere", "Classe", "Eleve", "Affectation", "Note", "Bulletin", "BulletinLigne", "Paiement",
   "FraisScolarite", "TrancheFrais", "PaiementFrais", "Rappel", "AuditLog", "InscriptionAnnuelle",
+  "CompteurRecu", "Acces", "Presence", "MouvementTresorerie", "DepenseRecurrente", "JetonEmail",
 ];
+// Non copiee : EchecConnexion (tentatives de connexion recentes, sans valeur apres un demenagement)
 const LOT = 500;
 
 function client(url) {

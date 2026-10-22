@@ -54,6 +54,7 @@ describe("transferts entre caisses", () => {
     const lignes = await journal(a.etablissementId, new Date("2026-10-01"), new Date("2026-11-01"));
     const l = lignes.find((x) => x.mouvementId === transfertId)!;
     assert.deepEqual([l.caisse, l.caisseDestination, l.transfert, l.entree, l.sortie], ["ESPECES", "BANQUE", 120000, 0, 0]);
+    assert.equal(l.reference, "BORD-17");
   });
 
   test("rapport financier : ni recette ni charge, soldes de fin a jour", async () => {
