@@ -11,6 +11,7 @@ import {
   supprimerCompte as supprimerCompteAction,
 } from "../actions";
 import { relever } from "@/lib/actions/resultat";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -193,6 +194,7 @@ export function GererCompte({
   estMoiMeme: boolean;
 }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [mode, setMode] = useState<"view" | "create" | "password">("view");
   const [loading, setLoading] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -233,7 +235,13 @@ export function GererCompte({
   }
 
   async function onDelete() {
-    if (!confirm("Supprimer le compte de connexion ? La fiche employé sera conservée.")) return;
+    const ok = await confirm({
+      title: "Supprimer le compte de connexion ?",
+      message: "L'employé ne pourra plus se connecter. Sa fiche employé sera conservée.",
+      confirmLabel: "Supprimer",
+      variant: "danger",
+    });
+    if (!ok) return;
     setLoading(true);
     setErreur(null);
     try {
@@ -340,25 +348,37 @@ export function GererCompte({
 // ═════════════════════════════════════════════
 export function SupprimerAffectation({ affectationId }: { affectationId: string }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
 
   async function handle() {
-    if (!confirm("Supprimer cette affectation ?")) return;
+    const ok = await confirm({
+      title: "Supprimer cette affectation ?",
+      message: "L'employé ne sera plus rattaché à cette classe et cette matière.",
+      confirmLabel: "Supprimer",
+      variant: "danger",
+    });
+    if (!ok) return;
     setLoading(true);
+    setErreur(null);
     try {
       await supprimerAffectation(affectationId);
       router.refresh();
     } catch (e: any) {
-      alert(e.message);
+      setErreur(e.message);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <button onClick={handle} disabled={loading} className="text-xs text-red-600 hover:underline disabled:opacity-50">
-      {loading ? "..." : "Supprimer"}
-    </button>
+    <span className="inline-flex flex-col items-end gap-0.5">
+      <button onClick={handle} disabled={loading} className="text-xs text-red-600 hover:underline disabled:opacity-50">
+        {loading ? "..." : "Supprimer"}
+      </button>
+      {erreur && <span className="text-xs text-red-600">{erreur}</span>}
+    </span>
   );
 }
 
