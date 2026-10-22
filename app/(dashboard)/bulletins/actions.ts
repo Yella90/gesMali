@@ -4,6 +4,7 @@ import { ecole } from "@/lib/data/ecole";
 import { requirePermission } from "@/lib/auth/session";
 import { enregistrerAudit } from "@/lib/audit";
 import { calculerMoyennesEleve } from "@/lib/notes/calculs";
+import { appreciationAutomatique } from "@/lib/notes/appreciation";
 import { revalidatePath } from "next/cache";
 import { capter } from "@/lib/actions/serveur";
 
@@ -135,6 +136,7 @@ async function genererBulletinsClasseCorps(classeId: string, trimestreId: string
     totalCoeffs: r.totalCoeffs,
     rang: i + 1,
     effectifClasse: effectif,
+    appreciation: appreciationAutomatique(r.moyenneGenerale),
     genereParId: user.id,
     lignes: r.lignes.map((l) => ({
       matiereId: l.matiereId,

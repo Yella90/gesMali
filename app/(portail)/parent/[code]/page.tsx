@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ecole } from "@/lib/data/ecole";
 import { eleveParCodeParent } from "@/lib/portail/eleve";
 import { calculerSituation, libelleStatut } from "@/lib/frais/calculs";
+import { appreciationAutomatique } from "@/lib/notes/appreciation";
 import { LiensLegaux } from "@/components/legal/PageLegale";
 import { identiteEtablissement } from "@/lib/etablissement/logo";
 
@@ -172,13 +173,12 @@ export default async function EspaceParentPage({ params }: { params: Promise<{ c
                     <Chiffre label="Rang" value={b.rang ? b.rang + " / " + b.effectifClasse : "-"} />
                     <Chiffre label="Moy. classe" value={b.moyenneClasse !== null ? fmt(b.moyenneClasse) : "-"} />
                   </div>
-                  {(b.decision || b.appreciation) && (
-                    <p className="text-sm mt-3">
-                      {b.decision && <span className="font-medium">{DECISIONS[b.decision] ?? b.decision}</span>}
-                      {b.decision && b.appreciation ? " · " : ""}
-                      {b.appreciation && <span className="text-[var(--color-ink-muted)]">{b.appreciation}</span>}
-                    </p>
-                  )}
+                  <p className="text-sm mt-3">
+                    {b.decision && <span className="font-medium">{DECISIONS[b.decision] ?? b.decision}{" · "}</span>}
+                    <span className="text-[var(--color-ink-muted)]">
+                      {b.appreciation || appreciationAutomatique(b.moyenneGenerale)}
+                    </span>
+                  </p>
                 </li>
               ))}
             </ul>

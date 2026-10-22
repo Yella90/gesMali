@@ -1,4 +1,5 @@
 import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
+import { appreciationAutomatique } from "@/lib/notes/appreciation";
 
 const C = {
   ink: "#0F172A",
@@ -344,7 +345,7 @@ export function BulletinPDF({
               <View style={acces ? [styles.appreciation, { flex: 1, marginBottom: 0 }] : styles.appreciation}>
                 <Text style={styles.appreciationLabel}>Appreciation du conseil de classe</Text>
                 <Text style={styles.appreciationText}>
-                  {b.appreciation || "________________________________________"}
+                  {b.appreciation || appreciationAutomatique(b.moyenneGenerale)}
                 </Text>
               </View>
               {acces && (
