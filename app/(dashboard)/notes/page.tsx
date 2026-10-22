@@ -3,6 +3,8 @@ import { requirePermission } from "@/lib/auth/session";
 import { SaisieNotes } from "./SaisieNotes";
 import { filtreClasses, filtreClasseId } from "@/lib/data/guard";
 import { libelleClasse, ORDRE_CLASSES } from "@/lib/classes/annees";
+import { peut } from "@/lib/auth/permissions";
+import { peutSaisirSelonMode } from "@/lib/notes/peutSaisir";
 
 export default async function NotesPage() {
   const user = await requirePermission("note.read");
@@ -54,6 +56,10 @@ export default async function NotesPage() {
           cloture: t.cloture,
         }))}
         modeSaisie={paramsEtab?.modeSaisieNotes ?? "DECENTRALISEE"}
+        utilisateurId={user.id}
+        peutSoumettre={peutSaisirSelonMode(user.roles, paramsEtab?.modeSaisieNotes ?? "DECENTRALISEE")}
+        soumetTout={user.roles.includes("DIRECTEUR") || user.roles.includes("SECRETAIRE")}
+        peutValider={peut(user.roles, "note.validate")}
       />
     </div>
   );

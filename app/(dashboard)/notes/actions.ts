@@ -170,17 +170,32 @@ async function enregistrerNotesCorps(data: {
   return { success: true, crees, modifies, ignores };
 }
 
-export async function soumettreNotes(params: {
+type LotNotes = {
   classeId: string;
   matiereId: string;
   trimestreId: string;
   type: TypeNote;
   numero: number;
-}) {
+};
+
+// Soumission au directeur : seulement les notes en brouillon d'un trimestre ouvert.
+// Un enseignant (sans role de secretaire ni de directeur) ne soumet que ses propres notes.
+async function soumettreNotesCorps(params: LotNotes) {
   const user = await requireUtilisateur();
   const db = ecole(user);
   await verifierClasse(user, params.classeId);
-  await verifierTrimestre(user, params.trimestreId);
+  await verifierMatiere(user, params.matiereId);
+  const trimestre = await verifierTrimestre(user, params.trimestreId);
+  if (trimestre.cloture) throw new Error("Trimestre cloture");
+
+  const paramsEtab = await db.parametresEtablissement.findUnique({
+    where: { etablissementId: user.etablissementId },
+  });
+  if (!paramsEtab) throw new Error("Parametres etablissement manquants");
+  if (!peutSaisirSelonMode(user.roles, paramsEtab.modeSaisieNotes)) {
+    throw new Error("Le mode de saisie ne vous autorise pas");
+  }
+  const soumetTout = user.roles.includes("DIRECTEUR") || user.roles.includes("SECRETAIRE");
 
   const resultat = await db.note.updateMany({
     where: {
@@ -190,15 +205,17 @@ export async function soumettreNotes(params: {
       type: params.type,
       numero: params.numero,
       statut: "BROUILLON",
+      ...(soumetTout ? {} : { saisieParId: user.id }),
     },
     data: { statut: "SOUMISE" },
   });
+  if (resultat.count === 0) throw new Error("Aucune note en brouillon a soumettre");
 
   await enregistrerAudit({
     userId: user.id,
     action: "SOUMETTRE_NOTES",
     entite: "Note",
-    entiteId: params.classeId + "-" + params.matiereId,
+    entiteId: params.classeId + "-" + params.matiereId + "-" + params.type + "-" + params.numero,
     details: { nombre: resultat.count },
   });
 
@@ -206,18 +223,14 @@ export async function soumettreNotes(params: {
   return { success: true, nombre: resultat.count };
 }
 
-export async function validerNotes(params: {
-  classeId: string;
-  matiereId: string;
-  trimestreId: string;
-  type: TypeNote;
-  numero: number;
-}) {
+async function validerNotesCorps(params: LotNotes) {
   const user = await requireUtilisateur();
   const db = ecole(user);
   if (!peut(user.roles, "note.validate")) throw new Error("Permission refusee");
   await verifierClasse(user, params.classeId);
-  await verifierTrimestre(user, params.trimestreId);
+  await verifierMatiere(user, params.matiereId);
+  const trimestre = await verifierTrimestre(user, params.trimestreId);
+  if (trimestre.cloture) throw new Error("Trimestre cloture");
 
   const resultat = await db.note.updateMany({
     where: {
@@ -230,12 +243,13 @@ export async function validerNotes(params: {
     },
     data: { statut: "VALIDEE" },
   });
+  if (resultat.count === 0) throw new Error("Aucune note soumise a valider");
 
   await enregistrerAudit({
     userId: user.id,
     action: "VALIDER_NOTES",
     entite: "Note",
-    entiteId: params.classeId + "-" + params.matiereId,
+    entiteId: params.classeId + "-" + params.matiereId + "-" + params.type + "-" + params.numero,
     details: { nombre: resultat.count },
   });
 
@@ -250,4 +264,10 @@ export async function chargerElevesEtNotes(...a: Parameters<typeof chargerEleves
 }
 export async function enregistrerNotes(...a: Parameters<typeof enregistrerNotesCorps>) {
   return capter(() => enregistrerNotesCorps(...a));
+}
+export async function soumettreNotes(...a: Parameters<typeof soumettreNotesCorps>) {
+  return capter(() => soumettreNotesCorps(...a));
+}
+export async function validerNotes(...a: Parameters<typeof validerNotesCorps>) {
+  return capter(() => validerNotesCorps(...a));
 }

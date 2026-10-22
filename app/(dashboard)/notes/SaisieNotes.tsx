@@ -1,12 +1,20 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { chargerElevesEtNotes as chargerElevesEtNotesAction, enregistrerNotes as enregistrerNotesAction } from "./actions";
+import {
+  chargerElevesEtNotes as chargerElevesEtNotesAction,
+  enregistrerNotes as enregistrerNotesAction,
+  soumettreNotes as soumettreNotesAction,
+  validerNotes as validerNotesAction,
+} from "./actions";
 import { relever } from "@/lib/actions/resultat";
 import { libModeSaisie } from "@/lib/libelles";
+import { useConfirm } from "@/components/ui/ConfirmProvider";
 
 const chargerElevesEtNotes = relever(chargerElevesEtNotesAction);
 const enregistrerNotes = relever(enregistrerNotesAction);
+const soumettreNotes = relever(soumettreNotesAction);
+const validerNotes = relever(validerNotesAction);
 
 type ClasseOption = { id: string; label: string; cycle: string };
 type MatiereOption = { id: string; nom: string; cycle: string };
@@ -44,12 +52,22 @@ export function SaisieNotes({
   matieres,
   trimestres,
   modeSaisie,
+  utilisateurId,
+  peutSoumettre,
+  soumetTout,
+  peutValider,
 }: {
   classes: ClasseOption[];
   matieres: MatiereOption[];
   trimestres: TrimestreOption[];
   modeSaisie: string;
+  utilisateurId: string;
+  peutSoumettre: boolean;
+  // Secretaire ou directeur : soumet toutes les notes du lot, pas seulement les siennes
+  soumetTout: boolean;
+  peutValider: boolean;
 }) {
+  const confirm = useConfirm();
   const [classeId, setClasseId] = useState("");
   const [matiereId, setMatiereId] = useState("");
   const [trimestreId, setTrimestreId] = useState("");
@@ -60,6 +78,7 @@ export function SaisieNotes({
   const [valeurs, setValeurs] = useState<Record<string, string>>({});
   const [chargement, setChargement] = useState(false);
   const [sauvegarde, setSauvegarde] = useState(false);
+  const [changementStatut, setChangementStatut] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -137,11 +156,7 @@ export function SaisieNotes({
       setMessage(
         res.crees + " créé(s), " + res.modifies + " modifié(s), " + res.ignores + " ignoré(s)"
       );
-      const data = await chargerElevesEtNotes({ classeId, matiereId, trimestreId, type, numero });
-      setLignes(data);
-      const v: Record<string, string> = {};
-      for (const e of data) v[e.id] = e.note?.valeur != null ? String(e.note.valeur) : "";
-      setValeurs(v);
+      await recharger();
     } catch (err: any) {
       setErreur(err.message);
     } finally {
@@ -149,7 +164,66 @@ export function SaisieNotes({
     }
   }
 
+  async function recharger() {
+    const data = await chargerElevesEtNotes({ classeId, matiereId, trimestreId, type, numero });
+    setLignes(data);
+    const v: Record<string, string> = {};
+    for (const e of data) v[e.id] = e.note?.valeur != null ? String(e.note.valeur) : "";
+    setValeurs(v);
+  }
+
   const totalSaisies = lignes.filter((l) => valeurs[l.id] !== "").length;
+
+  // Valeurs modifiees a l'ecran mais pas encore enregistrees
+  const nonEnregistre = lignes.some((l) => {
+    const enBase = l.note?.valeur != null ? String(l.note.valeur) : "";
+    return (valeurs[l.id] ?? "") !== enBase;
+  });
+  const aSoumettre = lignes.filter(
+    (l) => l.note?.statut === "BROUILLON" && (soumetTout || l.note.saisieParId === utilisateurId)
+  ).length;
+  const aValider = lignes.filter((l) => l.note?.statut === "SOUMISE").length;
+  const libelleLot = (type === "DEVOIR" ? "devoir" : "composition") + " n°" + numero;
+
+  async function changerStatut(action: "soumettre" | "valider") {
+    const soumission = action === "soumettre";
+    const nombre = soumission ? aSoumettre : aValider;
+    const ok = await confirm(
+      soumission
+        ? {
+            title: "Soumettre " + nombre + " note(s) au directeur ?",
+            message:
+              "Notes du " + libelleLot + ". Une fois soumises, l'enseignant ne pourra plus les modifier : seuls la secrétaire et le directeur le pourront.",
+            confirmLabel: "Soumettre",
+            variant: "warning",
+          }
+        : {
+            title: "Valider " + nombre + " note(s) ?",
+            message:
+              "Notes du " + libelleLot + ". Les notes validées deviennent visibles par les parents et ne sont plus modifiables que par le directeur.",
+            confirmLabel: "Valider",
+            variant: "success",
+          }
+    );
+    if (!ok) return;
+    setChangementStatut(true);
+    setErreur(null);
+    setMessage(null);
+    try {
+      const lot = { classeId, matiereId, trimestreId, type, numero };
+      const res = soumission ? await soumettreNotes(lot) : await validerNotes(lot);
+      setMessage(res.nombre + (soumission ? " note(s) soumise(s) au directeur" : " note(s) validée(s)"));
+      await recharger();
+    } catch (err: unknown) {
+      setErreur(err instanceof Error ? err.message : "Erreur");
+    } finally {
+      setChangementStatut(false);
+    }
+  }
+
+  const occupe = sauvegarde || changementStatut;
+  const afficherSoumettre = !trimestreFerme && peutSoumettre && aSoumettre > 0;
+  const afficherValider = !trimestreFerme && peutValider && aValider > 0;
 
   return (
     <div className="space-y-4">
@@ -401,14 +475,37 @@ export function SaisieNotes({
                 {recherche && " · " + lignesFiltrees.length + " affiché(s)"}
               </span>
               <span className="md:hidden">{totalSaisies} note(s)</span>
+              {nonEnregistre && (afficherSoumettre || afficherValider) && (
+                <span className="block text-xs text-amber-800 mt-0.5">Enregistrez avant de soumettre ou valider.</span>
+              )}
             </div>
-            <button
-              onClick={handleEnregistrer}
-              disabled={sauvegarde || trimestreFerme || totalSaisies === 0}
-              className="inline-flex items-center h-10 px-5 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)] disabled:opacity-50"
-            >
-              {sauvegarde ? "Enregistrement..." : "Enregistrer"}
-            </button>
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              {afficherSoumettre && (
+                <button
+                  onClick={() => changerStatut("soumettre")}
+                  disabled={occupe || nonEnregistre}
+                  className="inline-flex items-center h-10 px-4 rounded-lg border border-amber-300 bg-amber-50 text-amber-900 text-sm font-medium hover:bg-amber-100 disabled:opacity-50"
+                >
+                  Soumettre ({aSoumettre})
+                </button>
+              )}
+              {afficherValider && (
+                <button
+                  onClick={() => changerStatut("valider")}
+                  disabled={occupe || nonEnregistre}
+                  className="inline-flex items-center h-10 px-4 rounded-lg border border-[var(--color-accent)] bg-[var(--color-accent-soft)] text-[var(--color-accent)] text-sm font-medium hover:opacity-90 disabled:opacity-50"
+                >
+                  Valider ({aValider})
+                </button>
+              )}
+              <button
+                onClick={handleEnregistrer}
+                disabled={occupe || trimestreFerme || totalSaisies === 0}
+                className="inline-flex items-center h-10 px-5 rounded-lg bg-[var(--color-brand)] text-white text-sm font-medium hover:bg-[var(--color-brand-dark)] disabled:opacity-50"
+              >
+                {sauvegarde ? "Enregistrement..." : "Enregistrer"}
+              </button>
+            </div>
           </div>
         </>
       )}
