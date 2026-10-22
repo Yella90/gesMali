@@ -4,7 +4,8 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Download, FileUp, Plus, Trash2 } from "lucide-react";
 import { executer } from "@/lib/actions/resultat";
-import { analyserCsv, MODELES, modeleCsv, versLignes, type TypeImport } from "@/lib/reprise/modeles";
+import { analyserCsv, MODELES, versLignes, type TypeImport } from "@/lib/reprise/modeles";
+import { estFichierExcel, lireExcel, telechargerModeleExcel } from "@/lib/reprise/excel";
 import { importerDonnees, type BilanImport } from "./actions";
 
 const ETAPES: TypeImport[] = ["classes", "eleves", "notes"];
@@ -52,17 +53,19 @@ function Import({ type }: { type: TypeImport }) {
   const statuts = useMemo(() => new Map(bilan?.resultats.map((r) => [r.ligne, r]) ?? []), [bilan]);
   const ligneVide = () => Object.fromEntries(modele.colonnes.map((c) => [c.cle, ""]));
 
-  function telechargerModele() {
-    const url = URL.createObjectURL(new Blob([modeleCsv(type)], { type: "text/csv;charset=utf-8" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "modele-" + type + ".csv";
-    a.click();
-    URL.revokeObjectURL(url);
+  async function telechargerModele() {
+    try {
+      await telechargerModeleExcel(type);
+    } catch {
+      setMessage({ ok: false, texte: "Impossible de créer le modèle Excel, réessayez." });
+    }
   }
 
   function lire(contenu: string) {
-    const tableau = analyserCsv(contenu);
+    lireTableau(analyserCsv(contenu));
+  }
+
+  function lireTableau(tableau: string[][]) {
     if (tableau.length < 2) {
       setMessage({ ok: false, texte: "Il faut une ligne d'en-tête puis au moins une ligne de données." });
       return;
@@ -83,7 +86,14 @@ function Import({ type }: { type: TypeImport }) {
       setMessage({ ok: false, texte: "Fichier trop volumineux (5 Mo maximum)." });
       return;
     }
-    lire(await f.text());
+    try {
+      if (estFichierExcel(f)) lireTableau(await lireExcel(f));
+      else if (/\.xls$/i.test(f.name)) {
+        setMessage({ ok: false, texte: "Ancien format Excel (.xls) : enregistrez le fichier au format .xlsx (Fichier > Enregistrer sous) puis réessayez." });
+      } else lire(await f.text());
+    } catch {
+      setMessage({ ok: false, texte: "Fichier illisible : utilisez le modèle Excel (.xlsx) ou un fichier CSV." });
+    }
     if (fichier.current) fichier.current.value = "";
   }
 
@@ -129,7 +139,7 @@ function Import({ type }: { type: TypeImport }) {
           <p className="mt-0.5 text-sm text-[var(--color-ink-muted)]">{modele.description}</p>
         </div>
         <button type="button" onClick={telechargerModele} className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-[var(--color-border-strong)] px-3 text-sm hover:bg-neutral-50">
-          <Download className="h-4 w-4" aria-hidden /> Modèle CSV
+          <Download className="h-4 w-4" aria-hidden /> Modèle Excel
         </button>
       </div>
 
@@ -148,11 +158,11 @@ function Import({ type }: { type: TypeImport }) {
       {!lignes && (
         <div className="grid gap-3 md:grid-cols-2">
           <div className="flex flex-col gap-2 rounded-lg border border-dashed border-[var(--color-border-strong)] p-4">
-            <p className="text-sm font-medium">Depuis un fichier</p>
-            <p className="text-xs text-[var(--color-ink-muted)]">CSV enregistré depuis Excel ou LibreOffice (séparateur point-virgule, virgule ou tabulation).</p>
+            <p className="text-sm font-medium">Depuis un fichier Excel</p>
+            <p className="text-xs text-[var(--color-ink-muted)]">Fichier .xlsx rempli à partir du modèle (la première feuille est lue). Un fichier CSV est aussi accepté.</p>
             <label className="mt-auto inline-flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-lg bg-[var(--color-brand)] px-3 text-sm text-white hover:bg-[var(--color-brand-dark)]">
               <FileUp className="h-4 w-4" aria-hidden /> Choisir un fichier
-              <input ref={fichier} type="file" accept=".csv,.txt,text/csv,text/plain" className="sr-only" onChange={(e) => lireFichier(e.target.files?.[0])} />
+              <input ref={fichier} type="file" accept=".xlsx,.xls,.csv,.txt,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,text/plain" className="sr-only" onChange={(e) => lireFichier(e.target.files?.[0])} />
             </label>
           </div>
           <div className="flex flex-col gap-2 rounded-lg border border-dashed border-[var(--color-border-strong)] p-4">
@@ -161,7 +171,7 @@ function Import({ type }: { type: TypeImport }) {
               value={texte}
               onChange={(e) => setTexte(e.target.value)}
               rows={4}
-              placeholder={"Collez ici les lignes copiées depuis un tableur, en-tête compris :\n" + modele.colonnes.map((c) => c.titre).join(";")}
+              placeholder={"Collez ici les cellules copiées depuis Excel, en-tête compris :\n" + modele.colonnes.map((c) => c.titre).join("  ")}
               className="w-full rounded-lg border border-[var(--color-border-strong)] p-2 font-mono text-xs"
             />
             <div className="flex flex-wrap gap-2">

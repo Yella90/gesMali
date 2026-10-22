@@ -1,23 +1,24 @@
-// Reprise des donnees : modeles de fichiers CSV et lecture du texte colle ou importe.
+// Reprise des donnees : modeles de fichiers (Excel ou CSV) et lecture du texte colle ou importe.
 // Module sans dependance serveur : utilise par la page (client) et par les actions.
 
 export type TypeImport = "classes" | "eleves" | "notes";
 
-export type ColonneModele = { cle: string; titre: string; obligatoire?: boolean; aide: string; alias?: string[] };
+// format : type de la cellule dans le modele Excel (texte par defaut)
+export type ColonneModele = { cle: string; titre: string; obligatoire?: boolean; aide: string; alias?: string[]; format?: "nombre" | "date" };
 
 export const MODELES: Record<TypeImport, { titre: string; description: string; colonnes: ColonneModele[]; exemple: string[][] }> = {
   classes: {
     titre: "Classes",
     description: "Classes de l'année scolaire active, avec leurs frais. Une classe déjà existante (même niveau et section) est ignorée.",
     colonnes: [
-      { cle: "niveau", titre: "niveau", obligatoire: true, aide: "0 à 9 (0 pour le préscolaire)" },
+      { cle: "niveau", titre: "niveau", obligatoire: true, aide: "0 à 9 (0 pour le préscolaire)", format: "nombre" },
       { cle: "section", titre: "section", aide: "A, B… (facultatif)" },
       { cle: "nom", titre: "nom", aide: "Nom affiché, ex. 6e année A (facultatif)" },
       { cle: "cycle", titre: "cycle", aide: "préscolaire, premier ou second (déduit du niveau si vide)" },
       { cle: "salle", titre: "salle", aide: "Facultatif" },
-      { cle: "fraisinscription", titre: "frais_inscription", aide: "Montant en F CFA", alias: ["inscription"] },
-      { cle: "fraismensuel", titre: "frais_mensuel", aide: "Mensualité en F CFA", alias: ["mensualite", "scolarite", "fraisscolarite", "fraisscolaritemensuel"] },
-      { cle: "capacite", titre: "capacite", aide: "Nombre d'élèves maximum (50 par défaut)", alias: ["capacitemax", "effectifmax"] },
+      { cle: "fraisinscription", titre: "frais_inscription", aide: "Montant en F CFA", alias: ["inscription"], format: "nombre" },
+      { cle: "fraismensuel", titre: "frais_mensuel", aide: "Mensualité en F CFA", alias: ["mensualite", "scolarite", "fraisscolarite", "fraisscolaritemensuel"], format: "nombre" },
+      { cle: "capacite", titre: "capacite", aide: "Nombre d'élèves maximum (50 par défaut)", alias: ["capacitemax", "effectifmax"], format: "nombre" },
     ],
     exemple: [
       ["1", "A", "1re année A", "premier", "Salle 1", "5000", "7500", "45"],
@@ -30,7 +31,7 @@ export const MODELES: Record<TypeImport, { titre: string; description: string; c
     colonnes: [
       { cle: "nom", titre: "nom", obligatoire: true, aide: "Nom de famille" },
       { cle: "prenom", titre: "prenom", obligatoire: true, aide: "Prénom(s)", alias: ["prenoms"] },
-      { cle: "datenaissance", titre: "date_naissance", obligatoire: true, aide: "JJ/MM/AAAA ou AAAA-MM-JJ", alias: ["naissance", "nele", "datedenaissance"] },
+      { cle: "datenaissance", titre: "date_naissance", obligatoire: true, aide: "JJ/MM/AAAA ou AAAA-MM-JJ", alias: ["naissance", "nele", "datedenaissance"], format: "date" },
       { cle: "sexe", titre: "sexe", obligatoire: true, aide: "M ou F (G pour garçon accepté)", alias: ["genre"] },
       { cle: "classe", titre: "classe", aide: "Nom de la classe tel qu'affiché dans GES Mali, ex. 2 A" },
       { cle: "matricule", titre: "matricule", aide: "Ancien matricule à conserver (sinon attribué automatiquement)" },
@@ -52,9 +53,9 @@ export const MODELES: Record<TypeImport, { titre: string; description: string; c
       { cle: "matiere", titre: "matiere", obligatoire: true, aide: "Nom ou code de la matière", alias: ["discipline"] },
       { cle: "trimestre", titre: "trimestre", obligatoire: true, aide: "1, 2, 3 ou nom du trimestre de l'année active" },
       { cle: "type", titre: "type", aide: "devoir ou composition (devoir par défaut)" },
-      { cle: "numero", titre: "numero", aide: "1 pour le premier devoir… (1 par défaut)", alias: ["n", "no"] },
-      { cle: "note", titre: "note", obligatoire: true, aide: "Valeur, virgule ou point accepté", alias: ["valeur"] },
-      { cle: "sur", titre: "sur", aide: "Barème (20 par défaut) : la note est ramenée sur 20", alias: ["bareme"] },
+      { cle: "numero", titre: "numero", aide: "1 pour le premier devoir… (1 par défaut)", alias: ["n", "no"], format: "nombre" },
+      { cle: "note", titre: "note", obligatoire: true, aide: "Valeur, virgule ou point accepté", alias: ["valeur"], format: "nombre" },
+      { cle: "sur", titre: "sur", aide: "Barème (20 par défaut) : la note est ramenée sur 20", alias: ["bareme"], format: "nombre" },
     ],
     exemple: [
       ["2026-0001", "Mathématiques", "1", "devoir", "1", "14,5", "20"],
@@ -113,10 +114,4 @@ export function versLignes(type: TypeImport, tableau: string[][]) {
     return o;
   });
   return { lignes, inconnues, manquantes };
-}
-
-export function modeleCsv(type: TypeImport): string {
-  const m = MODELES[type];
-  const echapper = (v: string) => (/[;"\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v);
-  return "﻿" + [m.colonnes.map((c) => c.titre), ...m.exemple].map((l) => l.map(echapper).join(";")).join("\r\n") + "\r\n";
 }
